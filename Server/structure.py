@@ -71,6 +71,12 @@ class game_comp:
 		if event.type == "change_var":
 			self.vars[event.params["var_name"]] = event.params["var_value"]
 			event.type = "null"
+		
+		elif event.type == "get_vars":
+			event.params["vars"] = self.vars
+			
+		#elif event.type == "server_get_vars":
+			
 
 def construct(comps):
 	
