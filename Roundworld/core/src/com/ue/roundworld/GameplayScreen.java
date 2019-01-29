@@ -39,7 +39,7 @@ public class GameplayScreen implements Screen{
 		text.setPosition(5, 5);
 		mainStage.addActor(text);
 		
-		client = new Client("10.248.220.192", 1337);
+		client = new Client("localhost", 1337);
 	
 	}
 	
@@ -50,7 +50,7 @@ public class GameplayScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 	
-		text.setText(client.getRecievedData());
+		System.out.println(client.getRecievedData());
 	
 		mainStage.draw();
 		uiStage.draw();

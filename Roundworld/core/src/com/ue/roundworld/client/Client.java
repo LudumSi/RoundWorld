@@ -19,7 +19,7 @@ public class Client {
 
 	public static String user;
 
-	private String receivedData = "";
+	private String receivedData = "NONE";
 	private String connectionResult = "";
 	private String ip;
 	private int port;
@@ -43,8 +43,9 @@ public class Client {
 		socketHints.connectTimeout = 4000;
 		// create the socket and connect to the server entered in the text box (
 		// x.x.x.x format ) on port 9021
+		System.out.println("connecting to: " + ip);
 		socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
-		
+		System.out.println("connected to: " + ip);
 		this.receive.start();
 
 	}
@@ -88,7 +89,7 @@ public class Client {
 					System.out.println("IO Exception");
 					data = "error";
 				}
-
+				
 				if (!data.equals(prevData)) {
 					System.out.println("Recieved: " + data);
 					receivedData = data;
