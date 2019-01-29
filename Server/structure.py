@@ -1,53 +1,88 @@
 
 import copy
 
+#Function to fire events, usable by everything. Type is the event command, params becomes a dictionary of data.
+
 def fire_event(target,type,**params):
-	#print('Firing %s with %s at %s' % (type,params,target) )
 	new_event = event(type,params)
 	target.get_event(new_event)
 
+#Event class, stores command and data, and so can be passed around
 class event:
 	
+	#type:string params:dictionary
 	def __init__(self,type,params):
 		self.type = type
 		self.params = params
 
+#Game object class, the building-block of the game
 class game_obj:
-
-	def __init__(self,tags):
+	
+	#Creates an empty list for comps, gets a list of tags from constructor for quick object identification
+	def __init__(self):
 		self.comps = []
 		self.tags = tags
-		self.loc = None
 		
+	#Takes in an event, and then passes it through the list of events to me modified or manipulated
 	def get_event(self,event):
-		self.comps[0].pass_event(event)
 		
+		for comp in self.comps:
+			self.comp.pass_event(event)
+			if event.type == "null":
+				break
+
+		del event
+		
+	#Takes in the component to be added, adds it to the object's component list, and tells the component that its owner object is the object
 	def add_comp(self,comp):
-		self.comps.append(comp)
+		
+		#Sorts components as they're added
+		if comp.priority <= len(self.comps):
+			self.comps.insert(comp.priority,comp)
+		else:
+			self.comps.append(comp)
+		
 		comp.obj = self
-		comp.index = self.comps.index(comp)
 
 class game_comp:
 	
+	#The default variables for the component, basically creating the variables which will be used
 	default_vars = {}
+	comp_type = "default"
+	priority = 0
 	
 	def __init__(self,config):
-		self.obj = None
-		self.index = None
-		self.config = config
-		self.vars = copy.deepcopy(self.default_vars)
-		self.vars.update(config)
 		
+		#Creates a blank var for the object the component is part of
+		self.obj = None
+		
+		#Takes configuration settings from the contruction function
+		self.config = config
+		
+		#Copies the default variables so they exist to be configured
+		self.vars = copy.deepcopy(self.default_vars)
+		
+		#Changes the default vars to the configured ones
+		self.vars.update(config)
+	
+	#Takes in event, does things. Probably a massive switch statement
 	def pass_event(self,event):
-		if self.index == ( len(self.obj.comps) - 1 ):
-			del event
-		else:
-			self.obj.comps[self.index + 1].pass_event(event)
+		
+		if event.type == "change_var":
+			self.vars[event.params["var_name"]] = event.params["var_value"]
+			event.type = "null"
 
-def construct(tags,comps):
-	new_obj = game_obj(tags)
+def construct(comps):
+	
+	new_obj = game_obj()
+	
 	for comp in comps:
+		
 		config = comp.config
 		new_comp = comp.__class__(config)
 		new_obj.add_comp(new_comp)
+	
 	return new_obj
+	
+	
+	
