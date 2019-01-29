@@ -27,17 +27,18 @@ class connectingThread(threading.Thread):
 		PORT = 1337
 
 		self.server.bind((HOST,PORT))
-		self.server.settimeout(15)
+		self.server.settimeout(10)
 		
 	def run(self):
 		
 		print("Running")
 		
 		self.server.listen(1)
-		conn,address = self.server.accept()
-		print("Connected to " + address)
-		conn.send(b"It's alive!")
-		conn.close()
+		while(1):
+			conn,address = self.server.accept()
+			print("Connected to " + address)
+			conn.send(b"It's alive!")
+			conn.close()
 
 thread = connectingThread(1)
 
