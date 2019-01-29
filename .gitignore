@@ -36,6 +36,7 @@ com_crashlytics_export_strings.xml
 .classpath
 .project
 .metadata/
+.recommenders/
 /android/bin/
 /core/bin/
 /desktop/bin/
