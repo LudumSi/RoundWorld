@@ -23,11 +23,11 @@ class connectingThread(threading.Thread):
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-		HOST = "localhost"
+		HOST = "10.248.220.192"
 		PORT = 1337
 
 		self.server.bind((HOST,PORT))
-		self.server.settimeout(5)
+		self.server.settimeout(15)
 		
 	def run(self):
 		
