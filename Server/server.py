@@ -39,11 +39,14 @@ class connectingThread(threading.Thread):
 			try:
 				conn,address = self.server.accept()
 				print("Connected to " + address)
-				conn.send(b"It's alive!")
-				conn.close()
+				message_to_send = "bye".encode("UTF-8")
+				conn.send(message_to_send)
+				
 			except:
 				print("Timed out!")
-
+		conn.close()
+		
+		
 thread = connectingThread(1)
 
 thread.start()
