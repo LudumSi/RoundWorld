@@ -23,22 +23,26 @@ class connectingThread(threading.Thread):
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-		HOST = "10.248.220.192"
+		HOST = "localhost"
 		PORT = 1337
 
 		self.server.bind((HOST,PORT))
-		self.server.settimeout(10)
+		self.server.settimeout(20)
 		
 	def run(self):
 		
 		print("Running")
 		
 		self.server.listen(1)
+		
 		while(1):
-			conn,address = self.server.accept()
-			print("Connected to " + address)
-			conn.send(b"It's alive!")
-			conn.close()
+			try:
+				conn,address = self.server.accept()
+				print("Connected to " + address)
+				conn.send(b"It's alive!")
+				conn.close()
+			except:
+				print("Timed out!")
 
 thread = connectingThread(1)
 
