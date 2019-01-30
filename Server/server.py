@@ -23,7 +23,7 @@ class connectingThread(threading.Thread):
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-		HOST = "localhost"
+		HOST = "10.248.97.85"
 		PORT = 1337
 
 		self.server.bind((HOST,PORT))
