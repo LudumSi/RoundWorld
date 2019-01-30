@@ -63,7 +63,7 @@ public class Client {
 
 			socket.getOutputStream().write(jsonStringToSend.getBytes());
 		} catch (Exception e) {
-			// System.out.println("Socket write error");
+			System.out.println("Socket write error");
 
 		}
 

@@ -36,14 +36,15 @@ class connectingThread(threading.Thread):
 		self.server.listen(1)
 		
 		while(1):
+			
+			print("attmpt!")
 			try:
 				conn,address = self.server.accept()
-				print("Connected to " + address)
+				print("Connected to " + address[0])
 				message_to_send = "bye".encode("UTF-8")
 				conn.send(message_to_send)
-				
 			except:
-				print("Timed out!")
+				print("Connection fail")
 		conn.close()
 		
 		
