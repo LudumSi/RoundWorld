@@ -23,7 +23,7 @@ class connectingThread(threading.Thread):
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-		HOST = "localhost"
+		HOST = '10.248.220.192'
 		PORT = 1337
 
 		self.server.bind((HOST,PORT))
@@ -39,7 +39,7 @@ class connectingThread(threading.Thread):
 			try:
 				conn,address = self.server.accept()
 				print("Connected to " + address)
-				conn.send(b"It's alive!")
+				conn.send("It's alive!".encode('utc8'))
 				conn.close()
 			except:
 				print("Timed out!")

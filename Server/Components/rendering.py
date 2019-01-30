@@ -12,7 +12,7 @@ class rendering(game_comp):
 		
 		self.super()
 		
-		if event.type == 
+		if event.type == ""
 		
 	
 
