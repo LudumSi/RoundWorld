@@ -1,2 +1,4 @@
-0:Generic componant
-1:Rendering
+Hexadecimal values
+0x0:Generic componant
+0x1:Rendering
+0x2:Client command packager
