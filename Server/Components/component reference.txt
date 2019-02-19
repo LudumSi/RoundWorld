@@ -1,0 +1,2 @@
+0:Generic componant
+1:Rendering

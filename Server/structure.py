@@ -48,7 +48,7 @@ class game_comp:
 	
 	#The default variables for the component, basically creating the variables which will be used
 	default_vars = {}
-	comp_type = "default"
+	comp_id = 0x0
 	priority = 0
 	
 	def __init__(self,config):
