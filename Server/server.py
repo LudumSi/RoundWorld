@@ -22,8 +22,9 @@ class connectingThread(threading.Thread):
 		self.threadID = threadID
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-
-		HOST = '10.248.220.192'
+		
+		hostname = socket.gethostname() #Some black magic fuckery to get the local IP
+		HOST = socket.gethostbyname(hostname)
 		PORT = 1337
 
 		self.server.bind((HOST,PORT))

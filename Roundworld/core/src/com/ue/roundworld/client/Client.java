@@ -18,11 +18,14 @@ public class Client {
 	public static String userIpAddress;
 
 	public static String user;
+	
+	public boolean isConnected = false;
 
 	private String receivedData = "NONE";
 	private String connectionResult = "";
 	private String ip;
 	private int port;
+	
 
 	
 	private Socket socket; 
@@ -43,9 +46,19 @@ public class Client {
 		socketHints.connectTimeout = 4000;
 		// create the socket and connect to the server entered in the text box (
 		// x.x.x.x format ) on port 9021
-		System.out.println("connecting to: " + ip);
-		socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
+		while (!isConnected) {
+			System.out.println("connecting to: " + ip);
+			try {
+				socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
+				isConnected = true;
+			} catch (Exception e) {
+				System.out.println("failed connecting to: " + ip);
+			}
+			
+		}
+		
 		System.out.println("connected to: " + ip);
+		isConnected = true;
 		this.receive.start();
 
 	}

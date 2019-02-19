@@ -38,8 +38,8 @@ public class GameplayScreen implements Screen{
 		text = new Label(" ", RoundWorld.font);
 		text.setPosition(5, 5);
 		mainStage.addActor(text);
-		
-		client = new Client("localhost", 1337);
+	
+		client = new Client("10.248.97.85", 1337);
 	
 	}
 	
