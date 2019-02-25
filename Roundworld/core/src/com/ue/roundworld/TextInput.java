@@ -39,12 +39,12 @@ public class TextInput extends BaseActor implements InputProcessor {
 	}
 
 	public void update() {
-		/*Command com = c.getParsedData();
+		Command com = c.getParsedData();
 		System.out.println("P: "+ com.toString());
 		if(com.get_id() == 1) {
 			
 			add_to_log(com.get_component(0).getArg("text"));
-		}*/
+		}
 	}
 	
 	public String getKeyVal(int keycode, boolean shifted) {
@@ -266,10 +266,10 @@ public class TextInput extends BaseActor implements InputProcessor {
 		}
 		else {
 			add_to_log(text);
-			/*c.sendRequest(Command.generate(
+			c.sendRequest(Command.generate(
 					Command.Type.sendText, 
 					Component.generate(Component.Type.text, "text|" + text)
-					));*/
+					));
 			text = "";
 			log[9].setText(text);
 			

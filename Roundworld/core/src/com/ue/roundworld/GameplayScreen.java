@@ -49,7 +49,7 @@ public class GameplayScreen implements Screen{
 		//TextInput listener = new TextInput();
 		//Gdx.input.getTextInput(listener, "Enter ip", "Insert server ip here", "hint hint nudge nudge");
 		
-		//client = new Client("128.193.254.13", 1337);
+		client = new Client("192.168.56.1", 1337);
 		Command c = Parser.parse("FFFF{(45FC:name|sword,damage|10)}");
 		System.out.println(c.toString());
 		
