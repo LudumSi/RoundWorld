@@ -15,7 +15,7 @@ public class DesktopLauncher {
 		//cfg.fullscreen = true;
 		//cfg.addIcon("assets/player.png", FileType.Internal);
 	
-		cfg.addIcon("assets/icon.png", FileType.Internal);
+		cfg.addIcon("assets/RW_Icon_32.png", FileType.Internal);
 
 	
 		LwjglApplication launcher = new LwjglApplication(theGame, cfg);

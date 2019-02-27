@@ -40,7 +40,6 @@ public class TextInput extends BaseActor implements InputProcessor {
 
 	public void update() {
 		Command com = c.getParsedData();
-		System.out.println("P: "+ com.toString());
 		if(com.get_id() == 1) {
 			
 			add_to_log(com.get_component(0).getArg("text"));
