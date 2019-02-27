@@ -16,7 +16,7 @@ public class TextInput extends BaseActor implements InputProcessor {
 	
 	
 	String text = "";
-	Label[] log = new Label[10];
+	Label[] log = new Label[11];
 	Client c;
 	String lastText = "";
 	public TextInput(int x, int y, Client c) {
@@ -24,7 +24,7 @@ public class TextInput extends BaseActor implements InputProcessor {
 		this.setPosition(x, y);
 		this.c = c;
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < log.length; i++) {
 			Label l = new Label(" ", RoundWorld.font);
 			l.setPosition(0, x + 160 - i * 16);
 			this.addActor(l);
@@ -33,11 +33,12 @@ public class TextInput extends BaseActor implements InputProcessor {
 	}
 	
 	public void add_to_log(String text) {
-		for (int i = 0; i < log.length-1; i++) {
+		for (int i = 0; i < log.length-2; i++) {
 			log[i].setText(log[i+1].getText());
 		}
 		log[9].setText(text);
 	}
+
 
 	public void update() {
 		Command com = c.getParsedData();
@@ -256,7 +257,7 @@ public class TextInput extends BaseActor implements InputProcessor {
 			String key = getKeyVal(keycode, Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT));
 			if (key != null) {
 				text += key;
-				log[9].setText(text);
+				log[10].setText(text);
 			}
 		
 		} else if (keycode == Keys.BACKSPACE) {
@@ -267,7 +268,7 @@ public class TextInput extends BaseActor implements InputProcessor {
 					newArr[i] = arr[i];
 				}
 				text = String.valueOf(newArr);
-				log[9].setText(text);
+				log[10].setText(text);
 			}
 			
 			
@@ -279,7 +280,7 @@ public class TextInput extends BaseActor implements InputProcessor {
 					Component.generate(Component.Type.text, "text|" + text)
 					));
 			text = "";
-			log[9].setText(text);
+			log[10].setText(text);
 			
 		}
 		
