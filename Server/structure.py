@@ -21,7 +21,6 @@ class game_obj:
 	#Creates an empty list for comps, gets a list of tags from constructor for quick object identification
 	def __init__(self):
 		self.comps = []
-		self.tags = tags
 		
 	#Takes in an event, and then passes it through the list of events to me modified or manipulated
 	def get_event(self,event):
