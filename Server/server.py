@@ -24,6 +24,7 @@ class clientThread(threading.Thread):
 		
 		self.connection = conn
 		self.address = address
+		
 		#--Don't do this, shared mutable data like this can become easily corrupted
 		clients.append(self)
 		threads.append(self)
@@ -37,13 +38,32 @@ class clientThread(threading.Thread):
 		while(running):
 			
 			#--Arg is bytes recieved, doesn't always work bc of data rerouteing and other stuff.
-			data = self.connection.recv(1024)
+			try:
+				data = self.connection.recv(1024)
 			#print("Server recieved: %s" % data)
-			server_data.append((self,data))
+				server_data.append((self,data))
+			
+			except:
 				
-		print("Closed a client")
+				pass
+				
+	def disconnect(self):
 		
-#Connecting thread class
+		print(f"Disconnecting from {self.address}!")
+		
+		print(f"Clients: {clients}")
+		
+		print(f"Removing {self} from clients")
+		
+		clients.pop(clients.index(self))
+		
+		print("Removed from clients")
+		
+		self.connection.close()
+		
+		print("Closing connection")
+
+	#Connecting thread class
 class connectingThread(threading.Thread):
 
 	def __init__(self,threadID):
@@ -141,20 +161,18 @@ while(running):
 		data_sent = data[1]
 		print(f"{sending_client.address}:{data_sent}")
 		
-		if data_sent == "FFFF{(0:text|bye)}":
+		if data_sent == b'FFFF{(0:text|bye)}':
 			
-			message == "thanks"
-			sending_client.connection.send(message)
-			
-			sending_client.connection.close()
-			clients.pop(clients.get_index(sending_client))
+			sending_client.disconnect()
 		
-		for client in clients:
+		else:
 			
-			if client != sending_client:
+			for client in clients:
+			
+				if client != sending_client:
 				
-				message = "1{(0:text|" + f"{sending_client.address[0]}:{data_sent}\n" + ")}"
-				client.connection.send(message.encode("UTF-8"))
+					message = data_sent
+					client.connection.send(message) #Need to make sure people are online before sending them messages
 			
 		server_data.pop(index)
 
