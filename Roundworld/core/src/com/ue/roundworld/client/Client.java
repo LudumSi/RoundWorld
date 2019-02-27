@@ -90,6 +90,9 @@ public class Client {
 			String data = "";
 			String prevData = "";
 			while (true) {
+				if (receivedData.equals("STOP")) {
+					break;
+				}
 				BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 				try {
@@ -99,12 +102,16 @@ public class Client {
 
 					}
 				} catch (IOException e) {
-					System.out.println("IO Exception");
+					
+					System.out.println(e.toString());
 					data = "error";
 				}
 				
 				if (!data.equals(prevData)) {
 					System.out.println("Recieved: " + data);
+					if (receivedData.equals("STOP")) {
+						break;
+					}
 					receivedData = data;
 				}
 				prevData = data;
@@ -125,6 +132,16 @@ public class Client {
 		return this.receivedData;
 	}
 
+	public Command getParsedData() {
+		return Parser.parse(receivedData);
+	}
 	
+	public void close() {
+		this.sendRequest("FFFF{(0:text|bye)}");
+		receivedData = "STOP";
+		socket.dispose();
+	
+		
+	}
 
 }

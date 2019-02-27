@@ -10,7 +10,12 @@ threads = []
 
 running = True
 
+#--Gotta add message length to command header
+#--use global locked queue to send things between threads (included in python)
+#--see: async io 
+
 #Client thread class
+#--Python's threads don't run concurrently.
 class clientThread(threading.Thread):
 
 	def __init__(self,conn,address):
@@ -19,6 +24,7 @@ class clientThread(threading.Thread):
 		
 		self.connection = conn
 		self.address = address
+		#--Don't do this, shared mutable data like this can become easily corrupted
 		clients.append(self)
 		threads.append(self)
 		
@@ -32,6 +38,7 @@ class clientThread(threading.Thread):
 			message = "1{(0:text|Bob Boblaw)}\n".encode("UTF-8")
 			self.connection.send(message)
 			
+			#--Arg is bytes recieved, doesn't always work bc of data rerouteing and other stuff.
 			data = self.connection.recv(1024)
 			#print("Server recieved: %s" % data)
 			server_data.append((self,data))
@@ -51,7 +58,8 @@ class connectingThread(threading.Thread):
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		
 		hostname = socket.gethostname() #Some black magic fuckery to get the local IP
-		HOST = socket.gethostbyname(hostname)
+		#
+		HOST = "127.0.0.1"   #socket.gethostbyname(hostname)
 		PORT = 1337
 
 		self.server.bind((HOST,PORT))
@@ -65,11 +73,13 @@ class connectingThread(threading.Thread):
 		
 		print("Running")
 		
+		#--parameter is backlog of connections in queue. This may have to be modified later
 		self.server.listen(1)
 		
 		while(running):
 			
 			try:
+				#--Lots of things can go wrong here: read/write timeouts, heartbeats, external idle kills etc...
 				conn,address = self.server.accept()
 				
 				for client in clients:
@@ -89,8 +99,8 @@ class connectingThread(threading.Thread):
 				conn = 0
 				address = 0
 			
-			except:
-				print("No new connections")
+			except Exception as e:
+				print(e)
 				
 		conn.close()
 		print("Closed listener")
