@@ -35,8 +35,6 @@ class clientThread(threading.Thread):
 		print(f"Created client for {self.address}")
 		
 		while(running):
-			message = "1{(0:text|Bob Boblaw)}\n".encode("UTF-8")
-			self.connection.send(message)
 			
 			#--Arg is bytes recieved, doesn't always work bc of data rerouteing and other stuff.
 			data = self.connection.recv(1024)
@@ -58,8 +56,8 @@ class connectingThread(threading.Thread):
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		
 		hostname = socket.gethostname() #Some black magic fuckery to get the local IP
-		#
-		HOST = "127.0.0.1"   #socket.gethostbyname(hostname)
+		
+		HOST = socket.gethostbyname(hostname)
 		PORT = 1337
 
 		self.server.bind((HOST,PORT))
@@ -155,8 +153,8 @@ while(running):
 			
 			if client != sending_client:
 				
-				message = f"{sending_client.address[0]}:{data_sent}\n".encode("UTF-8")
-				client.send(message)
+				message = "1{(0:text|" + f"{sending_client.address[0]}:{data_sent}\n" + ")}"
+				client.connection.send(message.encode("UTF-8"))
 			
 		server_data.pop(index)
 
