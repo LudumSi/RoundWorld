@@ -28,8 +28,7 @@ public class Component {
 	public String getArg(String key) {
 		for (int i = 0; i < args.size(); i++) {
 			
-			String[] splitArg = args.get(i).split("|");
-			
+			String[] splitArg = args.get(i).split("\\|");
 			if (splitArg[0].equals(key)) {
 				return splitArg[1];
 			}

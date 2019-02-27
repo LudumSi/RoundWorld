@@ -65,8 +65,8 @@ public class GameplayScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		test.rotateBy(1);
 		test.addAction(Actions.sequence(
-				Actions.scaleBy(1.5f, 1.5f, 1),
-				Actions.scaleBy(0.5f, 0.5f, 1)
+				Actions.scaleBy(1.5f, 1.5f, 0.1f),
+				Actions.scaleBy(0.5f, 0.5f, 0.1f)
 				));
 	
 		//System.out.println(client.getRecievedData());

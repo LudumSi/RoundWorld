@@ -18,13 +18,14 @@ public class TextInput extends BaseActor implements InputProcessor {
 	String text = "";
 	Label[] log = new Label[10];
 	Client c;
+	String lastText = "";
 	public TextInput(int x, int y, Client c) {
 		super(Utils.emptyTexture);
 		this.setPosition(x, y);
 		this.c = c;
 		
 		for (int i = 0; i < 10; i++) {
-			Label l = new Label("NONEW", RoundWorld.font);
+			Label l = new Label(" ", RoundWorld.font);
 			l.setPosition(0, x + 160 - i * 16);
 			this.addActor(l);
 			log[i] = l;
@@ -40,9 +41,17 @@ public class TextInput extends BaseActor implements InputProcessor {
 
 	public void update() {
 		Command com = c.getParsedData();
-		if(com.get_id() == 1 && com.get_component(0) != null && com.get_component(0).getArg("text") != null && com.get_component(0).getArg("text") != "" ) {
+		
+		if(com.get_id() == 1 && com.get_component(0) != null) {
 			
-			add_to_log(com.get_component(0).getArg("text"));
+				if (com.get_component(0).getArg("text") != null && 
+					com.get_component(0).getArg("text") != ""  &&
+					!lastText.equals(com.get_component(0).getArg("text"))) {
+					lastText = com.get_component(0).getArg("text");
+					System.out.println("this should only print once");
+					add_to_log(com.get_component(0).getArg("text"));
+					
+				}
 		}
 	}
 	

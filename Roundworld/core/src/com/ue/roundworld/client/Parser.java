@@ -15,7 +15,7 @@ public class Parser {
 				start = i + 1;
 			}
 			else if (comp.charAt(i) == ',' || i == comp.length()-1) {
-				args.add(comp.substring(start, i));
+				args.add(comp.substring(start, i + 1));
 				start = i + 1;
 			}
 		}
