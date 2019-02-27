@@ -40,7 +40,7 @@ public class TextInput extends BaseActor implements InputProcessor {
 
 	public void update() {
 		Command com = c.getParsedData();
-		if(com.get_id() == 1 && com.get_component(0).getArg("text") != null && com.get_component(0).getArg("text") != "" ) {
+		if(com.get_id() == 1 && com.get_component(0) != null && com.get_component(0).getArg("text") != null && com.get_component(0).getArg("text") != "" ) {
 			
 			add_to_log(com.get_component(0).getArg("text"));
 		}
@@ -267,7 +267,7 @@ public class TextInput extends BaseActor implements InputProcessor {
 			add_to_log(text);
 			c.sendRequest(Command.generate(
 					Command.Type.sendText, 
-					Component.generate(Component.Type.text, "text|" + text + "\n")
+					Component.generate(Component.Type.text, "text|" + text)
 					));
 			text = "";
 			log[9].setText(text);

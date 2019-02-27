@@ -47,7 +47,7 @@ public class Command {
 			for (int i = 0; i < c.length; i++) {
 				str += c[i];
 			}
-			str += "}";
+			str += "}\n";
 			break;
 		}
 		return str;

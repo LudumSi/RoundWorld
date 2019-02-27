@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ue.roundworld.client.Client;
 import com.ue.roundworld.client.Command;
@@ -63,6 +64,10 @@ public class GameplayScreen implements Screen{
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		test.rotateBy(1);
+		test.addAction(Actions.sequence(
+				Actions.scaleBy(1.5f, 1.5f, 1),
+				Actions.scaleBy(0.5f, 0.5f, 1)
+				));
 	
 		//System.out.println(client.getRecievedData());
 		
