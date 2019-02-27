@@ -18,11 +18,14 @@ public class Client {
 	public static String userIpAddress;
 
 	public static String user;
+	
+	public boolean isConnected = false;
 
 	private String receivedData = "NONE";
 	private String connectionResult = "";
 	private String ip;
 	private int port;
+	
 
 	
 	private Socket socket; 
@@ -43,9 +46,19 @@ public class Client {
 		socketHints.connectTimeout = 4000;
 		// create the socket and connect to the server entered in the text box (
 		// x.x.x.x format ) on port 9021
-		System.out.println("connecting to: " + ip);
-		socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
+		while (!isConnected) {
+			System.out.println("connecting to: " + ip);
+			try {
+				socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
+				isConnected = true;
+			} catch (Exception e) {
+				System.out.println("failed connecting to: " + ip);
+			}
+			
+		}
+		
 		System.out.println("connected to: " + ip);
+		isConnected = true;
 		this.receive.start();
 
 	}
@@ -63,7 +76,7 @@ public class Client {
 
 			socket.getOutputStream().write(jsonStringToSend.getBytes());
 		} catch (Exception e) {
-			// System.out.println("Socket write error");
+			System.out.println("Socket write error");
 
 		}
 
@@ -77,6 +90,9 @@ public class Client {
 			String data = "";
 			String prevData = "";
 			while (true) {
+				if (receivedData.equals("STOP")) {
+					break;
+				}
 				BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 				try {
@@ -86,12 +102,16 @@ public class Client {
 
 					}
 				} catch (IOException e) {
-					System.out.println("IO Exception");
+					
+					System.out.println(e.toString());
 					data = "error";
 				}
 				
 				if (!data.equals(prevData)) {
 					System.out.println("Recieved: " + data);
+					if (receivedData.equals("STOP")) {
+						break;
+					}
 					receivedData = data;
 				}
 				prevData = data;
@@ -112,6 +132,16 @@ public class Client {
 		return this.receivedData;
 	}
 
+	public Command getParsedData() {
+		return Parser.parse(receivedData);
+	}
 	
+	public void close() {
+		this.sendRequest("FFFF{(0:text|bye)}");
+		receivedData = "STOP";
+		socket.dispose();
+	
+		
+	}
 
 }

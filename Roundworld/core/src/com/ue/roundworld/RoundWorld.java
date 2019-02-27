@@ -6,7 +6,8 @@ import com.badlogic.gdx.audio.Music;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -28,7 +29,7 @@ public class RoundWorld extends Game {
 	
 	
 		// viewBorder = new Rectangle(1, 0, PS.viewWidth-1, PS.viewHeight-220);
-		/*FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/AndromedaTV.TTF"));
+		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fantasquesansmono-regular.otf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 		parameter.size = 12;
 		BitmapFont theFont = generator.generateFont(parameter); // font size 12
@@ -37,7 +38,7 @@ public class RoundWorld extends Game {
 		
 		Gdx.input.setInputProcessor(new InputProcess());
 		
-		font = new LabelStyle(new BitmapFont(), Color.WHITE);
+		font = new LabelStyle(theFont, Color.WHITE);
 		GameplayScreen ms = new GameplayScreen(this);
 		
 		setScreen(ms);
