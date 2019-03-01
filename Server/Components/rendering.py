@@ -16,11 +16,3 @@ class rendering(game_comp):
 		
 		if event.type == ""
 		
-	
-
-	
-	
-	
-	
-	
-

@@ -1,0 +1,4 @@
+
+import structure
+
+class player():

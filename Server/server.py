@@ -3,6 +3,7 @@ import structure
 import socket
 import threading
 import sys
+import parser
 
 server_data = []
 clients = []
@@ -40,8 +41,9 @@ class clientThread(threading.Thread):
 			#--Arg is bytes recieved, doesn't always work bc of data rerouteing and other stuff.
 			try:
 				data = self.connection.recv(1024)
+				parser.parse(data)
 			#print("Server recieved: %s" % data)
-				server_data.append((self,data))
+				server_data.append((self, data))
 			
 			except:
 				

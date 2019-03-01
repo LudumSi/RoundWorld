@@ -14,12 +14,3 @@ class packager(game_comp):
 		if event.type == "send_data":
 		
 			data = string(str(self.obj.comps))
-		
-	
-
-	
-	
-	
-	
-	
-
