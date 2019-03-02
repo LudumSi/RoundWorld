@@ -16,12 +16,15 @@ public class RoundWorld extends Game {
 	
 
 	
-	public static Rectangle viewBorder;
 	public static LabelStyle font;
 	public static boolean paused;
 
 
+	public static int height = 700;
+	public static int width = 800;
+	
 
+	public static Rectangle window = new Rectangle(0, 0, width, height);
 	
 	
 	@Override
@@ -39,7 +42,7 @@ public class RoundWorld extends Game {
 		Gdx.input.setInputProcessor(new InputProcess());
 		
 		font = new LabelStyle(theFont, Color.WHITE);
-		GameplayScreen ms = new GameplayScreen(this);
+		MenuScreen ms = new MenuScreen(this);
 		
 		setScreen(ms);
 	}

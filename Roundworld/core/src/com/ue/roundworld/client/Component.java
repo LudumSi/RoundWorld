@@ -6,7 +6,15 @@ public class Component {
 	
 	public static enum Type{
 		text;
+		
+		public int id;
+		
+		static {
+			text.id = 0x0;
+			
+		}
 	}
+	
 	
 	
 	int id;
@@ -41,7 +49,7 @@ public class Component {
 		String str = "";
 		switch(t) {
 		case text:
-			str += "(0:";
+			str += "(" + Integer.toHexString(t.id).toUpperCase() +":";
 			for (int i = 0; i < args.length; i++) {
 				str += args[i];
 			}

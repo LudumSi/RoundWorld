@@ -25,6 +25,24 @@ public class Parser {
 	public static Command parse(String data) {
 		int start = 0;
 		int commandName = 0;
+		
+		int len = 0;
+		
+		/*getLength*/
+		for (int i = 0; i < data.length(); i++) {
+			if (data.charAt(i) == 'L') {
+				len = Integer.parseInt(data.substring(0, i));
+				start = i + 1;
+				break;
+			}
+			
+		}
+		
+		if (len != data.length()) {
+			System.out.println("Bad Command Length: " + data);
+			return null;
+		}
+		
 		ArrayList<Component> comps = new ArrayList<Component>();
 		for (int i = 0; i < data.length(); i++) {
 			if (data.charAt(i) == '{') {

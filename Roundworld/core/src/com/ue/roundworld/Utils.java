@@ -12,6 +12,7 @@ public class Utils {
 	
 	
 	public static Texture emptyTexture = Utils.loadTexture("null");
+	public static Texture missingTexture = new Texture(Gdx.files.internal("assets/missingTex.png"));
 	
 	public static Vector2 polarToRect(int r, double angle, Vector2 origin) {
 		Vector2 v = new Vector2();
@@ -91,6 +92,14 @@ public class Utils {
 	
 	
 
-	
+	public static int getDigits(int i) {
+		int count = 0;
+		while (i > 0) {
+			i/= 10;
+			count++;
+		}
+		
+		return count;
+	}
 
 }

@@ -10,7 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ue.roundworld.client.Client;
 import com.ue.roundworld.client.Command;
+import com.ue.roundworld.client.Component;
 import com.ue.roundworld.client.Parser;
+import com.ue.roundworld.client.RenderManager;
 
 public class GameplayScreen implements Screen{
 	
@@ -24,9 +26,13 @@ public class GameplayScreen implements Screen{
 	
 	private TextInput textInput;
 	
+	private RenderManager renderManager;
+	private Player player;
 	
-	public GameplayScreen(Game g){
+	public GameplayScreen(Game g, Client c){
 		game = g;
+		client = c;
+		renderManager = new RenderManager(c);
 		create();
 		
 	}
@@ -45,16 +51,20 @@ public class GameplayScreen implements Screen{
 		mainStage.addActor(text);
 		
 		
-		test.scaleBy(2, 2);
+		test.scaleBy(4, 4);
+		player = new Player();
+		player.setPosition(50, 50);
+		
 		
 		
 		//TextInput listener = new TextInput();
 		//Gdx.input.getTextInput(listener, "Enter ip", "Insert server ip here", "hint hint nudge nudge");
 		
-		client = new Client("128.193.254.13", 1337);		
 		textInput = new TextInput(0,0, client);
 		mainStage.addActor(textInput);
 		Gdx.input.setInputProcessor(textInput);
+		
+		mainStage.addActor(player);
 		
 	}
 	
@@ -73,16 +83,19 @@ public class GameplayScreen implements Screen{
 		
 		textInput.update();
 		
+		renderManager.render(player);
+		
 		mainStage.draw();
 		uiStage.draw();
 		
 		
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			client.sendRequest("FFFF{(0:text|bye)}");
 			
 			client.close();
 			Gdx.app.exit();
 		}
+		
+		
 		
 	}
 
