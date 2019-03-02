@@ -41,7 +41,7 @@ class clientThread(threading.Thread):
 			#--Arg is bytes recieved, doesn't always work bc of data rerouteing and other stuff.
 			try:
 				data = self.connection.recv(1024)
-				parser.parse(data)
+				#parser.parse(data) Doesn't return anything, so why is it here?
 			#print("Server recieved: %s" % data)
 				server_data.append((self, data))
 			
@@ -165,7 +165,10 @@ while(running):
 		
 		if data_sent == b'FFFF{(0:text|bye)}':
 			
-			sending_client.disconnect()
+			if sending_client:
+				
+				sending_client.disconnect()
+				#Makes sure the client is actually gone before disconnecting them. UNTESTED.
 		
 		else:
 			

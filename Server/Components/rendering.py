@@ -3,16 +3,17 @@ import ..\structure
 
 class rendering(game_comp):
 	
-	id = 0x1
+	comp_id = 0x1
 	
 	default_vars = {"x":0,
 					"y":0,
 					"r":0,
-					"texture":""}
+					"texture":""
+					}
 					
 	def pass_event(self,event):
 		
-		self.super()
+		super().pass_event(event)
 		
 		if event.type == ""
 		
