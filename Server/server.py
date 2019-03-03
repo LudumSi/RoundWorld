@@ -4,7 +4,6 @@ import socket
 import threading
 import sys
 import parser
-import queue
 
 #--Gotta add message length to command header
 #--use global locked queue to send things between threads (included in python)
@@ -13,28 +12,61 @@ import queue
 class lockArray(object):
 	
 	def __init__(self):
-		self.lock = threading.Lock()
+		self.queue = []
 		self.array = []
-
+		
+	def acquire(self,thread):
+		#Could probably just pass the thread itself rather than the threadID
+		
+		if thread not in self.queue:
+			
+			queue.append[threadID]
+	
+	#Assumes the thread doing the releasing is the one which has already aquired it
+	def release(self,threadID):
+		
+		self.queue.pop[0]
+		
 server_data = lockArray()
 clients = lockArray()
 threads = lockArray()
 
-running = True	
+running = True
 		
 #Client thread class
 #--Python's threads don't run concurrently.
-class clientThread(threading.Thread):
+
+class shittyPrestonThread(threading.Thread):
+	
+	def queueArray(self,array):
+		
+		array.acquire()
+		locked = True
+		while locked:
+			if array.queue[0] == self:
+				locked = False
+	
+	def __init__(self):
+		
+		super().__init__(self)
+		
+		self.queueArray(threading)
+		threads.array.append(self)
+		threads.release()
+		
+class clientThread(shittyPrestonThread):
 
 	def __init__(self,conn,address):
 		
-		threading.Thread.__init__(self)
+		super().__init__(self)
 		
 		self.connection = conn
 		self.address = address
 		
-		threads.array.append(self)
-		
+		self.queueArray(clients)
+		clients.array.append(self)
+		clients.release()
+	
 	def run(self):
 		
 		global running
@@ -48,9 +80,9 @@ class clientThread(threading.Thread):
 				data = self.connection.recv(1024)
 				#parser.parse(data) Doesn't return anything, so why is it here?
 			#print("Server recieved: %s" % data)
-				server_data.lock.acquire()
+				self.queueArray(server_data)
 				server_data.array.append((self, data))
-				server_data.lock.release()
+				server_data.release()
 			
 			except:
 				
@@ -64,9 +96,9 @@ class clientThread(threading.Thread):
 		
 		print(f"Removing {self} from clients")
 		
-		clients.lock.acquire()
+		self.queueArray(clients)
 		clients.array.pop(clients.array.index(self))
-		clients.lock.release()
+		clients.release()
 		
 		print("Removed from clients")
 		
@@ -75,14 +107,13 @@ class clientThread(threading.Thread):
 		print("Closing connection")
 
 	#Connecting thread class
-class connectingThread(threading.Thread):
+class connectingThread(shittyPrestonThread):
 
-	def __init__(self,threadID):
+	def __init__(self):
 		
 		print("Initializing")
 		
-		threading.Thread.__init__(self)
-		self.threadID = threadID
+		super().__init__(self)
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		
@@ -93,8 +124,6 @@ class connectingThread(threading.Thread):
 
 		self.server.bind((HOST,PORT))
 		self.server.settimeout(20)
-		
-		threads.array.append(self)
 		
 	def run(self):
 		
@@ -111,7 +140,7 @@ class connectingThread(threading.Thread):
 				#--Lots of things can go wrong here: read/write timeouts, heartbeats, external idle kills etc...
 				conn,address = self.server.accept()
 				
-				clients.lock.acquire()
+				sele.queueArray(clients)
 				
 				#Apparently important code to make sure the client doesn't connect multiple times
 				for client in clients.array:
@@ -127,7 +156,7 @@ class connectingThread(threading.Thread):
 						clients.array.append(new_client)
 						new_client.start()
 						
-				clients.lock.release()
+				clients.release()
 				
 				#Create a new client, automatically adding it to the clients list
 				
@@ -141,13 +170,11 @@ class connectingThread(threading.Thread):
 		conn.close()
 		print("Closed listener")
 		
-class safetyThread(threading.Thread):
+class safetyThread(shittyPrestonThread):
 		
 		def __init__(self):
 			
-			threading.Thread.__init__(self)
-			
-			threads.array.append(self)
+			super().__init__(self)
 		
 		def run(self):
 			
@@ -163,13 +190,13 @@ class safetyThread(threading.Thread):
 		
 #Multithreading. One thread is now always listening for new connections and client data
 
-thread = connectingThread(1)
-thread.daemon = True
-thread.start()
-
 safety = safetyThread()
 safety.daemon = True
 safety.start()
+
+thread = connectingThread(1)
+thread.daemon = True
+thread.start()
 
 while(running):
 
