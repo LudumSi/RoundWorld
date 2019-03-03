@@ -4,17 +4,24 @@ import socket
 import threading
 import sys
 import parser
-
-server_data = []
-clients = []
-threads = []
-
-running = True
+import queue
 
 #--Gotta add message length to command header
 #--use global locked queue to send things between threads (included in python)
 #--see: async io 
 
+class lockArray(object):
+	
+	def __init__(self):
+		self.lock = threading.Lock()
+		self.array = []
+
+server_data = lockArray()
+clients = lockArray()
+threads = lockArray()
+
+running = True	
+		
 #Client thread class
 #--Python's threads don't run concurrently.
 class clientThread(threading.Thread):
@@ -26,9 +33,7 @@ class clientThread(threading.Thread):
 		self.connection = conn
 		self.address = address
 		
-		#--Don't do this, shared mutable data like this can become easily corrupted
-		clients.append(self)
-		threads.append(self)
+		threads.array.append(self)
 		
 	def run(self):
 		
@@ -43,7 +48,9 @@ class clientThread(threading.Thread):
 				data = self.connection.recv(1024)
 				#parser.parse(data) Doesn't return anything, so why is it here?
 			#print("Server recieved: %s" % data)
-				server_data.append((self, data))
+				server_data.lock.acquire()
+				server_data.array.append((self, data))
+				server_data.lock.release()
 			
 			except:
 				
@@ -53,11 +60,13 @@ class clientThread(threading.Thread):
 		
 		print(f"Disconnecting from {self.address}!")
 		
-		print(f"Clients: {clients}")
+		print(f"Clients: {clients.array}")
 		
 		print(f"Removing {self} from clients")
 		
-		clients.pop(clients.index(self))
+		clients.lock.acquire()
+		clients.array.pop(clients.array.index(self))
+		clients.lock.release()
 		
 		print("Removed from clients")
 		
@@ -85,7 +94,7 @@ class connectingThread(threading.Thread):
 		self.server.bind((HOST,PORT))
 		self.server.settimeout(20)
 		
-		threads.append(self)
+		threads.array.append(self)
 		
 	def run(self):
 		
@@ -102,18 +111,25 @@ class connectingThread(threading.Thread):
 				#--Lots of things can go wrong here: read/write timeouts, heartbeats, external idle kills etc...
 				conn,address = self.server.accept()
 				
-				for client in clients:
+				clients.lock.acquire()
+				
+				#Apparently important code to make sure the client doesn't connect multiple times
+				for client in clients.array:
 					
 					if client.connection != conn:
-						
+					
 						print("Connected to " + address[0])
 						message_to_send = "Hello Beautiful!\n".encode("UTF-8")
-						conn.send(message_to_send)
+						new_client.connection.send(message_to_send)
+						
+						new_client = clientThread(conn,address)
+						new_client.daemon = True
+						clients.array.append(new_client)
+						new_client.start()
+						
+				clients.lock.release()
 				
 				#Create a new client, automatically adding it to the clients list
-				new_client = clientThread(conn,address)
-				new_client.daemon = True
-				new_client.start()
 				
 				#Clears the connection and the address for the next loop
 				conn = 0
@@ -131,7 +147,7 @@ class safetyThread(threading.Thread):
 			
 			threading.Thread.__init__(self)
 			
-			threads.append(self)
+			threads.array.append(self)
 		
 		def run(self):
 			
@@ -157,7 +173,9 @@ safety.start()
 
 while(running):
 
-	for index, data in enumerate(server_data):
+	server_data.lock.acquire()
+	
+	for index, data in enumerate(server_data.array):
 		
 		sending_client = data[0]
 		data_sent = data[1]
@@ -172,14 +190,21 @@ while(running):
 		
 		else:
 			
-			for client in clients:
+			clients.lock.acquire()
+			
+			for client in clients.array:
 			
 				if client != sending_client:
 				
 					message = data_sent
+				
 					client.connection.send(message) #Need to make sure people are online before sending them messages
-			
-		server_data.pop(index)
+					
+			clients.lock.release()
+		
+		server_data.array.pop(index)
+	
+	server_data.lock.release()
 
 print("Shutting down")	
 	
