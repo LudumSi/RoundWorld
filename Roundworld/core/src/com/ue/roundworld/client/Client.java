@@ -11,6 +11,7 @@ import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
+import com.badlogic.gdx.utils.Queue;
 
 
 public class Client {
@@ -22,6 +23,7 @@ public class Client {
 	public boolean isConnected = false;
 
 	private String receivedData = "NONE";
+	private Queue<String> dataQueue = new Queue<String>();
 	private String connectionResult = "";
 	private String ip;
 	private int port;
@@ -46,16 +48,14 @@ public class Client {
 		socketHints.connectTimeout = 4000;
 		// create the socket and connect to the server entered in the text box (
 		// x.x.x.x format ) on port 9021
-		while (!isConnected) {
-			System.out.println("connecting to: " + ip);
-			try {
-				socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
-				isConnected = true;
-			} catch (Exception e) {
-				System.out.println("failed connecting to: " + ip);
-			}
+	
+		System.out.println("connecting to: " + ip);
+	
+		socket = Gdx.net.newClientSocket(Protocol.TCP, ip, port, socketHints);
+		isConnected = true;
+	
 			
-		}
+		
 		
 		System.out.println("connected to: " + ip);
 		isConnected = true;
@@ -113,6 +113,7 @@ public class Client {
 						break;
 					}
 					receivedData = data;
+					dataQueue.addLast(data);
 				}
 				prevData = data;
 
@@ -133,7 +134,12 @@ public class Client {
 	}
 
 	public Command getParsedData() {
-		return Parser.parse(receivedData);
+		if (isCommandComplete()) {
+			return Parser.parse(dataQueue.removeFirst());
+		} else {
+			return null;
+		}
+		
 	}
 	
 	public void close() {
@@ -144,4 +150,39 @@ public class Client {
 		
 	}
 
+	
+	public boolean isCommandComplete() {
+		if (dataQueue.size > 0) {
+			String begin = dataQueue.removeFirst();
+			String length = "";
+			int len = 0;
+			/*get length*/
+			for (int i = 0; i < begin.length(); i++) {
+				if (begin.charAt(i) == 'L') {
+					length = begin.substring(0, i);
+					break;
+				}
+			}
+			if (length.length() > 0) {
+				len = Integer.parseInt(length);
+			}
+			
+			
+			/*check size*/
+			for (int i = 0; i < dataQueue.size; i++) {
+				if (begin.length() == len) {
+					dataQueue.addFirst(begin);
+					return true;
+				} else if (dataQueue.size > 0) {
+					begin += dataQueue.removeFirst();
+				}
+			}
+			dataQueue.addFirst(begin);
+		}
+		
+		return false;
+		
+		
+		
+	}
 }

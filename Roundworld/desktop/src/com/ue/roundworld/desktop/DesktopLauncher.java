@@ -16,7 +16,8 @@ public class DesktopLauncher {
 		//cfg.addIcon("assets/player.png", FileType.Internal);
 	
 		cfg.addIcon("assets/RW_Icon_32.png", FileType.Internal);
-
+		cfg.height = RoundWorld.height;
+		cfg.width = RoundWorld.width;
 	
 		LwjglApplication launcher = new LwjglApplication(theGame, cfg);
 	

@@ -2,12 +2,21 @@ package com.ue.roundworld.client;
 
 import java.util.ArrayList;
 
+import com.ue.roundworld.Utils;
+
 public class Command {
 	
 	
 	
 	public static enum Type{
-		sendText;
+		initConnect, sendText;
+		
+		int id;
+		
+		static {
+			initConnect.id = 0xC000;
+			sendText.id = 0xC001;
+		}
 	}
 	
 	private int id;
@@ -30,6 +39,10 @@ public class Command {
 		return id;
 	}
 	
+	public int getNumComponents() {
+		return components.size();
+	}
+	
 	public Component get_component(int id) {
 		for (int i = 0; i < components.size(); i++) {
 			if (components.get(i).id == id) {
@@ -41,15 +54,15 @@ public class Command {
 	
 	public static String generate(Command.Type t, String...c) {
 		String str = "";
-		switch (t) {
-		case sendText:
-			str += "1{";
-			for (int i = 0; i < c.length; i++) {
-				str += c[i];
-			}
-			str += "}\n";
-			break;
+		str += Integer.toHexString(t.id) + "{";
+		for (int i = 0; i < c.length; i++) {
+			str += c[i];
 		}
+		str += "}\n";
+		int len = 0;
+		len = str.length();
+		len += Utils.getDigits(len);
+		str = Integer.toString(len) + "L" + str;
 		return str;
 	}
 }
