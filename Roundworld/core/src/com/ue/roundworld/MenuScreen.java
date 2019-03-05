@@ -157,7 +157,7 @@ public class MenuScreen implements Screen{
 				
 				client = new Client("128.193.254.13", 1337);
 				/*send user name*/
-				Client.user = "EBNA";
+				Client.user = "EBNG";
 				client.sendRequest(Command.generate(
 						Command.Type.initConnect, 
 						Component.generate(Component.Type.text, Client.user)));

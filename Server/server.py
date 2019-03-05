@@ -5,31 +5,68 @@ import threading
 import sys
 import parser
 
-server_data = []
-clients = []
-threads = []
-
-running = True
-
 #--Gotta add message length to command header
 #--use global locked queue to send things between threads (included in python)
 #--see: async io 
 
+class lockArray(object):
+	
+	def __init__(self):
+		self.queue = []
+		self.array = []
+		
+	def acquire(self,thread):
+		#Could probably just pass the thread itself rather than the threadID
+		
+		if thread not in self.queue:
+			
+			queue.append[threadID]
+	
+	#Assumes the thread doing the releasing is the one which has already aquired it
+	def release(self,threadID):
+		
+		self.queue.pop[0]
+		
+server_data = lockArray()
+clients = lockArray()
+threads = lockArray()
+
+running = True
+		
 #Client thread class
 #--Python's threads don't run concurrently.
-class clientThread(threading.Thread):
+
+class shittyPrestonThread(threading.Thread):
+	
+	def queueArray(self,array):
+		
+		array.acquire()
+		locked = True
+		while locked:
+			if array.queue[0] == self:
+				locked = False
+	
+	def __init__(self):
+		
+		super().__init__(self)
+		
+		self.queueArray(threading)
+		threads.array.append(self)
+		threads.release()
+		
+class clientThread(shittyPrestonThread):
 
 	def __init__(self,conn,address):
 		
-		threading.Thread.__init__(self)
+		super().__init__(self)
 		
 		self.connection = conn
 		self.address = address
 		
-		#--Don't do this, shared mutable data like this can become easily corrupted
-		clients.append(self)
-		threads.append(self)
-		
+		self.queueArray(clients)
+		clients.array.append(self)
+		clients.release()
+	
 	def run(self):
 		
 		global running
@@ -41,9 +78,11 @@ class clientThread(threading.Thread):
 			#--Arg is bytes recieved, doesn't always work bc of data rerouteing and other stuff.
 			try:
 				data = self.connection.recv(1024)
-				parser.parse(data)
+				#parser.parse(data) Doesn't return anything, so why is it here?
 			#print("Server recieved: %s" % data)
-				server_data.append((self, data))
+				self.queueArray(server_data)
+				server_data.array.append((self, data))
+				server_data.release()
 			
 			except:
 				
@@ -53,11 +92,13 @@ class clientThread(threading.Thread):
 		
 		print(f"Disconnecting from {self.address}!")
 		
-		print(f"Clients: {clients}")
+		print(f"Clients: {clients.array}")
 		
 		print(f"Removing {self} from clients")
 		
-		clients.pop(clients.index(self))
+		self.queueArray(clients)
+		clients.array.pop(clients.array.index(self))
+		clients.release()
 		
 		print("Removed from clients")
 		
@@ -66,14 +107,13 @@ class clientThread(threading.Thread):
 		print("Closing connection")
 
 	#Connecting thread class
-class connectingThread(threading.Thread):
+class connectingThread(shittyPrestonThread):
 
-	def __init__(self,threadID):
+	def __init__(self):
 		
 		print("Initializing")
 		
-		threading.Thread.__init__(self)
-		self.threadID = threadID
+		super().__init__(self)
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		
@@ -84,8 +124,6 @@ class connectingThread(threading.Thread):
 
 		self.server.bind((HOST,PORT))
 		self.server.settimeout(20)
-		
-		threads.append(self)
 		
 	def run(self):
 		
@@ -102,18 +140,25 @@ class connectingThread(threading.Thread):
 				#--Lots of things can go wrong here: read/write timeouts, heartbeats, external idle kills etc...
 				conn,address = self.server.accept()
 				
-				for client in clients:
+				sele.queueArray(clients)
+				
+				#Apparently important code to make sure the client doesn't connect multiple times
+				for client in clients.array:
 					
 					if client.connection != conn:
-						
+					
 						print("Connected to " + address[0])
 						message_to_send = "Hello Beautiful!\n".encode("UTF-8")
-						conn.send(message_to_send)
+						new_client.connection.send(message_to_send)
+						
+						new_client = clientThread(conn,address)
+						new_client.daemon = True
+						clients.array.append(new_client)
+						new_client.start()
+						
+				clients.release()
 				
 				#Create a new client, automatically adding it to the clients list
-				new_client = clientThread(conn,address)
-				new_client.daemon = True
-				new_client.start()
 				
 				#Clears the connection and the address for the next loop
 				conn = 0
@@ -125,13 +170,11 @@ class connectingThread(threading.Thread):
 		conn.close()
 		print("Closed listener")
 		
-class safetyThread(threading.Thread):
+class safetyThread(shittyPrestonThread):
 		
 		def __init__(self):
 			
-			threading.Thread.__init__(self)
-			
-			threads.append(self)
+			super().__init__(self)
 		
 		def run(self):
 			
@@ -147,17 +190,20 @@ class safetyThread(threading.Thread):
 		
 #Multithreading. One thread is now always listening for new connections and client data
 
-thread = connectingThread(1)
-thread.daemon = True
-thread.start()
-
 safety = safetyThread()
 safety.daemon = True
 safety.start()
 
+thread = connectingThread(1)
+thread.daemon = True
+thread.start()
+
+parser.parse("1L0101{(2020:efewfew,fewfefw|1111)(4040:efewfew,3fee|2222)}")
 while(running):
 
-	for index, data in enumerate(server_data):
+	server_data.lock.acquire()
+	
+	for index, data in enumerate(server_data.array):
 		
 		sending_client = data[0]
 		data_sent = data[1]
@@ -165,18 +211,28 @@ while(running):
 		
 		if data_sent == b'FFFF{(0:text|bye)}':
 			
-			sending_client.disconnect()
+			if sending_client:
+				
+				sending_client.disconnect()
+				#Makes sure the client is actually gone before disconnecting them. UNTESTED.
 		
 		else:
 			
-			for client in clients:
+			clients.lock.acquire()
+			
+			for client in clients.array:
 			
 				if client != sending_client:
 				
 					message = data_sent
+				
 					client.connection.send(message) #Need to make sure people are online before sending them messages
-			
-		server_data.pop(index)
+					
+			clients.lock.release()
+		
+		server_data.array.pop(index)
+	
+	server_data.lock.release()
 
 print("Shutting down")	
 	

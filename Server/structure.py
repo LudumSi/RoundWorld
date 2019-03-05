@@ -25,9 +25,14 @@ class game_obj:
 	#Takes in an event, and then passes it through the list of events to me modified or manipulated
 	def get_event(self,event):
 		
+		'''if event.type == 'get_obj':
+			event.sender.vars['linked_obj'] = self
+			
+		else:
+		'''
 		for comp in self.comps:
-			self.comp.pass_event(event)
-			if event.type == "null":
+			comp.pass_event(event)
+			if event.type == "null": #Deletes null events
 				break
 
 		del event
@@ -68,15 +73,25 @@ class game_comp:
 	def pass_event(self,event):
 		
 		if event.type == "change_var":
-			self.vars[event.params["var_name"]] = event.params["var_value"]
-			event.type = "null"
-		
-		elif event.type == "get_vars":
-			event.params["vars"] = self.vars
+			
+			if event.params["comp_id"] == self.comp_id:
+				
+				self.vars[event.params["var_name"]] = event.params["var_value"]
+				event.type = "null" #Sets the event to be deleted
+				
+		elif event.type == "get_var":
+			
+			if event.params["comp_id"] == self.comp_id:
+				
+				event.params["var_name"] = self.vars[event.params["var_name"]]
+				#print(event.params) #Debugging only
+				event.type = "null"
 			
 		#elif event.type == "server_get_vars":
 			
 
+# We need to figure out a better way to contruct things...
+# Perhaps read from a JSON file to create objects?
 def construct(comps):
 	
 	new_obj = game_obj()
