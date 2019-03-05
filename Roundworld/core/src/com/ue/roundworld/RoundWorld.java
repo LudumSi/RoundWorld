@@ -45,8 +45,18 @@ public class RoundWorld extends Game {
 		MenuScreen ms = new MenuScreen(this);
 		
 		setScreen(ms);
+		
+	}
+	
+	@Override
+	public void dispose() {
+		if (GameplayScreen.client != null) {
+			GameplayScreen.client.close();
+		}
+		super.dispose();
 	}
 
+	
 
 	
 	

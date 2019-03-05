@@ -145,6 +145,12 @@ public class Client {
 	public void close() {
 		this.sendRequest("FFFF{(0:text|bye)}");
 		receivedData = "STOP";
+		try {
+			receive.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		socket.dispose();
 	
 		
