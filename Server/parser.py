@@ -5,9 +5,12 @@ def generate(length, command, components, component_vals, ip):
 	data = length + "L" + command + "{"
 
 	for i in range(len(components)):
-		data += "(" + components[i]
+		data += "(" + components[i] + ":"
 		for x in range(len(component_vals[i])):
-			data += components[i][x]
+			if x == 0:
+				data += component_vals[i][x]
+			else:
+				data += "," + component_vals[i][x]
 		data += "|" + ip[i] + ")"
 	data += "}"
 	return data
@@ -48,7 +51,7 @@ def parse(data):
 					ip.append(data[start + 1: x])
 					start = x + 2
 					print("End of Component")
-					break;
+					break
 				elif data[x] == ":":
 					print("Getting First Comp_val")
 					start = x
@@ -69,7 +72,7 @@ def parse(data):
 	print(component_vals)
 	print(ip)
 
-message = generate("10", "0101", ["1111","2222"], [["val1","val2"],["val3","val4"]], ["222.222.789","123.456.789"])
+message = generate("10", "0101", ["1111","2222"], [["val1","val2","Val5"],["val3","val4"]], ["222.222.789","123.456.789"])
 print(message)
 parse(message)
 #"10L0101{(2020:val1,val2|123.456.789)(4040:val3,val4,val5,val6|222.222.789)(4040:val3,val4|222.222.789)}"
