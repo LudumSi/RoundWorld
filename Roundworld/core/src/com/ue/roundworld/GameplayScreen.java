@@ -22,7 +22,7 @@ public class GameplayScreen implements Screen{
 		
 	public BaseActor test;
 	public Label text;
-	public Client client;
+	public static Client client;
 	
 	private TextInput textInput;
 	
@@ -91,7 +91,7 @@ public class GameplayScreen implements Screen{
 		
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			
-			client.close();
+			
 			Gdx.app.exit();
 		}
 		

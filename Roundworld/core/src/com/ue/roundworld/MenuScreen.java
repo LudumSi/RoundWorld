@@ -31,6 +31,8 @@ public class MenuScreen implements Screen{
 	public Client client;
 	private int scaleVal = 1;
 	
+	private int connectAnimCountdown = -1;
+	
 	boolean connectDone = true;
 	
 	private Music titleTheme;
@@ -104,7 +106,12 @@ public class MenuScreen implements Screen{
 			Gdx.app.exit();
 		}
 		
-		if (client != null) {
+		if (connectAnimCountdown > 0) {
+			connectAnimCountdown--;
+			test.scaleBy(3, 3);
+		}
+		
+		if (client != null && connectAnimCountdown == 0) {
 			try {
 				connectionThread.join();
 			} catch (InterruptedException e) {
@@ -155,7 +162,7 @@ public class MenuScreen implements Screen{
 						Command.Type.initConnect, 
 						Component.generate(Component.Type.text, Client.user)));
 			
-				
+				connectAnimCountdown = 30;
 			} catch (Exception e) {
 				text.setColor(Color.RED);
 				text.setText("Connection Failed");
