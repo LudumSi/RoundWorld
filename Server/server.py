@@ -11,9 +11,10 @@ import sys
 
 class lockArray(object):
 	
-	def __init__(self):
+	def __init__(self,name):
 		self.queue = []
 		self.array = []
+		self.name = name
 		
 	def acquire(self,thread):
 		#Could probably just pass the thread itself rather than the threadID
@@ -21,15 +22,28 @@ class lockArray(object):
 		if thread not in self.queue:
 			
 			self.queue.append(thread)
-	
+			
+			'''
+			if thread != "main":
+				print(self.name)
+				print(f"Queue: {self.queue}")
+				print(f"Array: {self.array}")
+			'''
+			
 	#Assumes the thread doing the releasing is the one which has already aquired it
 	def release(self):
 		
 		self.queue.pop(0)
 		
-server_data = lockArray()
-clients = lockArray()
-threads = lockArray()
+		if self.name != "data":
+			'''
+			print(f"{self.name} Released")
+			print(f"Queue: {self.queue}")
+			'''
+		
+server_data = lockArray("data")
+clients = lockArray("clients")
+threads = lockArray("threads")
 
 running = True
 		
@@ -62,10 +76,6 @@ class clientThread(shittyPrestonThread):
 		
 		self.connection = conn
 		self.address = address
-		
-		self.queueArray(clients)
-		clients.array.append(self)
-		clients.release()
 	
 	def run(self):
 		
@@ -105,6 +115,8 @@ class clientThread(shittyPrestonThread):
 		self.connection.close()
 		
 		print("Closing connection")
+		
+		self.join()
 
 	#Connecting thread class
 class connectingThread(shittyPrestonThread):
@@ -140,34 +152,38 @@ class connectingThread(shittyPrestonThread):
 				#--Lots of things can go wrong here: read/write timeouts, heartbeats, external idle kills etc...
 				conn,address = self.server.accept()
 				
-				sele.queueArray(clients)
+				self.queueArray(clients)
 				
-				#Apparently important code to make sure the client doesn't connect multiple times
+				#Important code to make sure the client doesn't connect multiple times
+				new_connection = True
+				
 				for client in clients.array:
 					
-					if client.connection != conn:
-					
-						print("Connected to " + address[0])
-						message_to_send = "Hello Beautiful!\n".encode("UTF-8")
-						new_client.connection.send(message_to_send)
+					if client.connection == conn:
 						
-						new_client = clientThread(conn,address)
-						new_client.daemon = True
-						clients.array.append(new_client)
-						new_client.start()
+						new_connection = False
+					
+				if new_connection:
+					
+					new_client = clientThread(conn,address)
+					new_client.daemon = True
+					clients.array.append(new_client)
+					new_client.start()
+					
+					print("Connected to " + address[0])
+					print(f"Current players: {len(clients.array)}")
+					#message_to_send = "Hello Beautiful!\n".encode("UTF-8")
+					#new_client.connection.send(message_to_send)
 						
 				clients.release()
 				
 				#Create a new client, automatically adding it to the clients list
-				
-				#Clears the connection and the address for the next loop
-				conn = 0
-				address = 0
 			
 			except Exception as e:
 				print(e)
 				
 		conn.close()
+		self.join()
 		print("Closed listener")
 		
 class safetyThread(shittyPrestonThread):
@@ -186,6 +202,8 @@ class safetyThread(shittyPrestonThread):
 			
 				if(user_input == "q"):
 					running = False
+					
+			self.join()
 			
 		
 #Multithreading. One thread is now always listening for new connections and client data
@@ -217,7 +235,7 @@ while(running):
 			if sending_client:
 				
 				sending_client.disconnect()
-				#Makes sure the client is actually gone before disconnecting them. UNTESTED.
+				#Makes sure the client is actually gone before disconnecting them.
 		
 		else:
 			
@@ -232,8 +250,14 @@ while(running):
 				if client != sending_client:
 				
 					message = data_sent
-				
-					client.connection.send(message) #Need to make sure people are online before sending them messages
+					
+					try:
+					
+						client.connection.send(message) #Need to make sure people are online before sending them messages
+						
+					except:
+						
+						pass
 					
 			clients.release()
 		
@@ -241,6 +265,17 @@ while(running):
 	
 	server_data.release()
 
+clients.acquire("main")
+locked = True
+while locked:
+	if clients.queue[0] == "main":
+		locked = False
+		
+for client in clients.array:
+	client.join()
+	
+clients.release()
+	
 print("Shutting down")	
 	
 sys.exit()
