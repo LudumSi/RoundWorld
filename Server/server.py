@@ -3,7 +3,7 @@ import structure
 import socket
 import threading
 import sys
-import parser
+#from parser import parse
 
 #--Gotta add message length to command header
 #--use global locked queue to send things between threads (included in python)
@@ -11,25 +11,39 @@ import parser
 
 class lockArray(object):
 	
-	def __init__(self):
+	def __init__(self,name):
 		self.queue = []
 		self.array = []
+		self.name = name
 		
 	def acquire(self,thread):
 		#Could probably just pass the thread itself rather than the threadID
 		
 		if thread not in self.queue:
 			
-			queue.append[threadID]
-	
+			self.queue.append(thread)
+			
+			'''
+			if thread != "main":
+				print(self.name)
+				print(f"Queue: {self.queue}")
+				print(f"Array: {self.array}")
+			'''
+			
 	#Assumes the thread doing the releasing is the one which has already aquired it
-	def release(self,threadID):
+	def release(self):
 		
-		self.queue.pop[0]
+		self.queue.pop(0)
 		
-server_data = lockArray()
-clients = lockArray()
-threads = lockArray()
+		if self.name != "data":
+			'''
+			print(f"{self.name} Released")
+			print(f"Queue: {self.queue}")
+			'''
+		
+server_data = lockArray("data")
+clients = lockArray("clients")
+threads = lockArray("threads")
 
 running = True
 		
@@ -40,7 +54,7 @@ class shittyPrestonThread(threading.Thread):
 	
 	def queueArray(self,array):
 		
-		array.acquire()
+		array.acquire(self)
 		locked = True
 		while locked:
 			if array.queue[0] == self:
@@ -48,9 +62,9 @@ class shittyPrestonThread(threading.Thread):
 	
 	def __init__(self):
 		
-		super().__init__(self)
+		super().__init__()
 		
-		self.queueArray(threading)
+		self.queueArray(threads)
 		threads.array.append(self)
 		threads.release()
 		
@@ -58,14 +72,10 @@ class clientThread(shittyPrestonThread):
 
 	def __init__(self,conn,address):
 		
-		super().__init__(self)
+		super().__init__()
 		
 		self.connection = conn
 		self.address = address
-		
-		self.queueArray(clients)
-		clients.array.append(self)
-		clients.release()
 	
 	def run(self):
 		
@@ -105,6 +115,8 @@ class clientThread(shittyPrestonThread):
 		self.connection.close()
 		
 		print("Closing connection")
+		
+		self.join()
 
 	#Connecting thread class
 class connectingThread(shittyPrestonThread):
@@ -113,7 +125,7 @@ class connectingThread(shittyPrestonThread):
 		
 		print("Initializing")
 		
-		super().__init__(self)
+		super().__init__()
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		
@@ -140,41 +152,45 @@ class connectingThread(shittyPrestonThread):
 				#--Lots of things can go wrong here: read/write timeouts, heartbeats, external idle kills etc...
 				conn,address = self.server.accept()
 				
-				sele.queueArray(clients)
+				self.queueArray(clients)
 				
-				#Apparently important code to make sure the client doesn't connect multiple times
+				#Important code to make sure the client doesn't connect multiple times
+				new_connection = True
+				
 				for client in clients.array:
 					
-					if client.connection != conn:
-					
-						print("Connected to " + address[0])
-						message_to_send = "Hello Beautiful!\n".encode("UTF-8")
-						new_client.connection.send(message_to_send)
+					if client.connection == conn:
 						
-						new_client = clientThread(conn,address)
-						new_client.daemon = True
-						clients.array.append(new_client)
-						new_client.start()
+						new_connection = False
+					
+				if new_connection:
+					
+					new_client = clientThread(conn,address)
+					new_client.daemon = True
+					clients.array.append(new_client)
+					new_client.start()
+					
+					print("Connected to " + address[0])
+					print(f"Current players: {len(clients.array)}")
+					#message_to_send = "Hello Beautiful!\n".encode("UTF-8")
+					#new_client.connection.send(message_to_send)
 						
 				clients.release()
 				
 				#Create a new client, automatically adding it to the clients list
-				
-				#Clears the connection and the address for the next loop
-				conn = 0
-				address = 0
 			
 			except Exception as e:
 				print(e)
 				
 		conn.close()
+		self.join()
 		print("Closed listener")
 		
 class safetyThread(shittyPrestonThread):
 		
 		def __init__(self):
 			
-			super().__init__(self)
+			super().__init__()
 		
 		def run(self):
 			
@@ -186,6 +202,8 @@ class safetyThread(shittyPrestonThread):
 			
 				if(user_input == "q"):
 					running = False
+					
+			self.join()
 			
 		
 #Multithreading. One thread is now always listening for new connections and client data
@@ -194,14 +212,17 @@ safety = safetyThread()
 safety.daemon = True
 safety.start()
 
-thread = connectingThread(1)
+thread = connectingThread()
 thread.daemon = True
 thread.start()
 
-parser.parse("1L0101{(2020:efewfew,fewfefw|1111)(4040:efewfew,3fee|2222)}")
 while(running):
-
-	server_data.lock.acquire()
+	
+	server_data.acquire("main")
+	locked = True
+	while locked:
+		if server_data.queue[0] == "main":
+			locked = False
 	
 	for index, data in enumerate(server_data.array):
 		
@@ -214,26 +235,47 @@ while(running):
 			if sending_client:
 				
 				sending_client.disconnect()
-				#Makes sure the client is actually gone before disconnecting them. UNTESTED.
+				#Makes sure the client is actually gone before disconnecting them.
 		
 		else:
 			
-			clients.lock.acquire()
+			clients.acquire("main")
+			locked = True
+			while locked:
+				if clients.queue[0] == "main":
+					locked = False
 			
 			for client in clients.array:
 			
 				if client != sending_client:
 				
 					message = data_sent
-				
-					client.connection.send(message) #Need to make sure people are online before sending them messages
 					
-			clients.lock.release()
+					try:
+					
+						client.connection.send(message) #Need to make sure people are online before sending them messages
+						
+					except:
+						
+						pass
+					
+			clients.release()
 		
 		server_data.array.pop(index)
 	
-	server_data.lock.release()
+	server_data.release()
 
+clients.acquire("main")
+locked = True
+while locked:
+	if clients.queue[0] == "main":
+		locked = False
+		
+for client in clients.array:
+	client.join()
+	
+clients.release()
+	
 print("Shutting down")	
 	
 sys.exit()
