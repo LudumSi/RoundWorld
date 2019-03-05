@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ue.roundworld.client.Client;
 import com.ue.roundworld.client.Command;
@@ -32,25 +33,27 @@ public class TextInput extends BaseActor implements InputProcessor {
 		}
 	}
 	
-	public void add_to_log(String text) {
+	public void add_to_log(String name, String text, Color c) {
 		for (int i = 0; i < log.length-2; i++) {
 			log[i].setText(log[i+1].getText());
+			log[i].setColor(log[i+1].getColor());
 		}
-		log[9].setText(text);
+		log[9].setText(name + ": " + text);
+		log[9].setColor(c);
 	}
 
 
 	public void update() {
 		Command com = c.getParsedData();
 		
-		if( com!= null && com.get_id() == 1 && com.get_component(0) != null) {
+		if( com!= null && com.get_id() == 1 && com.get_component(0) != null && com.get_component(1) != null) {
 			
 				if (com.get_component(0).getArg("text") != null && 
 					com.get_component(0).getArg("text") != ""  &&
 					!lastText.equals(com.get_component(0).getArg("text"))) {
 					lastText = com.get_component(0).getArg("text");
 					System.out.println("this should only print once");
-					add_to_log(com.get_component(0).getArg("text"));
+					add_to_log( com.get_component(0).getArg("text"), com.get_component(1).getArg("text"), Color.WHITE);
 					
 				}
 		}
@@ -274,9 +277,10 @@ public class TextInput extends BaseActor implements InputProcessor {
 			
 		}
 		else {
-			add_to_log(text);
+			add_to_log(Client.user, text, Color.WHITE);
 			c.sendRequest(Command.generate(
 					Command.Type.sendText, 
+					Component.generate(Component.Type.text, "text|" + Client.user),
 					Component.generate(Component.Type.text, "text|" + text)
 					));
 			text = "";
