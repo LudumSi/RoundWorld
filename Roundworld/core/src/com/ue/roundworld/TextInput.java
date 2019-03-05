@@ -45,15 +45,17 @@ public class TextInput extends BaseActor implements InputProcessor {
 
 	public void update() {
 		Command com = c.getParsedData();
-		
-		if( com!= null && com.get_id() == 1 && com.get_component(0) != null && com.get_component(1) != null) {
+		if( com!= null) { 
+			System.out.println(com.get_component(0, 0)); 
+			System.out.println(com.get_component(0, 1)); 
+		}
+		if( com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
 			
-				if (com.get_component(0).getArg("text") != null && 
-					com.get_component(0).getArg("text") != ""  &&
-					!lastText.equals(com.get_component(0).getArg("text"))) {
-					lastText = com.get_component(0).getArg("text");
+				if (
+					!lastText.equals(com.get_component(0, 1).getArg("text"))) {
+					lastText = com.get_component(0, 1).getArg("text");
 					System.out.println("this should only print once");
-					add_to_log( com.get_component(0).getArg("text"), com.get_component(1).getArg("text"), Color.WHITE);
+					add_to_log( com.get_component(0, 0).getArg("text"), com.get_component(0, 1).getArg("text"), Color.WHITE);
 					
 				}
 		}
