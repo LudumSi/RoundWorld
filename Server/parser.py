@@ -6,11 +6,13 @@ def generate():
 
 def parse(data):
       start = 0
+      component_num = 0
+      val_num = 0
       command_id = ""
+      ip = []
       length = 0
       components = []
       component_vals = [][]
-      ip = ""
 
       for i in data:
             start = 0
@@ -22,28 +24,30 @@ def parse(data):
                   start = i + 2
             elif data[i] == "(": #
                   components.append(data[start: start + 3]) #command_args
+                  component_num ++
 
-                  for i in range(start, len(data)]: #command
-                        if data[i] == ")":
+                  for x in range(start, len(data)]: #command
+                        if data[x] == ")":
+                              ip[component_num] = data[start + 1: x - 1]
                               break;
-                        elif data[i] == "":
+                        elif data[x] == ":":
+                              start = x
+                        elif data[x] == ",":
+                              val_num ++
+                              component_vals[component_num][val_num] = data[start + 1: x - 1]
+                              start = x
+                        elif data[x] == "|":
+                              start = x
+            print(length)
+            print(command_id)
+            print(components)
+            print(component_vals)
+            print(ip)
 
 
 
-            command_name = data[i+1:i+4]
+
+            #command_name = data[i+1:i+4]
         
     #<length>Lxxxx{(xxxx:text|<ip>)}
     #<length>L<command_id>{(<component_args>:<component_vals>)}
-
-def get_len(data):
-      for i in data:
-            start = 0
-            if data[i] == "L":
-                  return data[start: i-1]
-            else:
-                  return 0
-
-def get_command(data, )
-def get_comp(data, start):
-      for i in range(start, length(data)):
-            return 

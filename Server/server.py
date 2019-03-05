@@ -198,6 +198,7 @@ thread = connectingThread(1)
 thread.daemon = True
 thread.start()
 
+parser.parse("1L0101{(2020:efewfew,fewfefw|1111)(4040:efewfew,3fee|2222)}")
 while(running):
 
 	server_data.lock.acquire()
