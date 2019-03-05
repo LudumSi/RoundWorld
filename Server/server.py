@@ -3,7 +3,7 @@ import structure
 import socket
 import threading
 import sys
-import parser
+#from parser import parse
 
 #--Gotta add message length to command header
 #--use global locked queue to send things between threads (included in python)
@@ -198,7 +198,6 @@ thread = connectingThread()
 thread.daemon = True
 thread.start()
 
-parser.parse("1L0101{(2020:efewfew,fewfefw|1111)(4040:efewfew,3fee|2222)}")
 while(running):
 	
 	server_data.acquire("main")
