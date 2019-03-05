@@ -2,12 +2,14 @@ import structure
 
 def generate(length, command, components, component_vals, ip):
     
-	data = length + "L" + command + "{("
+	data = length + "L" + command + "{"
 
 	for i in range(len(components)):
-		data += components[i]
+		data += "(" + components[i]
 		for x in range(len(component_vals[i])):
-
+			data += components[i][x]
+		data += "|" + ip[i] + ")"
+	data += "}"
 	return data
 
 def parse(data):
@@ -42,7 +44,6 @@ def parse(data):
 
 
 			for x in range(start, len(data)): #command
-				print(start)
 				if data[x] == ")":
 					ip.append(data[start + 1: x])
 					start = x + 2
@@ -53,7 +54,6 @@ def parse(data):
 					start = x
 				elif data[x] == ",":
 					print("Getting Comp_Val")
-					print(data[start + 1: x])
 					component_vals[component_num][val_num] = data[start + 1: x]
 					val_num += 1
 					start = x
@@ -69,8 +69,10 @@ def parse(data):
 	print(component_vals)
 	print(ip)
 
-parse("10L0101{(2020:val1,val2|123.456.789)(4040:val3,val4,val5,val6|222.222.789)(4040:val3,val4|222.222.789)}")
-
+message = generate("10", "0101", ["1111","2222"], [["val1","val2"],["val3","val4"]], ["222.222.789","123.456.789"])
+print(message)
+parse(message)
+#"10L0101{(2020:val1,val2|123.456.789)(4040:val3,val4,val5,val6|222.222.789)(4040:val3,val4|222.222.789)}"
         
     #<length>Lxxxx{(xxxx:text|<ip>)}
     #<length>L<command_id>{(<component_args>:<component_vals>)}
