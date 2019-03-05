@@ -154,15 +154,17 @@ public class MenuScreen implements Screen{
 			textBase.addAction(Actions.fadeIn(1f));
 			
 			try {
+				if (client == null) {
+					client = new Client("128.193.254.13", 1337);
+					/*send user name*/
+					Client.user = "EBNA";
+					client.sendRequest(Command.generate(
+							Command.Type.initConnect, 
+							Component.generate(Component.Type.text, Client.user)));
 				
-				client = new Client("128.193.254.13", 1337);
-				/*send user name*/
-				Client.user = "EBNA";
-				client.sendRequest(Command.generate(
-						Command.Type.initConnect, 
-						Component.generate(Component.Type.text, Client.user)));
+					connectAnimCountdown = 30;
+				}
 			
-				connectAnimCountdown = 30;
 			} catch (Exception e) {
 				text.setColor(Color.RED);
 				text.setText("Connection Failed");
