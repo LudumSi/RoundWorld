@@ -20,12 +20,12 @@ class lockArray(object):
 		
 		if thread not in self.queue:
 			
-			queue.append[threadID]
+			self.queue.append(thread)
 	
 	#Assumes the thread doing the releasing is the one which has already aquired it
-	def release(self,threadID):
+	def release(self):
 		
-		self.queue.pop[0]
+		self.queue.pop(0)
 		
 server_data = lockArray()
 clients = lockArray()
@@ -40,7 +40,7 @@ class shittyPrestonThread(threading.Thread):
 	
 	def queueArray(self,array):
 		
-		array.acquire()
+		array.acquire(self)
 		locked = True
 		while locked:
 			if array.queue[0] == self:
@@ -48,9 +48,9 @@ class shittyPrestonThread(threading.Thread):
 	
 	def __init__(self):
 		
-		super().__init__(self)
+		super().__init__()
 		
-		self.queueArray(threading)
+		self.queueArray(threads)
 		threads.array.append(self)
 		threads.release()
 		
@@ -58,7 +58,7 @@ class clientThread(shittyPrestonThread):
 
 	def __init__(self,conn,address):
 		
-		super().__init__(self)
+		super().__init__()
 		
 		self.connection = conn
 		self.address = address
@@ -113,7 +113,7 @@ class connectingThread(shittyPrestonThread):
 		
 		print("Initializing")
 		
-		super().__init__(self)
+		super().__init__()
 		
 		self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 		
@@ -174,7 +174,7 @@ class safetyThread(shittyPrestonThread):
 		
 		def __init__(self):
 			
-			super().__init__(self)
+			super().__init__()
 		
 		def run(self):
 			
@@ -194,13 +194,17 @@ safety = safetyThread()
 safety.daemon = True
 safety.start()
 
-thread = connectingThread(1)
+thread = connectingThread()
 thread.daemon = True
 thread.start()
 
 while(running):
-
-	server_data.lock.acquire()
+	
+	server_data.acquire("main")
+	locked = True
+	while locked:
+		if server_data.queue[0] == "main":
+			locked = False
 	
 	for index, data in enumerate(server_data.array):
 		
@@ -217,7 +221,11 @@ while(running):
 		
 		else:
 			
-			clients.lock.acquire()
+			clients.acquire("main")
+			locked = True
+			while locked:
+				if clients.queue[0] == "main":
+					locked = False
 			
 			for client in clients.array:
 			
@@ -227,11 +235,11 @@ while(running):
 				
 					client.connection.send(message) #Need to make sure people are online before sending them messages
 					
-			clients.lock.release()
+			clients.release()
 		
 		server_data.array.pop(index)
 	
-	server_data.lock.release()
+	server_data.release()
 
 print("Shutting down")	
 	
