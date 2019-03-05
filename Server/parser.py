@@ -1,8 +1,14 @@
 import structure
 
-def generate():
-    #Todo
-	pass
+def generate(length, command, components, component_vals, ip):
+    
+	data = length + "L" + command + "{("
+
+	for i in range(len(components)):
+		data += components[i]
+		for x in range(len(component_vals[i])):
+
+	return data
 
 def parse(data):
 	
