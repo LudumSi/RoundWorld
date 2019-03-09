@@ -155,12 +155,13 @@ public class MenuScreen implements Screen{
 			
 			try {
 				if (client == null) {
-					client = new Client("128.193.254.13", 1337);
+					client = new Client("128.193.254.43", 1337);
 					/*send user name*/
 					Client.user = "JIMGRIND";
 					client.sendRequest(Command.generate(
 							Command.Type.initConnect, 
 							Component.generate(Component.Type.text, Client.user)));
+							System.out.println("Sending Connect Message");
 				
 					connectAnimCountdown = 30;
 				}

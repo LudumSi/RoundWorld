@@ -3,6 +3,7 @@ import structure
 import socket
 import threading
 import sys
+import time
 #from parser import parse
 
 #--Gotta add message length to command header
@@ -32,9 +33,9 @@ class lockArray(object):
 			
 	#Assumes the thread doing the releasing is the one which has already aquired it
 	def release(self):
-		
+				
 		self.queue.pop(0)
-		
+
 		if self.name != "data":
 			'''
 			print(f"{self.name} Released")
@@ -57,7 +58,13 @@ class shittyPrestonThread(threading.Thread):
 		array.acquire(self)
 		locked = True
 		while locked:
+			print(clients.queue)
+			print("Server")
+			print(server_data.queue)
+			print("looking for")
+			print(self)
 			if array.queue[0] == self:
+				print("Not Locked")
 				locked = False
 	
 	def __init__(self):
@@ -80,42 +87,49 @@ class clientThread(shittyPrestonThread):
 	def run(self):
 		
 		global running
-		
+		print(running)
 		print(f"Created client for {self.address}")
 		
 		while(running):
-			
 			#--Arg is bytes recieved, doesn't always work bc of data rerouteing and other stuff.
 			try:
 				data = self.connection.recv(1024)
 				#parser.parse(data) Doesn't return anything, so why is it here?
-			#print("Server recieved: %s" % data)
+				#print("Server recieved: %s" % data)
 				self.queueArray(server_data)
 				server_data.array.append((self, data))
 				server_data.release()
-			
+				print("End of Client loop")
+				#print(clients.queue)
 			except:
-				
+				print("NO message")
 				pass
-				
+		
 	def disconnect(self):
 		
+		print(f"Current players: {len(clients.array)}")
+
 		print(f"Disconnecting from {self.address}!")
 		
 		print(f"Clients: {clients.array}")
 		
 		print(f"Removing {self} from clients")
-		
+		print("Checkpoint 67")
+		#Something here is causing the error. The connecting Thread can't
+		# get to the start of the queue so no new clients can be fully made
 		self.queueArray(clients)
+		print("Checkpoint 6")
 		clients.array.pop(clients.array.index(self))
 		clients.release()
-		
+		print("Checkpoint 66")
 		print("Removed from clients")
 		
+		print(f"Current players: {len(clients.array)}")
+		#self.connection.shutdown()
 		self.connection.close()
 		
 		print("Closing connection")
-		
+
 		self.join()
 
 	#Connecting thread class
@@ -172,8 +186,9 @@ class connectingThread(shittyPrestonThread):
 					
 					print("Connected to " + address[0])
 					print(f"Current players: {len(clients.array)}")
-					#message_to_send = "Hello Beautiful!\n".encode("UTF-8")
-					#new_client.connection.send(message_to_send)
+					print(clients.array)
+					message_to_send = "Hello Beautiful!\n".encode("UTF-8")
+					new_client.connection.send(message_to_send)
 						
 				clients.release()
 				
@@ -217,11 +232,13 @@ thread.daemon = True
 thread.start()
 
 while(running):
-	
+	print("Aquiring Main")
 	server_data.acquire("main")
+	print("Aquired Main")
 	locked = True
 	while locked:
 		if server_data.queue[0] == "main":
+			print("FOUND MAIN")
 			locked = False
 	
 	for index, data in enumerate(server_data.array):
@@ -233,7 +250,7 @@ while(running):
 		if data_sent == b'FFFF{(0:text|bye)}':
 			
 			if sending_client:
-				
+				print("disconnecting Client")
 				sending_client.disconnect()
 				#Makes sure the client is actually gone before disconnecting them.
 		
@@ -242,6 +259,7 @@ while(running):
 			clients.acquire("main")
 			locked = True
 			while locked:
+				#print(clients.queue)
 				if clients.queue[0] == "main":
 					locked = False
 			
@@ -265,6 +283,7 @@ while(running):
 	
 	server_data.release()
 
+print("Leaving Loop")
 clients.acquire("main")
 locked = True
 while locked:
