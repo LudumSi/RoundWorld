@@ -27,6 +27,8 @@ public class MenuScreen implements Screen{
 		
 	public BaseActor test;
 	public BaseActor textBase = new BaseActor(Utils.emptyTexture);
+	private TextInput usernameIn;
+	private Label username;
 	public Label text;
 	public Client client;
 	private int scaleVal = 1;
@@ -61,10 +63,18 @@ public class MenuScreen implements Screen{
 		textBase.addActor(text);
 		mainStage.addActor(textBase);
 		textBase.setPosition(20, 20);
+		
+		username = new Label("Username: ", RoundWorld.font);
+		username.setPosition(10, RoundWorld.height - 25);
+		username.setColor(Color.YELLOW);
+		mainStage.addActor(username);
+		
 		//TextInput listener = new TextInput();
 		//Gdx.input.getTextInput(listener, "Enter ip", "Insert server ip here", "hint hint nudge nudge");
-		
-		Gdx.input.setInputProcessor(new InputProcess());
+		usernameIn = new TextInput(10, RoundWorld.height - 50, null);
+		usernameIn.setHideLog(true);
+		mainStage.addActor(usernameIn);
+		Gdx.input.setInputProcessor(usernameIn);
 		
 		
 	}
@@ -72,6 +82,8 @@ public class MenuScreen implements Screen{
 	public void render(float dt){
 		
 		titleTheme.play();
+		username.setText("Username: " + usernameIn.getLastAdd());
+		Client.user = usernameIn.getLastAdd();
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	
@@ -83,7 +95,7 @@ public class MenuScreen implements Screen{
 		
 		
 		if (test.getBoundingRectangle().contains(Gdx.input.getX(), RoundWorld.height - Gdx.input.getY())) {
-			if (InputProcess.leftMouseClicked() && connectDone) {
+			if (Gdx.input.justTouched() && connectDone) {
 				connectionThread = new Thread(connect);
 				connectionThread.start();
 				
@@ -156,8 +168,7 @@ public class MenuScreen implements Screen{
 			try {
 				if (client == null) {
 					client = new Client("128.193.254.13", 1337);
-					/*send user name*/
-					Client.user = "EBNA";
+					
 					client.sendRequest(Command.generate(
 							Command.Type.initConnect, 
 							Component.generate(Component.Type.text, Client.user)));

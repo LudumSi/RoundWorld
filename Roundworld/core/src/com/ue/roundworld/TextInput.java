@@ -20,6 +20,8 @@ public class TextInput extends BaseActor implements InputProcessor {
 	Label[] log = new Label[11];
 	Client c;
 	String lastText = "";
+	String lastAdd = "";
+	private boolean hideLog;
 	public TextInput(int x, int y, Client c) {
 		super(Utils.emptyTexture);
 		this.setPosition(x, y);
@@ -41,20 +43,33 @@ public class TextInput extends BaseActor implements InputProcessor {
 		log[9].setText(name + ": " + text);
 		log[9].setColor(c);
 	}
-
+	
+	public String getLastAdd() {
+		return lastAdd;
+		
+	}
+	
+	public void setHideLog(boolean b) {
+		if (b) {
+			for (int i = 0; i < log.length-2; i++) {
+				log[i].remove();
+			}
+		} else {
+			for (int i = 0; i < log.length-2; i++) {
+				this.addActor(log[i]);
+			}
+		}
+		hideLog = b;
+	}
 
 	public void update() {
 		Command com = c.getParsedData();
-		if( com!= null) { 
-			System.out.println(com.get_component(0, 0)); 
-			System.out.println(com.get_component(0, 1)); 
-		}
-		if( com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
+	
+		if( !this.hideLog && com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
 			
 				if (
 					!lastText.equals(com.get_component(0, 1).getArg("text"))) {
 					lastText = com.get_component(0, 1).getArg("text");
-					System.out.println("this should only print once");
 					add_to_log( com.get_component(0, 0).getArg("text"), com.get_component(0, 1).getArg("text"), Color.WHITE);
 					
 				}
@@ -279,12 +294,16 @@ public class TextInput extends BaseActor implements InputProcessor {
 			
 		}
 		else {
-			add_to_log(Client.user, text, Color.WHITE);
-			c.sendRequest(Command.generate(
-					Command.Type.sendText, 
-					Component.generate(Component.Type.text, "text|" + Client.user),
-					Component.generate(Component.Type.text, "text|" + text)
-					));
+			this.lastAdd = log[10].getText().toString();
+			if (!this.hideLog) {
+				add_to_log(Client.user, text, Color.WHITE);
+				c.sendRequest(Command.generate(
+						Command.Type.sendText, 
+						Component.generate(Component.Type.text, "text|" + Client.user),
+						Component.generate(Component.Type.text, "text|" + text)
+						));
+			}
+		
 			text = "";
 			log[10].setText(text);
 			
