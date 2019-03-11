@@ -41,7 +41,7 @@ class lockArray(object):
 			print(f"Queue: {self.queue}")
 			'''
 		
-server_data = lockArray("data")
+server_data = []
 clients = lockArray("clients")
 threads = lockArray("threads")
 
@@ -89,11 +89,10 @@ class clientThread(shittyPrestonThread):
 			try:
 				data = self.connection.recv(1024)
 				#parser.parse(data) Doesn't return anything, so why is it here?
-			#print("Server recieved: %s" % data)
-				self.queueArray(server_data)
+				#print("Server recieved: %s" % data)
+				
 				server_data.array.append((self, data))
-				server_data.release()
-			
+							
 			except:
 				
 				pass
@@ -111,12 +110,17 @@ class clientThread(shittyPrestonThread):
 		clients.release()
 		
 		print("Removed from clients")
-		
-		self.connection.close()
-		
+		print(f"Clients: {clients.array}")
 		print("Closing connection")
 		
+		self.connection.shutdown(socket.SHUT_RDWR)
+		self.connection.close()
+		
+		print("Stopping thread")
+		
 		self.join()
+		
+		del self
 
 	#Connecting thread class
 class connectingThread(shittyPrestonThread):
@@ -159,7 +163,7 @@ class connectingThread(shittyPrestonThread):
 				
 				for client in clients.array:
 					
-					if client.connection == conn:
+					if client.address[0] == address[0]:
 						
 						new_connection = False
 					
@@ -172,6 +176,7 @@ class connectingThread(shittyPrestonThread):
 					
 					print("Connected to " + address[0])
 					print(f"Current players: {len(clients.array)}")
+					print(f"Clients: {clients.array}")
 					#message_to_send = "Hello Beautiful!\n".encode("UTF-8")
 					#new_client.connection.send(message_to_send)
 						
@@ -182,8 +187,8 @@ class connectingThread(shittyPrestonThread):
 			except Exception as e:
 				print(e)
 				
-		conn.close()
-		self.join()
+		self.server.shutdown(socket.SHUT_RDWR)
+		self.server.close()
 		print("Closed listener")
 		
 class safetyThread(shittyPrestonThread):
@@ -202,9 +207,6 @@ class safetyThread(shittyPrestonThread):
 			
 				if(user_input == "q"):
 					running = False
-					
-			self.join()
-			
 		
 #Multithreading. One thread is now always listening for new connections and client data
 
@@ -218,13 +220,7 @@ thread.start()
 
 while(running):
 	
-	server_data.acquire("main")
-	locked = True
-	while locked:
-		if server_data.queue[0] == "main":
-			locked = False
-	
-	for index, data in enumerate(server_data.array):
+	for index, data in enumerate(server_data):
 		
 		sending_client = data[0]
 		data_sent = data[1]
@@ -261,9 +257,7 @@ while(running):
 					
 			clients.release()
 		
-		server_data.array.pop(index)
-	
-	server_data.release()
+		server_data.pop(index)
 
 clients.acquire("main")
 locked = True
