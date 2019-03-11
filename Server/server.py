@@ -58,13 +58,10 @@ class shittyPrestonThread(threading.Thread):
 		array.acquire(self)
 		locked = True
 		while locked:
-			print(clients.queue)
-			print("Server")
-			print(server_data.queue)
-			print("looking for")
-			print(self)
+			print(f"Looking for {self} in {array.queue}")
+			print(f"{array.name}: Queue: {array.queue}")
+			print(f"{array.name}: Array: {array.array}")
 			if array.queue[0] == self:
-				print("Not Locked")
 				locked = False
 	
 	def __init__(self):
@@ -99,10 +96,8 @@ class clientThread(shittyPrestonThread):
 				self.queueArray(server_data)
 				server_data.array.append((self, data))
 				server_data.release()
-				print("End of Client loop")
 				#print(clients.queue)
 			except:
-				print("NO message")
 				pass
 		
 	def disconnect(self):
@@ -114,23 +109,30 @@ class clientThread(shittyPrestonThread):
 		print(f"Clients: {clients.array}")
 		
 		print(f"Removing {self} from clients")
-		print("Checkpoint 67")
-		#Something here is causing the error. The connecting Thread can't
-		# get to the start of the queue so no new clients can be fully made
+		
 		self.queueArray(clients)
-		print("Checkpoint 6")
+		print("Queued Disconnect Sequence")
 		clients.array.pop(clients.array.index(self))
+		print(f"Deleted Client from Array {clients.array}")
 		clients.release()
-		print("Checkpoint 66")
 		print("Removed from clients")
 		
 		print(f"Current players: {len(clients.array)}")
 		#self.connection.shutdown()
 		self.connection.close()
 		
-		print("Closing connection")
+		print("Closing connection\n\n\n\n")
 
-		self.join()
+		#Something here is causing the error. The connecting Thread can't
+		# get to the start of the queue so no new clients can be fully made
+		server_data.release()
+		print("released main")
+		#self.join()
+		#del self
+		#print("Joined Thread")
+		#server_data.acquire("main")
+		#print("Remade Main")
+		
 
 	#Connecting thread class
 class connectingThread(shittyPrestonThread):
@@ -232,15 +234,15 @@ thread.daemon = True
 thread.start()
 
 while(running):
-	print("Aquiring Main")
 	server_data.acquire("main")
-	print("Aquired Main")
 	locked = True
+	print("Entering main")
 	while locked:
+		print(f"Looking for Main in {server_data.queue}")
 		if server_data.queue[0] == "main":
-			print("FOUND MAIN")
 			locked = False
 	
+	print("Entering For Loop")
 	for index, data in enumerate(server_data.array):
 		
 		sending_client = data[0]
@@ -249,13 +251,16 @@ while(running):
 		
 		if data_sent == b'FFFF{(0:text|bye)}':
 			
-			if sending_client:
-				print("disconnecting Client")
-				sending_client.disconnect()
+			#server_data.array.pop(0)
+
+			print("disconnecting Client\n\n\n")
+			sending_client.disconnect()
+			print("Disconnected Client")
 				#Makes sure the client is actually gone before disconnecting them.
-		
+			break
 		else:
 			
+			print("Aquiring main 2")
 			clients.acquire("main")
 			locked = True
 			while locked:
@@ -281,6 +286,7 @@ while(running):
 		
 		server_data.array.pop(index)
 	
+	print("Releasing main")
 	server_data.release()
 
 print("Leaving Loop")
