@@ -20,7 +20,7 @@ public class Client {
 
 	public static String user;
 	
-	public boolean isConnected = false;
+	private boolean isConnected = false;
 
 	private String receivedData = "NONE";
 	private Queue<String> dataQueue = new Queue<String>();
@@ -29,6 +29,7 @@ public class Client {
 	private int port;
 	
 
+		
 	
 	private Socket socket; 
 
@@ -76,8 +77,8 @@ public class Client {
 			System.out.println("Sent: " + jsonStringToSend);
 			socket.getOutputStream().write(jsonStringToSend.getBytes());
 		} catch (Exception e) {
-			System.out.println("Socket write error");
-
+			System.out.println("Socket write error " + e.getMessage());
+			isConnected = false;
 		}
 
 	}
@@ -134,11 +135,15 @@ public class Client {
 	}
 
 	public Command getParsedData() {
-		if (isCommandComplete()) {
-			return Parser.parse(dataQueue.removeFirst());
-		} else {
+		//if (isCommandComplete()) {
+			if (dataQueue.size> 0) {
+				return Parser.parse(dataQueue.removeFirst());
+			}
 			return null;
-		}
+		
+		//} else {
+			//return null;
+		//}
 		
 	}
 	
@@ -170,6 +175,7 @@ public class Client {
 				}
 			}
 			if (length.length() > 0) {
+				
 				len = Integer.parseInt(length);
 			}
 			
@@ -178,17 +184,25 @@ public class Client {
 			for (int i = 0; i < dataQueue.size; i++) {
 				if (begin.length() == len) {
 					dataQueue.addFirst(begin);
+					System.out.println("GOOD!");
 					return true;
 				} else if (dataQueue.size > 0) {
 					begin += dataQueue.removeFirst();
+					System.out.println("BAD! Should be: " + Integer.toString(len) + " is: " +  Integer.toString(begin.length()));
 				}
 			}
 			dataQueue.addFirst(begin);
+		
 		}
 		
 		return false;
 		
 		
 		
+		
+	}
+	
+	public boolean getConnect() {
+		return isConnected;
 	}
 }

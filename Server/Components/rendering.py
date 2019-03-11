@@ -1,5 +1,5 @@
 
-import ..\structure
+import structure
 
 class rendering(game_comp):
 	

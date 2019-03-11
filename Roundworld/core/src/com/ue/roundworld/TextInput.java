@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ue.roundworld.client.Client;
 import com.ue.roundworld.client.Command;
@@ -19,6 +20,8 @@ public class TextInput extends BaseActor implements InputProcessor {
 	Label[] log = new Label[11];
 	Client c;
 	String lastText = "";
+	String lastAdd = "";
+	private boolean hideLog;
 	public TextInput(int x, int y, Client c) {
 		super(Utils.emptyTexture);
 		this.setPosition(x, y);
@@ -32,25 +35,42 @@ public class TextInput extends BaseActor implements InputProcessor {
 		}
 	}
 	
-	public void add_to_log(String text) {
+	public void add_to_log(String name, String text, Color c) {
 		for (int i = 0; i < log.length-2; i++) {
 			log[i].setText(log[i+1].getText());
+			log[i].setColor(log[i+1].getColor());
 		}
-		log[9].setText(text);
+		log[9].setText(name + ": " + text);
+		log[9].setColor(c);
 	}
-
+	
+	public String getLastAdd() {
+		return lastAdd;
+		
+	}
+	
+	public void setHideLog(boolean b) {
+		if (b) {
+			for (int i = 0; i < log.length-2; i++) {
+				log[i].remove();
+			}
+		} else {
+			for (int i = 0; i < log.length-2; i++) {
+				this.addActor(log[i]);
+			}
+		}
+		hideLog = b;
+	}
 
 	public void update() {
 		Command com = c.getParsedData();
-		
-		if( com!= null && com.get_id() == 1 && com.get_component(0) != null) {
+	
+		if( !this.hideLog && com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
 			
-				if (com.get_component(0).getArg("text") != null && 
-					com.get_component(0).getArg("text") != ""  &&
-					!lastText.equals(com.get_component(0).getArg("text"))) {
-					lastText = com.get_component(0).getArg("text");
-					System.out.println("this should only print once");
-					add_to_log(com.get_component(0).getArg("text"));
+				if (
+					!lastText.equals(com.get_component(0, 1).getArg("text"))) {
+					lastText = com.get_component(0, 1).getArg("text");
+					add_to_log( com.get_component(0, 0).getArg("text"), com.get_component(0, 1).getArg("text"), Color.WHITE);
 					
 				}
 		}
@@ -274,11 +294,16 @@ public class TextInput extends BaseActor implements InputProcessor {
 			
 		}
 		else {
-			add_to_log(text);
-			c.sendRequest(Command.generate(
-					Command.Type.sendText, 
-					Component.generate(Component.Type.text, "text|" + text)
-					));
+			this.lastAdd = log[10].getText().toString();
+			if (!this.hideLog) {
+				add_to_log(Client.user, text, Color.WHITE);
+				c.sendRequest(Command.generate(
+						Command.Type.sendText, 
+						Component.generate(Component.Type.text, "text|" + Client.user),
+						Component.generate(Component.Type.text, "text|" + text)
+						));
+			}
+		
 			text = "";
 			log[10].setText(text);
 			

@@ -22,11 +22,11 @@ public class RenderManager{
 	
 	public boolean getRenders() {
 		Command com = c.getParsedData();
-		if (com.get_id() == 1 && com.get_component(1) != null) {
+		if (com.get_id() == 0xC001 && com.get_component(1, 0) != null) {
 			for (int i = 0; i < com.components.size(); i++) {
-				Texture t = AssetManager.get_texture(com.get_component(i).getArg("texture"));
-				int x = Integer.parseInt(com.get_component(i).getArg("x"));
-				int y = Integer.parseInt(com.get_component(i).getArg("x"));
+				Texture t = AssetManager.get_texture(com.get_component(1, i).getArg("texture"));
+				int x = Integer.parseInt(com.get_component(1, i).getArg("x"));
+				int y = Integer.parseInt(com.get_component(1, i).getArg("x"));
 				BaseActor ba = new BaseActor(t);
 				ba.setCenter(x, y);
 				renders.add(ba);
