@@ -42,7 +42,7 @@ class lockArray(object):
 			print(f"Queue: {self.queue}")
 			'''
 		
-server_data = lockArray("data")
+server_data = []
 clients = lockArray("clients")
 threads = lockArray("threads")
 
@@ -93,10 +93,9 @@ class clientThread(shittyPrestonThread):
 				data = self.connection.recv(1024)
 				#parser.parse(data) Doesn't return anything, so why is it here?
 				#print("Server recieved: %s" % data)
-				self.queueArray(server_data)
+				
 				server_data.array.append((self, data))
-				server_data.release()
-				#print(clients.queue)
+						
 			except:
 				pass
 		
@@ -116,23 +115,17 @@ class clientThread(shittyPrestonThread):
 		print(f"Deleted Client from Array {clients.array}")
 		clients.release()
 		print("Removed from clients")
+		print(f"Clients: {clients.array}")
+		print("Closing connection")
 		
-		print(f"Current players: {len(clients.array)}")
-		#self.connection.shutdown()
+		self.connection.shutdown(socket.SHUT_RDWR)
 		self.connection.close()
 		
-		print("Closing connection\n\n\n\n")
-
-		#Something here is causing the error. The connecting Thread can't
-		# get to the start of the queue so no new clients can be fully made
-		server_data.release()
-		print("released main")
-		#self.join()
-		#del self
-		#print("Joined Thread")
-		#server_data.acquire("main")
-		#print("Remade Main")
+		print("Stopping thread")
 		
+		self.join()
+		
+		del self
 
 	#Connecting thread class
 class connectingThread(shittyPrestonThread):
@@ -175,7 +168,7 @@ class connectingThread(shittyPrestonThread):
 				
 				for client in clients.array:
 					
-					if client.connection == conn:
+					if client.address[0] == address[0]:
 						
 						new_connection = False
 					
@@ -188,9 +181,10 @@ class connectingThread(shittyPrestonThread):
 					
 					print("Connected to " + address[0])
 					print(f"Current players: {len(clients.array)}")
-					print(clients.array)
-					message_to_send = "Hello Beautiful!\n".encode("UTF-8")
-					new_client.connection.send(message_to_send)
+
+					print(f"Clients: {clients.array}")
+					#message_to_send = "Hello Beautiful!\n".encode("UTF-8")
+					#new_client.connection.send(message_to_send)
 						
 				clients.release()
 				
@@ -199,8 +193,8 @@ class connectingThread(shittyPrestonThread):
 			except Exception as e:
 				print(e)
 				
-		conn.close()
-		self.join()
+		self.server.shutdown(socket.SHUT_RDWR)
+		self.server.close()
 		print("Closed listener")
 		
 class safetyThread(shittyPrestonThread):
@@ -219,9 +213,6 @@ class safetyThread(shittyPrestonThread):
 			
 				if(user_input == "q"):
 					running = False
-					
-			self.join()
-			
 		
 #Multithreading. One thread is now always listening for new connections and client data
 
@@ -234,16 +225,8 @@ thread.daemon = True
 thread.start()
 
 while(running):
-	server_data.acquire("main")
-	locked = True
-	print("Entering main")
-	while locked:
-		print(f"Looking for Main in {server_data.queue}")
-		if server_data.queue[0] == "main":
-			locked = False
 	
-	print("Entering For Loop")
-	for index, data in enumerate(server_data.array):
+	for index, data in enumerate(server_data):
 		
 		sending_client = data[0]
 		data_sent = data[1]
@@ -284,10 +267,7 @@ while(running):
 					
 			clients.release()
 		
-		server_data.array.pop(index)
-	
-	print("Releasing main")
-	server_data.release()
+		server_data.pop(index)
 
 print("Leaving Loop")
 clients.acquire("main")
