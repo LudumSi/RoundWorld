@@ -58,13 +58,12 @@ class shittyPrestonThread(threading.Thread):
 		array.acquire(self)
 		locked = True
 		while locked:
-			print(clients.queue)
-			print("Server")
-			print(server_data)
-			print("looking for")
-			print(self)
+
+			print(f"Looking for {self} in {array.queue}")
+			print(f"{array.name}: Queue: {array.queue}")
+			print(f"{array.name}: Array: {array.array}")
+
 			if array.queue[0] == self:
-				print("Not Locked")
 				locked = False
 	
 	def __init__(self):
@@ -101,7 +100,7 @@ class clientThread(shittyPrestonThread):
 					server_data.append((self, data))
 						
 			except:
-				#print("NO message")
+
 				pass
 		
 	def disconnect(self):
@@ -113,14 +112,12 @@ class clientThread(shittyPrestonThread):
 		print(f"Clients: {clients.array}")
 		
 		print(f"Removing {self} from clients")
-		print("Checkpoint 67")
-		#Something here is causing the error. The connecting Thread can't
-		# get to the start of the queue so no new clients can be fully made
+		
 		self.queueArray(clients)
-		print("Checkpoint 6")
+		print("Queued Disconnect Sequence")
 		clients.array.pop(clients.array.index(self))
+		print(f"Deleted Client from Array {clients.array}")
 		clients.release()
-		print("Checkpoint 66")
 		print("Removed from clients")
 		print(f"Clients: {clients.array}")
 		print("Closing connection")
@@ -246,10 +243,12 @@ while(running):
 			if sending_client:
 				print("Disconnecting Client")
 				sending_client.disconnect()
+
 				#Makes sure the client is actually gone before disconnecting them.
-		
+			break
 		else:
 			
+			print("Aquiring main 2")
 			clients.acquire("main")
 			locked = True
 			while locked:

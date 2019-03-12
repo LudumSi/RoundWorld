@@ -30,7 +30,9 @@ public class MenuScreen implements Screen{
 	public BaseActor test;
 	public BaseActor textBase = new BaseActor(Utils.emptyTexture);
 	private TextInput usernameIn;
+	private TextInput ipIn;
 	private Label username;
+	private Label serverIp;
 	private Projectile[] title;
 	public Label text;
 	public Client client;
@@ -78,10 +80,17 @@ public class MenuScreen implements Screen{
 		username.setColor(Color.YELLOW);
 		mainStage.addActor(username);
 		
+		serverIp = new Label("Server Ip: ", RoundWorld.font);
+		serverIp.setPosition(10, RoundWorld.height - 75);
+		serverIp.setColor(Color.YELLOW);
+		mainStage.addActor(serverIp);
 		
 		
-		
-		
+		String ip = AssetManager.loadIp();
+		if (ip != null) {
+			Client.userIpAddress = ip;
+			
+		}
 		
 		//TextInput listener = new TextInput();
 		//Gdx.input.getTextInput(listener, "Enter ip", "Insert server ip here", "hint hint nudge nudge");
@@ -89,6 +98,10 @@ public class MenuScreen implements Screen{
 		usernameIn.setHideLog(true);
 		mainStage.addActor(usernameIn);
 		Gdx.input.setInputProcessor(usernameIn);
+		
+		ipIn = new TextInput(10, RoundWorld.height - 100, null);
+		ipIn.setHideLog(true);
+		mainStage.addActor(ipIn);
 		
 		Projectile.spawnBullet(mainStage, new Vector2(0, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/D"), titleColor, "R");
 		Projectile.spawnBullet(mainStage, new Vector2(-64, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/N"), titleColor, "R");
@@ -106,7 +119,9 @@ public class MenuScreen implements Screen{
 		mainStage.act();
 		titleTheme.play();
 		username.setText("Username: " + usernameIn.getLastAdd());
+		serverIp.setText("Server Ip: " + Client.userIpAddress);
 		Client.user = usernameIn.getLastAdd();
+	
 		Gdx.gl.glClearColor(0.6f, 0.6f, 0.6f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	
@@ -137,13 +152,25 @@ public class MenuScreen implements Screen{
 			}
 		}
 		/*animates image*/
-		imgAnim();
+		//imgAnim();
 		
 		
 		mainStage.draw();
 		uiStage.draw();
 	
 		
+		if (Gdx.input.isKeyJustPressed(Keys.U)) {
+			username.setColor(Color.FOREST);
+			serverIp.setColor(Color.YELLOW);
+			Gdx.input.setInputProcessor(usernameIn);
+			serverIp.clear();
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.I)) {
+			username.setColor(Color.YELLOW);
+			serverIp.setColor(Color.FOREST);
+			Gdx.input.setInputProcessor(ipIn);
+			usernameIn.clear();
+		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			if (client != null) {
@@ -170,6 +197,10 @@ public class MenuScreen implements Screen{
 		
 			GameplayScreen g = new GameplayScreen(this.game, client);
 			this.game.setScreen(g);
+		}
+		if (ipIn.getLastAdd() != null && ipIn.getLastAdd() != "") {
+			Client.userIpAddress = ipIn.getLastAdd();
+			AssetManager.saveIp(ipIn.getLastAdd());
 		}
 		
 	}
@@ -209,7 +240,7 @@ public class MenuScreen implements Screen{
 				//create client only if is null
 				if (client == null) {
 
-					client = new Client("128.193.254.13", 1337);
+					client = new Client(Client.userIpAddress, 1337);
 					
 					//send hello
 					client.sendRequest(Command.generate(

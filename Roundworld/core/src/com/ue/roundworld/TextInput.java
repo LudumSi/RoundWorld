@@ -61,7 +61,12 @@ public class TextInput extends BaseActor implements InputProcessor {
 		}
 		hideLog = b;
 	}
-
+	
+	public void clear() {
+		text = "";
+		log[10].setText(text);
+	}
+	
 	public void update() {
 		Command com = c.getParsedData();
 	
