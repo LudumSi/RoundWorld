@@ -21,8 +21,8 @@ class lockArray(object):
 		#Could probably just pass the thread itself rather than the threadID
 		
 		if thread not in self.queue:
-			
-			self.queue.append(thread)
+				
+			self.array.append(thread)
 			
 			'''
 			if thread != "main":
@@ -60,7 +60,7 @@ class shittyPrestonThread(threading.Thread):
 		while locked:
 			print(clients.queue)
 			print("Server")
-			print(server_data.queue)
+			print(server_data)
 			print("looking for")
 			print(self)
 			if array.queue[0] == self:
@@ -76,7 +76,7 @@ class shittyPrestonThread(threading.Thread):
 		threads.release()
 		
 class clientThread(shittyPrestonThread):
-
+	
 	def __init__(self,conn,address):
 		
 		super().__init__()
@@ -97,10 +97,11 @@ class clientThread(shittyPrestonThread):
 				#parser.parse(data) Doesn't return anything, so why is it here?
 				#print("Server recieved: %s" % data)
 				
-				server_data.array.append((self, data))
+				if data != b'':
+					server_data.append((self, data))
 						
 			except:
-				print("NO message")
+				#print("NO message")
 				pass
 		
 	def disconnect(self):
@@ -232,6 +233,8 @@ thread.start()
 
 while(running):
 	
+	#print(server_data)
+	
 	for index, data in enumerate(server_data):
 		
 		sending_client = data[0]
@@ -241,7 +244,7 @@ while(running):
 		if data_sent == b'FFFF{(0:text|bye)}':
 			
 			if sending_client:
-				print("disconnecting Client")
+				print("Disconnecting Client")
 				sending_client.disconnect()
 				#Makes sure the client is actually gone before disconnecting them.
 		
