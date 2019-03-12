@@ -71,7 +71,8 @@ public class GameplayScreen implements Screen{
 	
 	public void render(float dt){
 		
-		
+
+		mainStage.act();
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		test.rotateBy(1);

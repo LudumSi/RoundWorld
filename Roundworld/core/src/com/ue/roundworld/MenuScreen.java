@@ -38,7 +38,7 @@ public class MenuScreen implements Screen{
 	public Client client;
 	private int scaleVal = 1;
 	
-	private Color titleColor = Color.RED;
+	private Color titleColor = Color.WHITE;
 	
 	private int connectAnimCountdown = -1;
 	
@@ -103,20 +103,36 @@ public class MenuScreen implements Screen{
 		ipIn.setHideLog(true);
 		mainStage.addActor(ipIn);
 		
-		Projectile.spawnBullet(mainStage, new Vector2(0, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/D"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(-64, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/N"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(-64 * 2, RoundWorld.height/2 ), 1.5f, 0, 0, 0, Utils.loadTexture("title/U"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(-64 * 3, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/O"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(-64 * 4, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/R"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(RoundWorld.width, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/W"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(RoundWorld.width + 64, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/O"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(RoundWorld.width + 64 * 2, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/R"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(RoundWorld.width + 64 * 3, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/L"), titleColor, "R");
-		Projectile.spawnBullet(mainStage, new Vector2(RoundWorld.width + 64 * 4, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/D"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(0, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/D"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/N"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 2, RoundWorld.height/2 ), 1.5f, 0, 0, 0, Utils.loadTexture("title/U"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 3, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/O"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 4, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/R"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/W"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/O"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 2, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/R"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 3, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/L"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 4, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/D"), titleColor, "R");
+	
+		test.addAction(Actions.fadeOut(0));
+		test.addAction(Actions.sequence(
+				Actions.delay(6f),
+				Actions.parallel(
+						Actions.fadeIn(0.5f),
+						Actions.rotateBy(360, 0.5f)
+						
+						)
+				
+				
+				));
+				
+				
+				
+		
 	}
 	
 	public void render(float dt){
-		mainStage.act();
+		
 		titleTheme.play();
 		username.setText("Username: " + usernameIn.getLastAdd());
 		serverIp.setText("Server Ip: " + Client.userIpAddress);
@@ -124,8 +140,10 @@ public class MenuScreen implements Screen{
 	
 		Gdx.gl.glClearColor(0.6f, 0.6f, 0.6f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	
-		test.rotateBy(1);
+		mainStage.act();
+		uiStage.act();
+		test.addAction(Actions.rotateBy(1));
+		
 
 		
 		//System.out.println(client.getRecievedData());
@@ -140,6 +158,10 @@ public class MenuScreen implements Screen{
 			}
 		}
 		for (int i = 0; i < Projectile.projs.size(); i++) {
+			
+	
+		
+
 			if (i < 5) {
 				if (Projectile.projs.get(i).center.x > RoundWorld.width/2 - 128) {
 					Projectile.projs.get(i).orbit(RoundWorld.width/2, RoundWorld.height/2, 90 + 45, -0.01f, 128);

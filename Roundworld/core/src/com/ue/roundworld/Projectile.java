@@ -53,6 +53,7 @@ public class Projectile extends BaseActor{
 		b.setTexture(type);
 		b.id = id;
 		b.setColor(c);
+	
 		
 		b.setCenter(pos.x, pos.y);
 		b.vel = vel;
@@ -81,6 +82,7 @@ public class Projectile extends BaseActor{
 	
 	@Override
 	public void act(float dt){
+
 		super.act(dt);
 		angle += angleVel;
 		angleMultX = Utils.convertVel(angle).x;
@@ -95,7 +97,7 @@ public class Projectile extends BaseActor{
 		
 		
 	
-	
+		
 		
 	}
 	
