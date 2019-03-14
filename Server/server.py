@@ -21,8 +21,8 @@ class lockArray(object):
 		#Could probably just pass the thread itself rather than the threadID
 		
 		if thread not in self.queue:
-				
-			self.array.append(thread)
+			self.queue.append(thread)
+			print(f"appending to: {self.array}")
 			
 			'''
 			if thread != "main":
@@ -54,6 +54,7 @@ running = True
 class shittyPrestonThread(threading.Thread):
 	
 	def queueArray(self,array):
+		
 		
 		array.acquire(self)
 		locked = True
