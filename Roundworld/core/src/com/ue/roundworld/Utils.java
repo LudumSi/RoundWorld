@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Utils {
 	
 	
-	public static Texture emptyTexture = Utils.loadTexture("null");
+	public static Texture emptyTexture = Utils.loadTexture("assets/null.png");
 	public static Texture missingTexture = new Texture(Gdx.files.internal("assets/missingTex.png"));
 	
 	public static Vector2 polarToRect(int r, double angle, Vector2 origin) {
@@ -40,7 +40,7 @@ public class Utils {
 
 	public static Texture loadTexture(String path) {
 		try {
-			Texture t = new Texture(Gdx.files.internal("assets/" + path + ".png"));
+			Texture t = new Texture(Gdx.files.internal(path));
 			
 			String s = "hello";
 		

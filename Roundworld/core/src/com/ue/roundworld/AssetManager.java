@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class AssetManager {
@@ -15,17 +16,25 @@ public class AssetManager {
 	
 	public static void load_textures(File f) {
 		if (f.isDirectory()) {
-			load_textures(f);
+			
+			System.out.println(f.getName());
+			
+			for (File fi : f.listFiles()) {
+				load_textures(fi);
+			}
 		} else {
 			if (f.getName().contains(".png")) {
-				textureLib.put(f.getName().substring(0, f.getName().length() - 4), Utils.loadTexture(f.getPath()));
+				String fName = f.getName().substring(0, f.getName().length() - 4);
+				System.out.println("Adding " + fName + " to texLib");
+				textureLib.put(fName, new Texture(Gdx.files.internal(f.getPath())));
 			}
 			
 		}
 	}
 	
 	public static Texture get_texture(String s) {
-		if (textureLib.containsKey(s)) {
+		if (!textureLib.containsKey(s)) {
+			System.out.println("Error: Could not find: " + s + " in texLib, substituting...");
 			return Utils.missingTexture;
 		}
 		return textureLib.get(s);

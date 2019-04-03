@@ -1,5 +1,7 @@
 package com.ue.roundworld;
 
+import java.io.File;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -41,6 +43,9 @@ public class RoundWorld extends Game {
 		generator.dispose(); // don't forget to dispose to avoid memory leaks!*/
 		
 		Gdx.input.setInputProcessor(new InputProcess());
+		
+		
+		AssetManager.load_textures(new File("assets"));
 		
 		font = new LabelStyle(theFont, Color.WHITE);
 		MenuScreen ms = new MenuScreen(this);

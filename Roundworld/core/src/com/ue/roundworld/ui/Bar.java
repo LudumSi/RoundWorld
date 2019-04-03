@@ -2,7 +2,6 @@ package com.ue.roundworld.ui;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.ue.roundworld.BaseActor;
-import com.ue.roundworld.Utils;
 
 public class Bar extends BaseActor{
 	
@@ -25,7 +24,10 @@ public class Bar extends BaseActor{
 		
 		
 	}
-	
+	/**
+	 * Subtracts a percentage of max value from the bar
+	 * @param amt the percentage to subtract
+	 */
 	public void sub(float amt) {
 		ratio -= amt;
 	
@@ -34,6 +36,10 @@ public class Bar extends BaseActor{
 		}
 	}
 	
+	/**
+	 * Adds a percentage of max value to the bar
+	 * @param amt the percentage to add
+	 */
 	public void add(float amt) {
 		ratio += amt;
 	

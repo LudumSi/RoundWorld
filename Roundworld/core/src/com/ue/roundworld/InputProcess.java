@@ -10,6 +10,7 @@ public class InputProcess implements InputProcessor {
 	private static boolean leftMouseDown;
 	private static boolean rightMouseDown;
 	private static int scroll;
+	public static InputProcess instance = new InputProcess();
 
 
 

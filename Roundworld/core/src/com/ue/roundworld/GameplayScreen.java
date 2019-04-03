@@ -16,6 +16,7 @@ import com.ue.roundworld.client.Command;
 import com.ue.roundworld.client.Component;
 import com.ue.roundworld.client.Parser;
 import com.ue.roundworld.client.RenderManager;
+import com.ue.roundworld.ui.TextInput;
 import com.ue.roundworld.ui.UiBase;
 
 public class GameplayScreen implements Screen{
@@ -48,7 +49,7 @@ public class GameplayScreen implements Screen{
 		mainStage = new Stage();
 		uiStage = new Stage();
 	
-		test = new BaseActor("assets/RW_Icon_64.png");
+		test = new BaseActor(AssetManager.get_texture("RW_Icon_64"));
 		test.setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		mainStage.addActor(test);
 		
@@ -66,16 +67,15 @@ public class GameplayScreen implements Screen{
 		//TextInput listener = new TextInput();
 		//Gdx.input.getTextInput(listener, "Enter ip", "Insert server ip here", "hint hint nudge nudge");
 		
-		textInput = new TextInput(0,0, client);
-		mainStage.addActor(textInput);
-		Gdx.input.setInputProcessor(textInput);
+	
+		
 		
 		mainStage.addActor(player);
 		
 		//AssetManager.load_textures(new File("assets/"));
 		
 		uiStage.addActor(uiBase);
-		
+		Gdx.input.setInputProcessor(InputProcess.instance);
 	}
 	
 	public void render(float dt){
@@ -90,23 +90,15 @@ public class GameplayScreen implements Screen{
 	
 		//System.out.println(client.getRecievedData());
 		
-		textInput.update();
+		
 		
 		renderManager.render(player);
 		
 		mainStage.draw();
 		uiStage.draw();
 		
+	
 		
-		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			
-			
-			Gdx.app.exit();
-		}
-		
-		if (client != null && !client.getConnect()) {
-			textInput.add_to_log("SERVER:", "Connection Failed", Color.RED);
-		}
 		
 		
 	}

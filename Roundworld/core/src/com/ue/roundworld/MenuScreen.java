@@ -20,6 +20,7 @@ import com.ue.roundworld.client.Client;
 import com.ue.roundworld.client.Command;
 import com.ue.roundworld.client.Component;
 import com.ue.roundworld.client.Parser;
+import com.ue.roundworld.ui.TextInput;
 
 public class MenuScreen implements Screen{
 	
@@ -28,7 +29,7 @@ public class MenuScreen implements Screen{
 	public Game game;
 		
 	
-	private BaseActor serverlessDebugButton = new BaseActor(Utils.loadTexture("ui/serverless_debug_button"));
+	private BaseActor serverlessDebugButton = new BaseActor(AssetManager.get_texture("serverless_debug_button"));
 	
 	public BaseActor test;
 	public BaseActor textBase = new BaseActor(Utils.emptyTexture);
@@ -67,7 +68,7 @@ public class MenuScreen implements Screen{
 		mainStage = new Stage();
 		uiStage = new Stage();
 	
-		test = new BaseActor("assets/RW_Icon_64.png");
+		test = new BaseActor(AssetManager.get_texture("RW_Icon_64"));
 		test.setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		mainStage.addActor(test);
 		test.scaleBy(2, 2);
@@ -101,25 +102,23 @@ public class MenuScreen implements Screen{
 		
 		//TextInput listener = new TextInput();
 		//Gdx.input.getTextInput(listener, "Enter ip", "Insert server ip here", "hint hint nudge nudge");
-		usernameIn = new TextInput(10, RoundWorld.height - 50, null);
-		usernameIn.setHideLog(true);
+		usernameIn = new TextInput(10, RoundWorld.height - 50);
 		mainStage.addActor(usernameIn);
 		Gdx.input.setInputProcessor(usernameIn);
 		
-		ipIn = new TextInput(10, RoundWorld.height - 100, null);
-		ipIn.setHideLog(true);
+		ipIn = new TextInput(10, RoundWorld.height - 100);
 		mainStage.addActor(ipIn);
 		
-		Projectile.spawnBullet(uiStage, new Vector2(0, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/D"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(-64, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/N"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(-64 * 2, RoundWorld.height/2 ), 1.5f, 0, 0, 0, Utils.loadTexture("title/U"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(-64 * 3, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/O"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(-64 * 4, RoundWorld.height/2), 1.5f, 0, 0, 0, Utils.loadTexture("title/R"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/W"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/O"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 2, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/R"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 3, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/L"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 4, RoundWorld.height/2), -1.5f, 0, 0, 0, Utils.loadTexture("title/D"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(0, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.get_texture("D"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.get_texture("N"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 2, RoundWorld.height/2 ), 1.5f, 0, 0, 0, AssetManager.get_texture("U"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 3, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.get_texture("O"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 4, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.get_texture("R"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("W"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("O"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 2, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("R"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 3, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("L"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 4, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("D"), titleColor, "R");
 	
 		test.addAction(Actions.fadeOut(0));
 		test.addAction(Actions.sequence(
@@ -141,9 +140,9 @@ public class MenuScreen implements Screen{
 	public void render(float dt){
 		
 		titleTheme.play();
-		username.setText("Username: " + usernameIn.getLastAdd());
+		username.setText("Username: " + usernameIn.getInput());
 		serverIp.setText("Server Ip: " + Client.userIpAddress);
-		Client.user = usernameIn.getLastAdd();
+		Client.user = usernameIn.getInput();
 	
 		Gdx.gl.glClearColor(0.6f, 0.6f, 0.6f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -232,9 +231,9 @@ public class MenuScreen implements Screen{
 			GameplayScreen g = new GameplayScreen(this.game, client);
 			this.game.setScreen(g);
 		}
-		if (ipIn.getLastAdd() != null && ipIn.getLastAdd() != "") {
-			Client.userIpAddress = ipIn.getLastAdd();
-			AssetManager.saveIp(ipIn.getLastAdd());
+		if (ipIn.getInput() != null && ipIn.getInput() != "") {
+			Client.userIpAddress = ipIn.getInput();
+			AssetManager.saveIp(ipIn.getInput());
 		}
 		
 	}
@@ -284,7 +283,7 @@ public class MenuScreen implements Screen{
 				//create client only if is null
 				if (client == null) {
 
-					client = new Client(Client.userIpAddress, 1337);
+					client = new Client(Client.userIpAddress, 7777);
 					
 					//send hello
 					client.sendRequest(Command.generate(
