@@ -68,17 +68,20 @@ public class TextInput extends BaseActor implements InputProcessor {
 	}
 	
 	public void update() {
-		Command com = c.getParsedData();
-	
-		if( !this.hideLog && com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
+		if (c != null) {
+			Command com = c.getParsedData();
 			
-				if (
-					!lastText.equals(com.get_component(0, 1).getArg("text"))) {
-					lastText = com.get_component(0, 1).getArg("text");
-					add_to_log( com.get_component(0, 0).getArg("text"), com.get_component(0, 1).getArg("text"), Color.WHITE);
-					
-				}
+			if( !this.hideLog && com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
+				
+					if (
+						!lastText.equals(com.get_component(0, 1).getArg("text"))) {
+						lastText = com.get_component(0, 1).getArg("text");
+						add_to_log( com.get_component(0, 0).getArg("text"), com.get_component(0, 1).getArg("text"), Color.WHITE);
+						
+					}
+			}
 		}
+		
 	}
 	
 	public String getKeyVal(int keycode, boolean shifted) {
@@ -302,11 +305,14 @@ public class TextInput extends BaseActor implements InputProcessor {
 			this.lastAdd = log[10].getText().toString();
 			if (!this.hideLog) {
 				add_to_log(Client.user, text, Color.WHITE);
-				c.sendRequest(Command.generate(
-						Command.Type.sendText, 
-						Component.generate(Component.Type.text, "text|" + Client.user),
-						Component.generate(Component.Type.text, "text|" + text)
-						));
+				if (c != null) {
+					c.sendRequest(Command.generate(
+							Command.Type.sendText, 
+							Component.generate(Component.Type.text, "text|" + Client.user),
+							Component.generate(Component.Type.text, "text|" + text)
+							));
+				}
+				
 			}
 		
 			text = "";

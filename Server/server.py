@@ -83,8 +83,13 @@ class clientThread(shittyPrestonThread):
 		self.connection = conn
 		self.address = address
 	
+	#--all client stuff should be in this function   async, await
+	#--put broadcast in background thread
+	
+	#--look into asyc io
 	def run(self):
 		
+		#--don't global
 		global running
 		print(running)
 		print(f"Created client for {self.address}")
@@ -93,12 +98,16 @@ class clientThread(shittyPrestonThread):
 			#--Arg is bytes recieved, doesn't always work bc of data rerouteing and other stuff.
 			try:
 				data = self.connection.recv(1024)
+				#--got to continue reading until we get entire command
+				
 				#parser.parse(data) Doesn't return anything, so why is it here?
 				#print("Server recieved: %s" % data)
 				
-				if data != b'':
+				if data:  # != b'':
+					#--increases thread refrence count, which makes it take longer to get rid of
 					server_data.append((self, data))
-						
+					
+					#--put command listeners here, and make sure client is still connect
 			except:
 
 				pass
@@ -201,6 +210,7 @@ class connectingThread(shittyPrestonThread):
 		self.server.close()
 		print("Closed listener")
 		
+#--don't need this
 class safetyThread(shittyPrestonThread):
 		
 		def __init__(self):
@@ -220,77 +230,82 @@ class safetyThread(shittyPrestonThread):
 		
 #Multithreading. One thread is now always listening for new connections and client data
 
-safety = safetyThread()
-safety.daemon = True
-safety.start()
+#--use thread pool to handle all these threads
 
-thread = connectingThread()
-thread.daemon = True
-thread.start()
+#--Can use ctrl c to end this, which can be caught with... something
+def main():
+	safety = safetyThread()
+	safety.daemon = True
+	safety.start()
 
-while(running):
-	
-	#print(server_data)
-	
-	for index, data in enumerate(server_data):
+	thread = connectingThread()
+	thread.daemon = True
+	thread.start()
+
+	while(running):
 		
-		sending_client = data[0]
-		data_sent = data[1]
-		print(f"{sending_client.address}:{data_sent}")
+		#print(server_data)
 		
-		if data_sent == b'FFFF{(0:text|bye)}':
+		for index, data in enumerate(server_data):
 			
-			if sending_client:
-				print("Disconnecting Client")
-				sending_client.disconnect()
-
-				#Makes sure the client is actually gone before disconnecting them.
-			break
-		else:
+			sending_client = data[0]
+			data_sent = data[1]
+			print(f"{sending_client.address}:{data_sent}")
 			
-			print("Aquiring main 2")
-			clients.acquire("main")
-			locked = True
-			while locked:
-				#print(clients.queue)
-				if clients.queue[0] == "main":
-					locked = False
-			
-			for client in clients.array:
-			
-				if client != sending_client:
+			#--should be in the client thread
+			if data_sent == b'FFFF{(0:text|bye)}':
 				
-					message = data_sent
-					
-					try:
-					
-						client.connection.send(message) #Need to make sure people are online before sending them messages
-						
-					except:
-						
-						pass
-					
-			clients.release()
-		
-		server_data.pop(index)
+				if sending_client:
+					print("Disconnecting Client")
+					sending_client.disconnect()
 
-print("Leaving Loop")
-clients.acquire("main")
-locked = True
-while locked:
-	if clients.queue[0] == "main":
-		locked = False
-		
-for client in clients.array:
-	client.join()
-	
-clients.release()
-	
-print("Shutting down")	
-	
-sys.exit()
-		
+					#Makes sure the client is actually gone before disconnecting them.
+				break
+			else:
+				
+				print("Aquiring main 2")
+				clients.acquire("main")
+				locked = True
+				while locked:
+					#print(clients.queue)
+					if clients.queue[0] == "main":
+						locked = False
+				
+				for client in clients.array:
+				
+					if client != sending_client:
+					
+						message = data_sent
+						
+						try:
+						
+							client.connection.send(message) #Need to make sure people are online before sending them messages
+							
+						except:
+							
+							pass
+						
+				clients.release()
+			
+			server_data.pop(index)
 
+	print("Leaving Loop")
+	clients.acquire("main")
+	locked = True
+	while locked:
+		if clients.queue[0] == "main":
+			locked = False
+			
+	for client in clients.array:
+		client.join()
+		
+	clients.release()
+		
+	print("Shutting down")	
+		
+			
+if __name__ == '__main__':
+    main()
 		
 		
 		

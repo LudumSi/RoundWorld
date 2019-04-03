@@ -27,14 +27,18 @@ public class MenuScreen implements Screen{
 	public Stage uiStage;
 	public Game game;
 		
+	
+	private BaseActor serverlessDebugButton = new BaseActor(Utils.loadTexture("ui/serverless_debug_button"));
+	
 	public BaseActor test;
 	public BaseActor textBase = new BaseActor(Utils.emptyTexture);
 	private TextInput usernameIn;
 	private TextInput ipIn;
+	
 	private Label username;
 	private Label serverIp;
-	private Projectile[] title;
 	public Label text;
+	
 	public Client client;
 	private int scaleVal = 1;
 	
@@ -84,6 +88,9 @@ public class MenuScreen implements Screen{
 		serverIp.setPosition(10, RoundWorld.height - 75);
 		serverIp.setColor(Color.YELLOW);
 		mainStage.addActor(serverIp);
+		
+		serverlessDebugButton.setPosition(5, 5);
+		mainStage.addActor(serverlessDebugButton);
 		
 		
 		String ip = AssetManager.loadIp();
@@ -157,6 +164,11 @@ public class MenuScreen implements Screen{
 				
 			}
 		}
+		
+		serverlessDebugOnClick();
+		
+		
+		
 		for (int i = 0; i < Projectile.projs.size(); i++) {
 			
 	
@@ -243,6 +255,16 @@ public class MenuScreen implements Screen{
 		}
 	}
 	
+	private void serverlessDebugOnClick() {
+		if (serverlessDebugButton.getBoundingRectangle().contains(Gdx.input.getX(), RoundWorld.height - Gdx.input.getY())) {
+			if (Gdx.input.justTouched()) {
+				RoundWorld.serverless = true;
+				GameplayScreen g = new GameplayScreen(this.game, null);
+				this.game.setScreen(g);
+				
+			}
+		}
+	}
 	
 	
 	private Runnable connect = new Runnable() {

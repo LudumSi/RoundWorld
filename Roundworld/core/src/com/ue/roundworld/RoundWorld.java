@@ -26,6 +26,7 @@ public class RoundWorld extends Game {
 
 	public static Rectangle window = new Rectangle(0, 0, width, height);
 	
+	public static boolean serverless = false;
 	
 	@Override
 	public void create() {

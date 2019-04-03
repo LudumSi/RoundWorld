@@ -1,5 +1,7 @@
 package com.ue.roundworld;
 
+import java.io.File;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -14,6 +16,7 @@ import com.ue.roundworld.client.Command;
 import com.ue.roundworld.client.Component;
 import com.ue.roundworld.client.Parser;
 import com.ue.roundworld.client.RenderManager;
+import com.ue.roundworld.ui.UiBase;
 
 public class GameplayScreen implements Screen{
 	
@@ -29,6 +32,8 @@ public class GameplayScreen implements Screen{
 	
 	private RenderManager renderManager;
 	private Player player;
+	
+	private UiBase uiBase = new UiBase();
 	
 	public GameplayScreen(Game g, Client c){
 		game = g;
@@ -67,19 +72,21 @@ public class GameplayScreen implements Screen{
 		
 		mainStage.addActor(player);
 		
+		//AssetManager.load_textures(new File("assets/"));
+		
+		uiStage.addActor(uiBase);
+		
 	}
 	
 	public void render(float dt){
 		
 
 		mainStage.act();
+		uiStage.act();
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		test.rotateBy(1);
-		test.addAction(Actions.sequence(
-				Actions.scaleBy(1.5f, 1.5f, 0.1f),
-				Actions.scaleBy(0.5f, 0.5f, 0.1f)
-				));
+	
 	
 		//System.out.println(client.getRecievedData());
 		
@@ -97,7 +104,7 @@ public class GameplayScreen implements Screen{
 			Gdx.app.exit();
 		}
 		
-		if (!client.getConnect()) {
+		if (client != null && !client.getConnect()) {
 			textInput.add_to_log("SERVER:", "Connection Failed", Color.RED);
 		}
 		
