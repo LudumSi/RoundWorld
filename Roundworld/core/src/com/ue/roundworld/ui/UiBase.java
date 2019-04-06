@@ -9,6 +9,7 @@ import com.ue.roundworld.BaseActor;
 import com.ue.roundworld.InputProcess;
 import com.ue.roundworld.RoundWorld;
 import com.ue.roundworld.Utils;
+import com.ue.roundworld.client.Client;
 
 public class UiBase extends BaseActor{
 	
@@ -16,11 +17,14 @@ public class UiBase extends BaseActor{
 	private Bar pmb;
 	
 	private Chat chat;
-	
+	private Client c;
 	private Vector2 mousePos = new Vector2();
 	
-	public UiBase() {
+	public UiBase(Client c) {
 		super(Utils.emptyTexture);
+		
+		this.c = c;
+		
 		//health bars
 		phb = new Bar(AssetManager.get_texture("health_bar_back"), AssetManager.get_texture("health_bar"));
 		pmb = new Bar(AssetManager.get_texture("mana_bar_back"), AssetManager.get_texture("mana_bar"));

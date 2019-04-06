@@ -258,6 +258,7 @@ public class MenuScreen implements Screen{
 		if (serverlessDebugButton.getBoundingRectangle().contains(Gdx.input.getX(), RoundWorld.height - Gdx.input.getY())) {
 			if (Gdx.input.justTouched()) {
 				RoundWorld.serverless = true;
+				System.out.println("Going serverless");
 				GameplayScreen g = new GameplayScreen(this.game, null);
 				this.game.setScreen(g);
 				

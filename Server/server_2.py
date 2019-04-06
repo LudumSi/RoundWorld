@@ -1,98 +1,60 @@
-import structure
+
+
 import socket
-import threading
-import sys
-import time
-#from parser import parse
-
-#--Gotta add message length to command header
-#--use global locked queue to send things between threads (included in python)
-#--see: async io 
-
-class client_thread(shittyPrestonThread):
-
-	def run():
-
-	def disconnect():
+from threading import Thread
+from socketserver import ThreadingMixIn
 
 
-class connecting_thread():
+class ClientThread(Thread):
 
-	def __init__(self):
-		
-		print("Initializing")
-		
-		super().__init__()
-		
-		try: 
-    		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-    		print "Socket successfully created"
-		except socket.error as err: 
-    		print "socket creation failed with error %s" %(err)
-		
-		hostname = socket.gethostname() #Some black magic fuckery to get the local IP
-		
-		HOST = socket.gethostbyname(hostname)
-		PORT = 1337
+	def __init__(self,ip,port):
+		Thread.__init__(self)
+		self.ip = ip
+		self.port = port
+		print(f"[+] New server socket thread started for {ip} : {port}")
 
-		self.server.bind((HOST,PORT))
-		self.server.settimeout(20)
-		
+
 	def run(self):
+		while True:
+			data = conn.recv(2048)
+			print(f"Server received data: {data}")
+
+			if data == b'FFFF{(0:text|bye)}':
+				print("Disconnect Sequence")
+				
+
+				self.ip.shu
+				self.thread..shutdown(socket.SHUT_RDWR)
+				self.connection.close()
+
+				#clients.array.pop(clients.array.index(self))
+				self.join()
 		
-		global running
-		
-		print("Running")
-		
-		#--parameter is backlog of connections in queue. This may have to be modified later
-		self.server.listen(1)
-		
-		while(running):
-			
+				del self
 
-			
-			try:
-				#--Lots of things can go wrong here: read/write timeouts, heartbeats, external idle kills etc...
-				conn,address = self.server.accept()
-				
-				self.queueArray(clients)
-				
-				#Important code to make sure the client doesn't connect multiple times
-				new_connection = True
-				
-				for client in clients.array:
-					
-					if client.address[0] == address[0]:
-						
-						new_connection = False
-					
-				if new_connection:
-					
-					new_client = clientThread(conn,address)
-					new_client.daemon = True
-					clients.array.append(new_client)
-					new_client.start()
-					
-					print("Connected to " + address[0])
-					print(f"Current players: {len(clients.array)}")
-
-					print(f"Clients: {clients.array}")
-					#message_to_send = "Hello Beautiful!\n".encode("UTF-8")
-					#new_client.connection.send(message_to_send)
-						
-				clients.release()
-				
-				#Create a new client, automatically adding it to the clients list
-			
-			except Exception as e:
-				print(e)
-				
-		self.server.shutdown(socket.SHUT_RDWR)
-		self.server.close()
-		print("Closed listener")
+			MESSAGE = input("Multithreaded Python server : Enter Response from Server/Enter exit:")
+			if MESSAGE == 'exit':
+				break
+			conn.send(MESSAGE.encode())
 
 
-class game_thread():
+TCP_IP = 'localhost'
+TCP_PORT = 7777
+BUFFER_SIZE = 128
 
+tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+tcpServer.bind((TCP_IP, TCP_PORT))
+threads = []
 
-while running:
+while True:
+	tcpServer.listen(4)
+	print("Multithreaded Python server : Waiting for connections from TCP clients...")
+	(conn, (ip,port)) = tcpServer.accept()
+	newthread = ClientThread(ip,port)
+	newthread.start()
+	threads.append(newthread)
+	print(threads)
+
+for t in threads:
+	t.join()

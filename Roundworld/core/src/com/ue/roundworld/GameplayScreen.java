@@ -34,7 +34,7 @@ public class GameplayScreen implements Screen{
 	private RenderManager renderManager;
 	private Player player;
 	
-	private UiBase uiBase = new UiBase();
+	private UiBase uiBase;
 	
 	public GameplayScreen(Game g, Client c){
 		game = g;
@@ -48,7 +48,8 @@ public class GameplayScreen implements Screen{
 		
 		mainStage = new Stage();
 		uiStage = new Stage();
-	
+		
+		uiBase = new UiBase(client);
 		test = new BaseActor(AssetManager.get_texture("RW_Icon_64"));
 		test.setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		mainStage.addActor(test);
