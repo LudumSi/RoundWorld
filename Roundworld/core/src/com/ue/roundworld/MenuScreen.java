@@ -40,7 +40,7 @@ public class MenuScreen implements Screen{
 	private Label serverIp;
 	public Label text;
 	
-	public Client client;
+	
 	private int scaleVal = 1;
 	
 	private Color titleColor = Color.WHITE;
@@ -206,8 +206,8 @@ public class MenuScreen implements Screen{
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			if (client != null) {
-				client.close();
+			if (Client.isConnected()) {
+				Client.close();
 			}
 			
 			Gdx.app.exit();
@@ -220,7 +220,7 @@ public class MenuScreen implements Screen{
 		}
 		
 		//start game
-		if (client != null && connectAnimCountdown == 0) {
+		if (Client.isConnected() && connectAnimCountdown == 0) {
 			try {
 				connectionThread.join();
 			} catch (InterruptedException e) {
@@ -228,7 +228,7 @@ public class MenuScreen implements Screen{
 				e.printStackTrace();
 			}
 		
-			GameplayScreen g = new GameplayScreen(this.game, client);
+			GameplayScreen g = new GameplayScreen(this.game);
 			this.game.setScreen(g);
 		}
 		if (ipIn.getInput() != null && ipIn.getInput() != "") {
@@ -259,7 +259,7 @@ public class MenuScreen implements Screen{
 			if (Gdx.input.justTouched()) {
 				RoundWorld.serverless = true;
 				System.out.println("Going serverless");
-				GameplayScreen g = new GameplayScreen(this.game, null);
+				GameplayScreen g = new GameplayScreen(this.game);
 				this.game.setScreen(g);
 				
 			}
@@ -282,12 +282,12 @@ public class MenuScreen implements Screen{
 			
 			try {
 				//create client only if is null
-				if (client == null) {
+				if (!Client.isConnected()) {
 
-					client = new Client(Client.userIpAddress, 7777);
+					Client.init(Client.userIpAddress, 7777);
 					
 					//send hello
-					client.sendRequest(Command.generate(
+					Client.sendRequest(Command.generate(
 							Command.Type.initConnect, 
 							Component.generate(Component.Type.text, Client.user)));
 							System.out.println("Sending Connect Message");

@@ -17,13 +17,13 @@ public class UiBase extends BaseActor{
 	private Bar pmb;
 	
 	private Chat chat;
-	private Client c;
+
 	private Vector2 mousePos = new Vector2();
 	
-	public UiBase(Client c) {
+	public UiBase() {
 		super(Utils.emptyTexture);
 		
-		this.c = c;
+	
 		
 		//health bars
 		phb = new Bar(AssetManager.get_texture("health_bar_back"), AssetManager.get_texture("health_bar"));

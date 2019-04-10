@@ -14,15 +14,14 @@ import com.ue.roundworld.BaseActor;
 public class RenderManager{
 	
 	private static final int renderDist = 1000;
-	private Client c;
 	private HashMap<Integer, BaseActor> renders = new HashMap<Integer, BaseActor>();
-	public RenderManager(Client c){
-		this.c = c;
+	public RenderManager(){
+	
 	}
 	
 	
 	public boolean getRenders() {
-		Command com = c.getParsedData();
+		Command com = Client.getParsedData();
 		if (com.get_id() == 0xC001 && com.get_component(1, 0) != null) {
 			for (int i = 0; i < com.components.size(); i++) {
 				Texture t = AssetManager.get_texture(com.get_component(1, i).getArg("texture"));

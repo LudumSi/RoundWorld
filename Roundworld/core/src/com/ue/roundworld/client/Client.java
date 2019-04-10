@@ -20,18 +20,17 @@ public class Client {
 
 	public static String user;
 	
-	private boolean isConnected = false;
+	private static  boolean isConnected = false;
 
-	private String receivedData = "NONE";
-	private Queue<String> dataQueue = new Queue<String>();
-	private String connectionResult = "";
-	private String ip;
-	private int port;
-	
+	private static String receivedData = "NONE";
+	private static Queue<String> dataQueue = new Queue<String>();
+
+	private static String ip;
+	private static int port;
 
 		
 	
-	private Socket socket; 
+	private static Socket socket; 
 
 	
 
@@ -41,9 +40,9 @@ public class Client {
 	 * 
 	 * @param ip the ip to connect to
 	 */
-	public Client(String ip, int port) {
-		this.ip = ip;
-		this.port = port;
+	public static void init(String ips, int ports) {
+		ip = ips;
+		port = ports;
 		SocketHints socketHints = new SocketHints();
 		// Socket will time our in 4 seconds
 		socketHints.connectTimeout = 4000;
@@ -60,7 +59,7 @@ public class Client {
 		
 		System.out.println("connected to: " + ip);
 		isConnected = true;
-		this.receive.start();
+		receive.start();
 
 	}
 
@@ -70,7 +69,7 @@ public class Client {
 	 * @param data the data to be sent
 	 * @param com the command for the server to perform
 	 */
-	public void sendRequest(String jsonStringToSend) {
+	public static void sendRequest(String jsonStringToSend) {
 
 		try {
 			// write our entered message to the stream
@@ -83,7 +82,7 @@ public class Client {
 
 	}
 
-	private Thread receive = new Thread(new Runnable() {
+	private static Thread receive = new Thread(new Runnable() {
 
 		@Override
 		public void run() {
@@ -129,12 +128,12 @@ public class Client {
 	 * 
 	 * @return String the data recieve from the server
 	 */
-	public String getRecievedData() {
+	public static String getRecievedData() {
 
-		return this.receivedData;
+		return receivedData;
 	}
 
-	public Command getParsedData() {
+	public static Command getParsedData() {
 		//if (isCommandComplete()) {
 			if (dataQueue.size> 0) {
 				return Parser.parse(dataQueue.removeFirst());
@@ -147,8 +146,8 @@ public class Client {
 		
 	}
 	
-	public void close() {
-		this.sendRequest("FFFF{(0:text|bye)}");
+	public static void close() {
+		sendRequest("FFFF{(0:text|bye)}");
 		receivedData = "STOP";
 		try {
 			receive.join();
@@ -162,7 +161,7 @@ public class Client {
 	}
 
 	
-	public boolean isCommandComplete() {
+	public static boolean isCommandComplete() {
 		if (dataQueue.size > 0) {
 			String begin = dataQueue.removeFirst();
 			String length = "";
@@ -202,7 +201,7 @@ public class Client {
 		
 	}
 	
-	public boolean getConnect() {
+	public static boolean isConnected() {
 		return isConnected;
 	}
 }

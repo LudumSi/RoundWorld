@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ue.roundworld.AssetManager;
 import com.ue.roundworld.BaseActor;
+import com.ue.roundworld.GameplayScreen;
 import com.ue.roundworld.RoundWorld;
 import com.ue.roundworld.client.Client;
 import com.ue.roundworld.client.Command;
@@ -14,7 +15,6 @@ public class Chat extends BaseActor{
 	
 	public TextInput textInput;
 	Label[] log = new Label[7];
-	Client c;
 	String lastText = "";
 	String lastAdd = "";
 	
@@ -37,8 +37,8 @@ public class Chat extends BaseActor{
 	
 	public void act(float dt) {
 		super.act(dt);
-		if (c != null) {
-			Command com = c.getParsedData();
+		if (Client.isConnected()) {
+			Command com = Client.getParsedData();
 			
 			if(com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
 				
@@ -52,8 +52,8 @@ public class Chat extends BaseActor{
 		}
 		if (!lastText.equals(textInput.getInput())) {
 			add_to_log(Client.user, textInput.getInput(), Color.WHITE);
-			if (c != null) {
-				c.sendRequest(Command.generate(Command.Type.sendText,
+			if (Client.isConnected()) {
+				Client.sendRequest(Command.generate(Command.Type.sendText,
 						Component.generate(Component.Type.text, Client.user),
 						Component.generate(Component.Type.text, textInput.getInput())
 						));

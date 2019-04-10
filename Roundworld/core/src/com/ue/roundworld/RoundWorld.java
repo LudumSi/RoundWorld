@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.ue.roundworld.client.Client;
 
 public class RoundWorld extends Game {
 	
@@ -56,8 +57,8 @@ public class RoundWorld extends Game {
 	
 	@Override
 	public void dispose() {
-		if (GameplayScreen.client != null) {
-			GameplayScreen.client.close();
+		if (Client.isConnected()) {
+			Client.close();
 		}
 		super.dispose();
 	}
