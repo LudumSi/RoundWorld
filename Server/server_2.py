@@ -22,10 +22,7 @@ class ClientThread(Thread):
 			if data == b'FFFF{(0:text|bye)}':
 				print("Disconnect Sequence")
 				
-
-				self.ip.shu
-				self.thread..shutdown(socket.SHUT_RDWR)
-				self.connection.close()
+				conn.close()
 
 				#clients.array.pop(clients.array.index(self))
 				self.join()
@@ -48,13 +45,13 @@ tcpServer.bind((TCP_IP, TCP_PORT))
 threads = []
 
 while True:
+	print(threads)
 	tcpServer.listen(4)
 	print("Multithreaded Python server : Waiting for connections from TCP clients...")
 	(conn, (ip,port)) = tcpServer.accept()
 	newthread = ClientThread(ip,port)
 	newthread.start()
 	threads.append(newthread)
-	print(threads)
 
 for t in threads:
 	t.join()
