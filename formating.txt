@@ -1,0 +1,23 @@
+--Basic Components and their args--
+
+Text: <Text>
+vector: <x, y>
+Num: <num>
+
+
+--Commands--
+
+-Client:
+
+C000: Client Join: Text<username>
+CFFF: Client Leave: Text<leavemsg>
+C001: Chat Message: Text<Username>, Text<Message>
+C002: Vector Update: Vector<x, y>, Num<accel>, Num<Id>
+
+
+-Server:
+
+0000: Client Accept: Text<acceptmsg>
+0001: Chat Message: Text<Username>, Text<Message>
+0002: World Renders: Text<Texture name>, Vector<x, y>, Num<id>
+0003: Update Render: Vector<x, y>, Num<id>
