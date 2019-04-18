@@ -33,6 +33,7 @@ public class GameplayScreen implements Screen{
 	
 	private RenderManager renderManager;
 	private Player player;
+	private Entity ghost;
 	
 	private UiBase uiBase;
 	
@@ -62,6 +63,9 @@ public class GameplayScreen implements Screen{
 		player = new Player();
 		player.setPosition(50, 50);
 		
+		ghost = new Entity(Utils.missingTexture);
+		ghost.setPosition(100, 50);
+		
 		
 		
 		//TextInput listener = new TextInput();
@@ -71,6 +75,7 @@ public class GameplayScreen implements Screen{
 		
 		
 		mainStage.addActor(player);
+		mainStage.addActor(ghost);
 		
 		//AssetManager.load_textures(new File("assets/"));
 		

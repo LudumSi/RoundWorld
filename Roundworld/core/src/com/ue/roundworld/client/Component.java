@@ -5,12 +5,13 @@ import java.util.ArrayList;
 public class Component {
 	
 	public static enum Type{
-		text;
+		text, velocity;
 		
 		public int id;
 		
 		static {
 			text.id = 0x0;
+			velocity.id = 0x1;
 			
 		}
 	}
@@ -27,36 +28,25 @@ public class Component {
 	public String toString() {
 		String out = "(" + Integer.toHexString(id) + ":";
 		for (int i = 0; i < this.args.size(); i++) {
-			out += this.args.get(i) + ",";
+			out += this.args.get(i);
 		}
 		out += ")";
 		return out;
 	}
 	
-	public String getArg(String key) {
-		for (int i = 0; i < args.size(); i++) {
+	public String getArg(int key) {
+
 			
-			String[] splitArg = args.get(i).split("\\|");
-			if (splitArg.length < 2) {return null;}
-			if (splitArg[0].equals(key)) {
-				return splitArg[1];
-			}
-		}
-		return null;
+		return args.get(key).substring(0, args.get(key).length()-1);
 	}
 	
 	public static String generate(Component.Type t, String...args) {
 		String str = "";
-		switch(t) {
-		case text:
-			str += "(" + Integer.toHexString(t.id).toUpperCase() +":";
-			for (int i = 0; i < args.length; i++) {
-				str += args[i];
-			}
-			str += ")";
-			break;
-		
+		str += "(" + Integer.toHexString(t.id).toUpperCase() +":";
+		for (int i = 0; i < args.length; i++) {
+			str += args[i] + ",";
 		}
+		str += ")";
 		return str;
 	}
 }

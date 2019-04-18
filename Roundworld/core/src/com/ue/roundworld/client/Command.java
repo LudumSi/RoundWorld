@@ -9,13 +9,14 @@ public class Command {
 	
 	
 	public static enum Type{
-		initConnect, sendText;
+		initConnect, sendText, velUpdate;
 		
 		int id;
 		
 		static {
 			initConnect.id = 0xC000;
 			sendText.id = 0xC001;
+			velUpdate.id = 0xC002;
 		}
 	}
 	
@@ -69,5 +70,18 @@ public class Command {
 		len += Utils.getDigits(len);
 		str = Integer.toString(len) + "L" + str;
 		return str;
+	}
+	
+	public static boolean verify(Command com, Component.Type type, int expectedComponents) {
+		if (com == null) {
+			return false;
+		}
+		
+		for (int i = 0; i < expectedComponents; i++) {
+			if (com.get_component(type.id, i) == null) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

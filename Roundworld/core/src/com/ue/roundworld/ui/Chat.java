@@ -42,12 +42,11 @@ public class Chat extends BaseActor{
 			
 			if(com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
 				
-					if (
-						!lastText.equals(com.get_component(0, 1).getArg("text"))) {
-						lastText = com.get_component(0, 1).getArg("text");
-						add_to_log( com.get_component(0, 0).getArg("text"), com.get_component(0, 1).getArg("text"), Color.WHITE);
+					
 						
-					}
+					add_to_log( com.get_component(0, 0).getArg(0), com.get_component(0, 1).getArg(0), Color.WHITE);
+						
+					
 			}
 		}
 		if (!lastText.equals(textInput.getInput())) {

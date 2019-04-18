@@ -18,9 +18,10 @@ public class Client {
 
 	public static String userIpAddress;
 
-	public static String user;
+	public static String user = "ME";
 	
-	private static  boolean isConnected = false;
+	private static boolean isConnected = false;
+	private static boolean isRunning = true;
 
 	private static String receivedData = "NONE";
 	private static Queue<String> dataQueue = new Queue<String>();
@@ -89,7 +90,8 @@ public class Client {
 
 			String data = "";
 			String prevData = "";
-			while (true) {
+			isRunning = true;
+			while (isRunning) {
 				if (receivedData.equals("STOP")) {
 					break;
 				}
@@ -149,6 +151,7 @@ public class Client {
 	public static void close() {
 		sendRequest("FFFF{(0:text|bye)}");
 		receivedData = "STOP";
+		isRunning = false;
 		try {
 			receive.join();
 		} catch (InterruptedException e) {

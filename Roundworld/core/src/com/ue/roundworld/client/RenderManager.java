@@ -24,12 +24,12 @@ public class RenderManager{
 		Command com = Client.getParsedData();
 		if (com.get_id() == 0xC001 && com.get_component(1, 0) != null) {
 			for (int i = 0; i < com.components.size(); i++) {
-				Texture t = AssetManager.get_texture(com.get_component(1, i).getArg("texture"));
-				int x = Integer.parseInt(com.get_component(1, i).getArg("x"));
-				int y = Integer.parseInt(com.get_component(1, i).getArg("y"));
+				Texture t = AssetManager.get_texture(com.get_component(1, i).getArg(0));
+				int x = Integer.parseInt(com.get_component(1, i).getArg(1));
+				int y = Integer.parseInt(com.get_component(1, i).getArg(2));
 				BaseActor ba = new BaseActor(t);
 				ba.setCenter(x, y);
-				renders.put(Integer.parseInt(com.get_component(1, i).getArg("id")), ba);
+				renders.put(Integer.parseInt(com.get_component(1, i).getArg(3)), ba);
 			}
 			return true;
 		}
