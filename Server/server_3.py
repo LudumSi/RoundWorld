@@ -1,5 +1,10 @@
 import socketserver
 
+
+#class Queue_stuff():
+
+
+
 class Handler_TCPServer(socketserver.BaseRequestHandler):
 	"""
 	The TCP Server class for demonstration.
@@ -8,6 +13,7 @@ class Handler_TCPServer(socketserver.BaseRequestHandler):
 	with TCP client.
 
 	"""
+
 
 	def handle(self):
 		# self.request - TCP socket connected to the client
