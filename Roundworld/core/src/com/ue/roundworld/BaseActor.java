@@ -31,6 +31,7 @@ public class BaseActor extends Group {
 	
 	public Texture texture;
 	public Animation<TextureRegion> animation;
+	
 	public BaseActor(String path) {
 		super();
 		region = new TextureRegion();
@@ -105,8 +106,8 @@ public class BaseActor extends Group {
 		}
 	}
 
-	public void genAnimation(String path, int cols, int rows) {
-		Texture sheet = Utils.loadTexture(path);
+	public void genAnimation(Texture sheet, int cols, int rows, float speed) {
+		
 		
 		TextureRegion[][] map = TextureRegion.split(sheet, sheet.getWidth()/cols, sheet.getHeight()/rows);
 		TextureRegion[] frames = new TextureRegion[cols * rows];
@@ -116,7 +117,7 @@ public class BaseActor extends Group {
 				frames[index++] = map[i][j];
 			}
 		}
-		animation = new Animation<TextureRegion>(0.025f, frames);
+		animation = new Animation<TextureRegion>(speed, frames);
 		
 		int w = frames[0].getRegionWidth();
 		int h = frames[0].getRegionHeight();

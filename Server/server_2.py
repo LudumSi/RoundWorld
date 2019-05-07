@@ -5,6 +5,8 @@ from threading import Thread
 from socketserver import ThreadingMixIn
 
 
+testRenders = "74L0002{(4:grass_00,50,50,0,)(4:grass_00,100,50,0,)(4:grass_00,50,100,0,)}"
+
 class ClientThread(Thread):
 
 	def __init__(self,ip,port):
@@ -16,6 +18,10 @@ class ClientThread(Thread):
 
 
 	def run(self):
+		global testRenders
+		
+		conn.send(testRenders.encode())
+		
 		#client update loop
 		while self.running:
 			#get data

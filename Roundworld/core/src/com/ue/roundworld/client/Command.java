@@ -44,10 +44,10 @@ public class Command {
 		return components.size();
 	}
 	
-	public Component get_component(int id, int num) {
+	public Component get_component(Component.Type id, int num) {
 		int count = 0;
 		for (int i = 0; i < components.size(); i++) {
-			if (components.get(i).id == id) {
+			if (components.get(i).id == id.id) {
 				if (count == num) {
 					return components.get(i);
 				}
@@ -78,7 +78,7 @@ public class Command {
 		}
 		
 		for (int i = 0; i < expectedComponents; i++) {
-			if (com.get_component(type.id, i) == null) {
+			if (com.get_component(type, i) == null) {
 				return false;
 			}
 		}

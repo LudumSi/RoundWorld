@@ -5,13 +5,16 @@ import java.util.ArrayList;
 public class Component {
 	
 	public static enum Type{
-		text, velocity;
+		text, value, velocity, position, render;
 		
 		public int id;
 		
 		static {
 			text.id = 0x0;
-			velocity.id = 0x1;
+			value.id = 0x1;
+			velocity.id = 0x2;
+			position.id = 0x3;
+			render.id = 0x4;
 			
 		}
 	}

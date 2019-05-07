@@ -11,8 +11,8 @@ import com.badlogic.gdx.math.Vector2;
 public class Utils {
 	
 	
-	public static Texture emptyTexture = Utils.loadTexture("assets/null.png");
-	public static Texture missingTexture = new Texture(Gdx.files.internal("assets/missingTex.png"));
+	public static Texture emptyTexture = Utils.loadTexture("assets/textures/null.png");
+	public static Texture missingTexture = new Texture(Gdx.files.internal("assets/textures/missingTex.png"));
 	
 	public static Vector2 polarToRect(int r, double angle, Vector2 origin) {
 		Vector2 v = new Vector2();
@@ -48,7 +48,7 @@ public class Utils {
 
 		} catch (Exception GdxRuntimeException) {
 			System.out.println("Error: Could not find: " + path + " substituting...");
-			Texture t = new Texture(Gdx.files.internal("assets/missingTex.png"));
+			Texture t = new Texture(Gdx.files.internal("assets/textures/missingTex.png"));
 			return t;
 		}
 	}

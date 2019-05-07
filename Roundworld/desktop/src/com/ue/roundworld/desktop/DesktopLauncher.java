@@ -15,7 +15,7 @@ public class DesktopLauncher {
 		//cfg.fullscreen = true;
 		//cfg.addIcon("assets/player.png", FileType.Internal);
 	
-		cfg.addIcon("assets/RW_Icon_32.png", FileType.Internal);
+		cfg.addIcon("assets/textures/RW_Icon_32.png", FileType.Internal);
 		cfg.height = RoundWorld.height;
 		cfg.width = RoundWorld.width;
 	

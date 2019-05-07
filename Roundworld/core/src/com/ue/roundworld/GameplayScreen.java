@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -34,6 +35,8 @@ public class GameplayScreen implements Screen{
 	private RenderManager renderManager;
 	private Player player;
 	private Entity ghost;
+	private Entity ghost2;
+	
 	
 	private UiBase uiBase;
 	
@@ -49,22 +52,36 @@ public class GameplayScreen implements Screen{
 		mainStage = new Stage();
 		uiStage = new Stage();
 		
+		//while(!renderManage.getRenders(mainStage));
+		for (int i = 0; i < 25; i++) {
+			for (int j = 0; j < 25; j++) {
+				BaseActor ba = new BaseActor(AssetManager.get_texture("grass_0" + Integer.toString(MathUtils.random(0, 3))));
+				ba.sizeBy(16, 16);
+				ba.setPosition(i * 32, j * 32);
+				mainStage.addActor(ba);
+			}
+			
+		}
+		
+		
 		uiBase = new UiBase();
-		test = new BaseActor(AssetManager.get_texture("RW_Icon_64"));
-		test.setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
-		mainStage.addActor(test);
+	
+		
 		
 		text = new Label(" ", RoundWorld.font);
 		text.setPosition(5, 5);
 		mainStage.addActor(text);
 		
 		
-		test.scaleBy(4, 4);
+
 		player = new Player();
 		player.setPosition(50, 50);
 		
 		ghost = new Entity(Utils.missingTexture);
 		ghost.setPosition(100, 50);
+		
+		ghost2 = new Entity(Utils.missingTexture);
+		ghost2.setPosition(150, 50);
 		
 		
 		
@@ -76,6 +93,7 @@ public class GameplayScreen implements Screen{
 		
 		mainStage.addActor(player);
 		mainStage.addActor(ghost);
+		mainStage.addActor(ghost2);
 		
 		//AssetManager.load_textures(new File("assets/"));
 		
@@ -85,12 +103,12 @@ public class GameplayScreen implements Screen{
 	
 	public void render(float dt){
 		
-
+		
 		mainStage.act();
 		uiStage.act();
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		test.rotateBy(1);
+	
 	
 	
 		//System.out.println(client.getRecievedData());

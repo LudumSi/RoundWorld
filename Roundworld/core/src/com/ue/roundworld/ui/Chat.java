@@ -38,13 +38,13 @@ public class Chat extends BaseActor{
 	public void act(float dt) {
 		super.act(dt);
 		if (Client.isConnected()) {
-			Command com = Client.getParsedData();
+			Command com = Client.popParsedData();
 			
-			if(com!= null && com.get_id() == 0xC001 && com.get_component(0, 0) != null && com.get_component(0, 1) != null) {
+			if(com!= null && com.get_id() == 0xC001 && com.get_component(Component.Type.text, 0) != null && com.get_component(Component.Type.text, 1) != null) {
 				
 					
 						
-					add_to_log( com.get_component(0, 0).getArg(0), com.get_component(0, 1).getArg(0), Color.WHITE);
+					add_to_log( com.get_component(Component.Type.text, 0).getArg(0), com.get_component(Component.Type.text, 1).getArg(0), Color.WHITE);
 						
 					
 			}

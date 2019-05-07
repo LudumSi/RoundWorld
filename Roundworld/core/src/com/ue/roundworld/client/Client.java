@@ -135,16 +135,30 @@ public class Client {
 		return receivedData;
 	}
 
-	public static Command getParsedData() {
-		//if (isCommandComplete()) {
+	public static Command popParsedData() {
+		/*add search for correct command*/
+		if (isCommandComplete()) {
 			if (dataQueue.size> 0) {
 				return Parser.parse(dataQueue.removeFirst());
 			}
 			return null;
 		
-		//} else {
-			//return null;
-		//}
+		} else {
+			return null;
+		}
+		
+	}
+	
+	public static Command getParsedData() {
+		if (isCommandComplete()) {
+			if (dataQueue.size> 0) {
+				return Parser.parse(dataQueue.first());
+			}
+			return null;
+		
+		} else {
+			return null;
+		}
 		
 	}
 	
@@ -186,11 +200,16 @@ public class Client {
 			for (int i = 0; i < dataQueue.size; i++) {
 				if (begin.length() == len) {
 					dataQueue.addFirst(begin);
-					System.out.println("GOOD!");
+					System.out.println("GOOD: " + dataQueue.first());
 					return true;
-				} else if (dataQueue.size > 0) {
+				} else if (begin.length() <= len) {
 					begin += dataQueue.removeFirst();
 					System.out.println("BAD! Should be: " + Integer.toString(len) + " is: " +  Integer.toString(begin.length()));
+					return false;
+				} else if (begin.length() >= len) {
+					dataQueue.addFirst(begin.substring(0, len));
+					System.out.println("GOOD: "+ dataQueue.first());
+					return true;
 				}
 			}
 			dataQueue.addFirst(begin);

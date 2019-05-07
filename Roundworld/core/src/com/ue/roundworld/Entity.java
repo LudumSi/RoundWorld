@@ -12,15 +12,21 @@ public class Entity extends BaseActor{
 	private static int globalID = 0;
 	
 	private Vector2 vel = new Vector2();
+	private Vector2 prevVel = new Vector2();
 	private int id;
 	
 	public Entity(Texture t) {
 		super(t);
 		id = globalID;
+	
 		globalID++;
 		
-		//remove
 		id = 0;
+		vel.x = 0;
+		vel.y = 0;
+		prevVel.x = 0;
+		prevVel.y = 0;
+	
 	}
 	
 	public void addVel(float amtX, float amtY) {
@@ -38,25 +44,41 @@ public class Entity extends BaseActor{
 		
 	}
 	public void act(float dt) {
-		super.act(dt);
+		
+		if (prevVel.x != vel.x || prevVel.y != vel.y) {
+			prevVel.x = vel.x;
+			prevVel.y = vel.y;
+			sendVelUpdate();
+			
+		}
+	
 		this.moveBy(dt * 60 * vel.x, dt * 60 * vel.y);
 		
 		Command com = Client.getParsedData();
-		if( Command.verify(com, Component.Type.velocity, 1) && com.get_id() == 0xC002) {
-				if (this.id == Integer.parseInt(com.get_component(Component.Type.velocity.id, 0).getArg(0))) {
-					this.setVelX(Float.parseFloat(com.get_component(Component.Type.velocity.id, 0).getArg(1)));
-					this.setVelY(Float.parseFloat(com.get_component(Component.Type.velocity.id, 0).getArg(2)));
-				}
+	
+		if(Command.verify(com, Component.Type.velocity, 1) && Command.verify(com, Component.Type.position, 1) && com.get_id() == 0xC002) {
+		
+			if (id == Integer.parseInt(com.get_component(Component.Type.value, 0).getArg(0))){
+				this.setCenter(Float.parseFloat(com.get_component(Component.Type.position, 0).getArg(0)), 
+						Float.parseFloat(com.get_component(Component.Type.position, 0).getArg(1)));
+				this.setVelX(Float.parseFloat(com.get_component(Component.Type.velocity, 0).getArg(0)));
+				this.setVelY(Float.parseFloat(com.get_component(Component.Type.velocity, 0).getArg(1)));
+				
+			}
+				
+				
 			
 		}
+		super.act(dt);
 	}
 	
 	public void sendVelUpdate() {
 		if (Client.isConnected()) {
 			Client.sendRequest(
 					Command.generate(Command.Type.velUpdate, 
-							Component.generate(Component.Type.velocity, 
-									Integer.toString(id), Float.toString(vel.x), Float.toString(vel.y)
+							Component.generate(Component.Type.value, Integer.toString(0)),
+							Component.generate(Component.Type.position, Float.toString(this.center.x), Float.toString(this.center.y)),
+							Component.generate(Component.Type.velocity, Float.toString(vel.x), Float.toString(vel.y)
 									)
 							
 							)

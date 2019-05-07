@@ -6,11 +6,14 @@ import com.ue.roundworld.BaseActor;
 public class Bar extends BaseActor{
 	
 	private BaseActor barVal;
+	private BaseActor barMid;
 	private float ratio;
 	
-	public Bar(Texture back, Texture fore) {
+	public Bar(Texture back, Texture mid, Texture fore) {
 		super(back);
 		barVal = new BaseActor(fore);
+		barMid = new BaseActor(mid);
+		this.addActor(barMid);
 		this.addActor(barVal);
 		ratio = 1.0f; 
 	}

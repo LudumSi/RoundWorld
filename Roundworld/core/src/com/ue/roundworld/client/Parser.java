@@ -38,10 +38,8 @@ public class Parser {
 			
 		}
 		
-		if (len != data.length()) {
-			System.out.println("Bad Command Length: " + data);
-			return null;
-		}
+		data = data.substring(start, len);
+		System.out.println("parsing: " + data);
 		
 		ArrayList<Component> comps = new ArrayList<Component>();
 		for (int i = 0; i < data.length(); i++) {
