@@ -4,8 +4,13 @@ import socket
 from threading import Thread
 from socketserver import ThreadingMixIn
 
+import gameObject
+import player
+
 
 testRenders = "74L0002{(4:grass_00,50,50,0,)(4:grass_00,100,50,0,)(4:grass_00,50,100,0,)}"
+
+
 
 class ClientThread(Thread):
 
@@ -14,6 +19,7 @@ class ClientThread(Thread):
 		self.ip = ip
 		self.port = port
 		self.running = True
+		self.dataQueue = []
 		print(f"[+] New server socket thread started for {ip} : {port}")
 
 
@@ -48,16 +54,22 @@ class ClientThread(Thread):
 		print("Killing thread...")
 		self.running = False
 
+#sends data to target client
+def queueForSend(comp, target):
+	target.dataQueue.append(comp)
 
+#sends data to all clients
+def queueForSendAll(comp):		
+	pass
 TCP_IP = 'localhost'
 TCP_PORT = 7777
 BUFFER_SIZE = 128
-
+threads = []
 #setup server
 tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpServer.bind((TCP_IP, TCP_PORT))
-threads = []
+
 
 while True:
 	print(threads)

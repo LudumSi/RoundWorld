@@ -9,16 +9,41 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AssetManager {
 	
 	private static HashMap<String, Texture> textureLib = new HashMap<String, Texture>();
+	private static HashMap<String, Animation<TextureRegion>> animationLib = new HashMap<String, Animation<TextureRegion>>();
 	
 	/**
 	 * Recursively loads ALL the textures in a given file, reads through subdirectories
 	 * @param f the file to load textures from
 	 */
 	public static void loadTextures(File f) {
+		if (f.isDirectory()) {
+			
+			System.out.println(f.getName());
+			
+			for (File fi : f.listFiles()) {
+				loadTextures(fi);
+			}
+		} else {
+			if (f.getName().contains(".png")) {
+				String fName = f.getName().substring(0, f.getName().length() - 4);
+				System.out.println("Adding " + fName + " to texLib");
+				textureLib.put(fName, new Texture(Gdx.files.internal(f.getPath())));
+			}
+			
+		}
+	}
+	
+	/**
+	 * Recursively loads ALL the animations in a given file, reads through subdirectories
+	 * @param f the file to load animations from
+	 */
+	public static void loadAnimations(File f) {
 		if (f.isDirectory()) {
 			
 			System.out.println(f.getName());
