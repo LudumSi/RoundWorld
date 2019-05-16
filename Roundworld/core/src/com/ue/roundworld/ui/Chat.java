@@ -19,7 +19,7 @@ public class Chat extends BaseActor{
 	String lastAdd = "";
 	
 	public Chat() {
-		super(AssetManager.get_texture("ui_chat"));
+		super(AssetManager.getTexture("ui_chat"));
 		
 		for (int i = 0; i < log.length; i++) {
 			Label l = new Label("re", RoundWorld.font);
@@ -31,6 +31,9 @@ public class Chat extends BaseActor{
 		this.addActor(textInput);
 	}
 	
+	/**
+	 * sets the input processor to this text input
+	 */
 	public void select() {
 		Gdx.input.setInputProcessor(textInput);
 	}
@@ -63,6 +66,12 @@ public class Chat extends BaseActor{
 		}
 	}
 	
+	/**
+	 * adds a message to the chat
+	 * @param name the owner of the message
+	 * @param text the message to put in the chat
+	 * @param c the color of the message
+	 */
 	public void add_to_log(String name, String text, Color c) {
 		for (int i = 0; i < log.length-1; i++) {
 			log[i].setText(log[i+1].getText());
@@ -72,6 +81,9 @@ public class Chat extends BaseActor{
 		log[6].setColor(c);
 	}
 	
+	/**
+	 * clears the chat
+	 */
 	public void clearLog() {
 		for (Label l : log) {
 			l.setText("");

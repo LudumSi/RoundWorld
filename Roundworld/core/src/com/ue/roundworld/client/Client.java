@@ -40,6 +40,7 @@ public class Client {
 	 * errors when calling sendRequest if the ip can't be found
 	 * 
 	 * @param ip the ip to connect to
+	 * @param port the port
 	 */
 	public static void init(String ips, int ports) {
 		ip = ips;
@@ -67,15 +68,15 @@ public class Client {
 	/**
 	 * sends data to the server
 	 * 
-	 * @param data the data to be sent
-	 * @param com the command for the server to perform
+	 * @param s the data to be sent
+	 * 
 	 */
-	public static void sendRequest(String jsonStringToSend) {
+	public static void sendRequest(String s) {
 
 		try {
 			// write our entered message to the stream
-			System.out.println("Sent: " + jsonStringToSend);
-			socket.getOutputStream().write(jsonStringToSend.getBytes());
+			System.out.println("Sent: " + s);
+			socket.getOutputStream().write(s.getBytes());
 		} catch (Exception e) {
 			System.out.println("Socket write error " + e.getMessage());
 			isConnected = false;
@@ -134,7 +135,11 @@ public class Client {
 
 		return receivedData;
 	}
-
+	
+	/**
+	 * removes the command at the front of the data queue
+	 * @return the command at the front of the data queue
+	 */
 	public static Command popParsedData() {
 		/*add search for correct command*/
 		if (isCommandComplete()) {
@@ -149,6 +154,10 @@ public class Client {
 		
 	}
 	
+	/**
+	 * snags parsed data from the data queue
+	 * @return A command representing the first command in the data queue
+	 */
 	public static Command getParsedData() {
 		if (isCommandComplete()) {
 			if (dataQueue.size> 0) {
@@ -162,6 +171,9 @@ public class Client {
 		
 	}
 	
+	/**
+	 * stops the server
+	 */
 	public static void close() {
 		sendRequest("FFFF{(0:text|bye)}");
 		receivedData = "STOP";
@@ -177,7 +189,11 @@ public class Client {
 		
 	}
 
-	
+	/**
+	 * checks to see if the command at the front of the data queue
+	 * is complete
+	 * @return if the command is complete or not
+	 */
 	public static boolean isCommandComplete() {
 		if (dataQueue.size > 0) {
 			String begin = dataQueue.removeFirst();

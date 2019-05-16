@@ -26,7 +26,11 @@ public class TextInput extends BaseActor implements InputProcessor {
 	
 	String input = "";
 	
-	
+	/**
+	 * creates a text input at x, y
+	 * @param x
+	 * @param y
+	 */
 	public TextInput(int x, int y) {
 		super(Utils.emptyTexture);
 		this.setPosition(x, y);
@@ -35,7 +39,10 @@ public class TextInput extends BaseActor implements InputProcessor {
 		
 	}
 	
-	
+	/**
+	 * 
+	 * @return the text entered into the text Input (after the enter key is pressed)
+	 */
 	public String getInput() {
 		return input;
 	}
@@ -51,7 +58,12 @@ public class TextInput extends BaseActor implements InputProcessor {
 	
 	
 	
-	
+	/**
+	 * gets the value of a key
+	 * @param keycode the keycode, as in Keys.*
+	 * @param shifted whether the shift key is being pressed or not
+	 * @return a string representing the character corrisponding to the keycode
+	 */
 	
 	public String getKeyVal(int keycode, boolean shifted) {
 		switch (keycode) {
@@ -250,20 +262,32 @@ public class TextInput extends BaseActor implements InputProcessor {
 	
 	@Override
 	public boolean keyDown(int keycode) {
+		
+		//if key isn't enter or backspace
 		if (keycode != Keys.ENTER && keycode != Keys.BACKSPACE) {
+			
+			//get string of key
 			String key = getKeyVal(keycode, Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT));
+			
+			//If valid, add to text
 			if (key != null) {
 				text += key;
 				inputLine.setText(text);
 			}
 		
 		} else if (keycode == Keys.BACKSPACE) {
+			
+			//Make sure there's text to delete
 			if (text.length() > 0) {
+				
+				//copy over all but the last character
 				char[] arr = text.toCharArray();
 				char[] newArr = new char[text.length()-1];
 				for (int i = 0; i < text.length()-1; i++) {
 					newArr[i] = arr[i];
 				}
+				
+				//place back in the inputLine
 				text = String.valueOf(newArr);
 				inputLine.setText(text);
 			}

@@ -22,6 +22,11 @@ public class Parser {
 		return new Component(compId, args);
 	}
 	
+	/**
+	 * converts a command string into a command
+	 * @param data the command string
+	 * @return a Command representing the command string
+	 */
 	public static Command parse(String data) {
 		int start = 0;
 		int commandName = 0;
@@ -37,7 +42,7 @@ public class Parser {
 			}
 			
 		}
-		
+		//read the rest of the data
 		data = data.substring(start, len);
 		System.out.println("parsing: " + data);
 		

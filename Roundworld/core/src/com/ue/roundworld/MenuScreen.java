@@ -29,7 +29,7 @@ public class MenuScreen implements Screen{
 	public Game game;
 		
 	
-	private BaseActor serverlessDebugButton = new BaseActor(AssetManager.get_texture("serverless_debug_button"));
+	private BaseActor serverlessDebugButton = new BaseActor(AssetManager.getTexture("serverless_debug_button"));
 	
 	public BaseActor test;
 	public BaseActor textBase = new BaseActor(Utils.emptyTexture);
@@ -68,7 +68,7 @@ public class MenuScreen implements Screen{
 		mainStage = new Stage();
 		uiStage = new Stage();
 	
-		test = new BaseActor(AssetManager.get_texture("RW_Icon_64"));
+		test = new BaseActor(AssetManager.getTexture("RW_Icon_64"));
 		test.setCenter(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
 		mainStage.addActor(test);
 		test.scaleBy(2, 2);
@@ -109,16 +109,17 @@ public class MenuScreen implements Screen{
 		ipIn = new TextInput(10, RoundWorld.height - 100);
 		mainStage.addActor(ipIn);
 		
-		Projectile.spawnBullet(uiStage, new Vector2(0, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.get_texture("D"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(-64, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.get_texture("N"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(-64 * 2, RoundWorld.height/2 ), 1.5f, 0, 0, 0, AssetManager.get_texture("U"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(-64 * 3, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.get_texture("O"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(-64 * 4, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.get_texture("R"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("W"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("O"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 2, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("R"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 3, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("L"), titleColor, "R");
-		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 4, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.get_texture("D"), titleColor, "R");
+		//tile spawn in
+		Projectile.spawnBullet(uiStage, new Vector2(0, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.getTexture("D"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.getTexture("N"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 2, RoundWorld.height/2 ), 1.5f, 0, 0, 0, AssetManager.getTexture("U"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 3, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.getTexture("O"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(-64 * 4, RoundWorld.height/2), 1.5f, 0, 0, 0, AssetManager.getTexture("R"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.getTexture("W"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.getTexture("O"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 2, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.getTexture("R"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 3, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.getTexture("L"), titleColor, "R");
+		Projectile.spawnBullet(uiStage, new Vector2(RoundWorld.width + 64 * 4, RoundWorld.height/2), -1.5f, 0, 0, 0, AssetManager.getTexture("D"), titleColor, "R");
 	
 		test.addAction(Actions.fadeOut(0));
 		test.addAction(Actions.sequence(

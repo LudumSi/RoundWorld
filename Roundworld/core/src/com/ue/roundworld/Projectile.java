@@ -38,12 +38,27 @@ public class Projectile extends BaseActor{
 
 	public static ArrayList<Projectile> projs = new ArrayList<Projectile>();
 	
+	/**
+	 * use spawnBullet instead
+	 */
 	public Projectile() {
 		super();
 		
 		
 	}
-	
+	/**
+	 * spawns a Projectile
+	 * @param s the stage to add the projectile to 
+	 * @param pos the position to spawn the projectile at
+	 * @param vel the velocity to give the projectile
+	 * @param accel the acceleration to give the projectile
+	 * @param angle the angle that the projectile will move in
+	 * @param angleVel the angular velocity of the projectile
+	 * @param type the texture of the projectile
+	 * @param c the color of the projectile
+	 * @param id the id of the projectile
+	 * @return the projectile spawned
+	 */
 	public static Projectile spawnBullet(Stage s, Vector2 pos, float vel, float accel, float angle, float angleVel, Texture type, Color c, String id){
 		
 		
@@ -102,7 +117,9 @@ public class Projectile extends BaseActor{
 	}
 	
 	
-
+	/**
+	 * deletes this projectile
+	 */
 	public void kill(){
 		this.setCenter(-1000, -1000);
 		this.kill = true;
@@ -115,7 +132,14 @@ public class Projectile extends BaseActor{
 	
 	
 	
-	
+	/**
+	 * causes this projectile to orbit a point
+	 * @param x the x cord to orbit
+	 * @param y the y cord to orbit
+	 * @param angle the angle to begin orbiting at
+	 * @param speed the speed at which to orbit
+	 * @param radius the radius at which to orbit at
+	 */
 	public void orbit(float x, float y, float angle, float speed, float radius) {
 		this.setCenter(x + (float)Math.cos(angle + orbitSpeed) * radius, y + (float)Math.sin(angle + orbitSpeed) * radius);
 		orbitSpeed += speed;

@@ -34,7 +34,7 @@ public class RoundWorld extends Game {
 	@Override
 	public void create() {
 	
-	
+		//setup font
 		// viewBorder = new Rectangle(1, 0, PS.viewWidth-1, PS.viewHeight-220);
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/fantasquesansmono-regular.otf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -45,8 +45,8 @@ public class RoundWorld extends Game {
 		
 		Gdx.input.setInputProcessor(new InputProcess());
 		
-		
-		AssetManager.load_textures(new File("assets"));
+		//load assets
+		AssetManager.loadTextures(new File("assets"));
 		
 		font = new LabelStyle(theFont, Color.WHITE);
 		MenuScreen ms = new MenuScreen(this);

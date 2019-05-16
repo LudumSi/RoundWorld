@@ -45,6 +45,7 @@ public class Entity extends BaseActor{
 	}
 	public void act(float dt) {
 		
+		//check for vel update
 		if (prevVel.x != vel.x || prevVel.y != vel.y) {
 			prevVel.x = vel.x;
 			prevVel.y = vel.y;
@@ -54,10 +55,11 @@ public class Entity extends BaseActor{
 	
 		this.moveBy(dt * 60 * vel.x, dt * 60 * vel.y);
 		
+		//update position and velocity from server
 		Command com = Client.getParsedData();
 	
 		if(Command.verify(com, Component.Type.velocity, 1) && Command.verify(com, Component.Type.position, 1) && com.get_id() == 0xC002) {
-		
+			Client.popParsedData();
 			if (id == Integer.parseInt(com.get_component(Component.Type.value, 0).getArg(0))){
 				this.setCenter(Float.parseFloat(com.get_component(Component.Type.position, 0).getArg(0)), 
 						Float.parseFloat(com.get_component(Component.Type.position, 0).getArg(1)));
@@ -72,6 +74,9 @@ public class Entity extends BaseActor{
 		super.act(dt);
 	}
 	
+	/**
+	 * sends a position and velocity update to the server
+	 */
 	public void sendVelUpdate() {
 		if (Client.isConnected()) {
 			Client.sendRequest(

@@ -22,7 +22,10 @@ public class Bar extends BaseActor{
 		
 		
 		//health.region.setRegionWidth((int) (healthRatio * 256));
-		barVal.setWidth((float) (ratio * 256));
+		//slice the bar to the ratio
+		
+		//TODO make this fancy
+		barVal.slice(0, 0,(int) (ratio * 256), (int)this.getHeight());
 		
 		
 		

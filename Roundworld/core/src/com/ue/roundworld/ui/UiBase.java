@@ -26,8 +26,8 @@ public class UiBase extends BaseActor{
 	
 		
 		//health bars
-		phb = new Bar(AssetManager.get_texture("health_bar_back"), AssetManager.get_texture("health_bar_invert"), AssetManager.get_texture("health_bar"));
-		pmb = new Bar(AssetManager.get_texture("mana_bar_back"),  AssetManager.get_texture("mana_bar"), AssetManager.get_texture("mana_bar"));
+		phb = new Bar(AssetManager.getTexture("health_bar_back"), AssetManager.getTexture("health_bar_invert"), AssetManager.getTexture("health_bar"));
+		pmb = new Bar(AssetManager.getTexture("mana_bar_back"),  AssetManager.getTexture("mana_bar"), AssetManager.getTexture("mana_bar"));
 		phb.setPosition(0, RoundWorld.height - 16);
 		pmb.setPosition(0, RoundWorld.height - 16 - 8);
 		this.addActor(phb);
@@ -55,12 +55,16 @@ public class UiBase extends BaseActor{
 	}
 	
 	private void chatUpdate() {
+		
+		//use T to bring up chat
 		if (Gdx.input.isKeyJustPressed(Keys.T)) {
 			if (Gdx.input.getInputProcessor() == InputProcess.instance) {
 				chat.addAction(Actions.fadeIn(1));
 				Gdx.input.setInputProcessor(chat.textInput);
 			}
 		}
+		
+		//clicking outside unselects chat
 		if (!chat.getBoundingRectangle().contains(mousePos) && Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			Gdx.input.setInputProcessor(InputProcess.instance);
 			chat.addAction(Actions.fadeOut(1));

@@ -14,12 +14,17 @@ import com.ue.roundworld.BaseActor;
 public class RenderManager{
 	
 	private static final int renderDist = 1000;
+	//TODO change to an array
 	private HashMap<Integer, BaseActor> renders = new HashMap<Integer, BaseActor>();
 	public RenderManager(){
 	
 	}
 	
-	
+	/**
+	 * asks server for ALL renders and places them on stage
+	 * @param s the stage
+	 * @return whether all the renders have been obtained or not
+	 */
 	public boolean getRenders(Stage s) {
 		Command com = Client.popParsedData();
 		
@@ -27,7 +32,7 @@ public class RenderManager{
 		
 		if (com != null && Command.verify(com, Component.Type.render, com.getNumComponents()) && com.get_id() == 0x002){
 			for (int i = 0; i < com.getNumComponents(); i++) {
-				BaseActor ba = new BaseActor(AssetManager.get_texture(com.get_component(Component.Type.render, i).getArg(0)));
+				BaseActor ba = new BaseActor(AssetManager.getTexture(com.get_component(Component.Type.render, i).getArg(0)));
 				ba.setCenter(
 						Float.parseFloat(com.get_component(Component.Type.render, i).getArg(1)),
 						Float.parseFloat(com.get_component(Component.Type.render, i).getArg(2))
@@ -41,6 +46,10 @@ public class RenderManager{
 		
 	}
 	
+	/**
+	 * renders all renders within renderDist of player
+	 * @param player the player
+	 */
 	public void render(BaseActor player) {
 		for (BaseActor b : renders.values()) {
 			if (b.distanceTo(player.center.x, player.center.y) <= renderDist) {

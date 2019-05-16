@@ -7,8 +7,8 @@ public class Player extends Entity{
 
 	
 	public Player() {
-		super(AssetManager.get_texture("character_01"));
-		this.genAnimation(AssetManager.get_texture("character_idle"), 2, 2, 0.5f * 0.3f); 
+		super(AssetManager.getTexture("character_01"));
+		this.genAnimation(AssetManager.getTexture("character_idle"), 2, 2, 0.5f * 0.3f); 
 	}
 	
 	public void act(float dt) {

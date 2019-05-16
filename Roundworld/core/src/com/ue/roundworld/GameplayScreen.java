@@ -52,10 +52,12 @@ public class GameplayScreen implements Screen{
 		mainStage = new Stage();
 		uiStage = new Stage();
 		
+		//get renders
 		//while(!renderManage.getRenders(mainStage));
+		
 		for (int i = 0; i < 25; i++) {
 			for (int j = 0; j < 25; j++) {
-				BaseActor ba = new BaseActor(AssetManager.get_texture("grass_0" + Integer.toString(MathUtils.random(0, 3))));
+				BaseActor ba = new BaseActor(AssetManager.getTexture("grass_0" + Integer.toString(MathUtils.random(0, 3))));
 				ba.sizeBy(16, 16);
 				ba.setPosition(i * 32, j * 32);
 				mainStage.addActor(ba);

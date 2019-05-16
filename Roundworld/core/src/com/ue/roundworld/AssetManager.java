@@ -14,13 +14,17 @@ public class AssetManager {
 	
 	private static HashMap<String, Texture> textureLib = new HashMap<String, Texture>();
 	
-	public static void load_textures(File f) {
+	/**
+	 * Recursively loads ALL the textures in a given file, reads through subdirectories
+	 * @param f the file to load textures from
+	 */
+	public static void loadTextures(File f) {
 		if (f.isDirectory()) {
 			
 			System.out.println(f.getName());
 			
 			for (File fi : f.listFiles()) {
-				load_textures(fi);
+				loadTextures(fi);
 			}
 		} else {
 			if (f.getName().contains(".png")) {
@@ -32,7 +36,12 @@ public class AssetManager {
 		}
 	}
 	
-	public static Texture get_texture(String s) {
+	/**
+	 * gets a texture from the texture library
+	 * @param s the name of the texture to obtain, without file extensions
+	 * @return a texture with the given name
+	 */
+	public static Texture getTexture(String s) {
 		if (!textureLib.containsKey(s)) {
 			System.out.println("Error: Could not find: " + s + " in texLib, substituting...");
 			return Utils.missingTexture;

@@ -22,7 +22,11 @@ public class Utils {
 
 		return v;
 	}
-
+	
+	/**
+	 * Performs an insertion sort on the given array
+	 * @param ar the array to sort
+	 */
 	public static void insertionSort(int[] ar) {
 		for (int i = 1; i < ar.length; i++) {
 			int index = ar[i];
@@ -37,7 +41,7 @@ public class Utils {
 	}
 	
 
-
+	@Deprecated
 	public static Texture loadTexture(String path) {
 		try {
 			Texture t = new Texture(Gdx.files.internal(path));
@@ -53,6 +57,14 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Loads an animation from a path
+	 * @param path
+	 * @param cols
+	 * @param rows
+	 * @return
+	 */
+	@Deprecated
 	public static Animation<TextureRegion> loadAnimation(String path, int cols, int rows){
 		Texture sheet = Utils.loadTexture(path);
 		TextureRegion[][] map = TextureRegion.split(sheet, sheet.getWidth()/cols, sheet.getHeight()/rows);
@@ -67,7 +79,14 @@ public class Utils {
 	}
 
 	
-
+	/**
+	 * calculates the angle between two points
+	 * @param x
+	 * @param y
+	 * @param x2
+	 * @param y2
+	 * @return the angle between the points (x, y) and (x2, y2)
+	 */
 	public static float pointAt(float x, float y, float x2, float y2) {
 
 		float yDiff = y - y2;
@@ -78,20 +97,37 @@ public class Utils {
 		return newAngle;
 
 	}
-
+	
+	/**
+	 * converts an angle into it's unit components
+	 * @param angle the angle to convert, in degrees
+	 * @return a vector containing the angle's unit components
+	 */
 	public static Vector2 convertVel(float angle) {
 	
 
 		return new Vector2(MathUtils.cosDeg(angle), MathUtils.sinDeg(angle));
 	}
-
+	
+	/**
+	 * calculates the distance between two points
+	 * @param x
+	 * @param y
+	 * @param x2
+	 * @param y2
+	 * @return the distance between points (x, y) and (x2, y2)
+	 */
 	public static float distanceTo(float x, float y, float x2, float y2) {
 
 		return  (float) Math.hypot(Math.abs(x2 - x), Math.abs(y2 - y));
 	}
 	
 	
-
+	/**
+	 * gets the number of digits in an integer
+	 * @param i the integer to count digits of
+	 * @return the number of digits in i
+	 */
 	public static int getDigits(int i) {
 		int count = 0;
 		while (i > 0) {

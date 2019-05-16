@@ -37,12 +37,23 @@ public class Component {
 		return out;
 	}
 	
+	/**
+	 * gets an argument
+	 * @param key the index of the argument
+	 * @return the String argument
+	 */
 	public String getArg(int key) {
 
 			
 		return args.get(key).substring(0, args.get(key).length()-1);
 	}
 	
+	/**
+	 * generates a string component
+	 * @param t the type
+	 * @param args a string list representing the arguments
+	 * @return the string component
+	 */
 	public static String generate(Component.Type t, String...args) {
 		String str = "";
 		str += "(" + Integer.toHexString(t.id).toUpperCase() +":";
