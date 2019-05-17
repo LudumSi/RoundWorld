@@ -200,7 +200,8 @@ public class BaseActor extends Group {
 	public void setPolygonBoundary(float...verts) {
 		float w = getWidth();
 		float h = getHeight();
-		if (verts.length % 2 != 0) {
+		
+		if (verts.length % 2 != 0 || verts.length == 0) {
 			
 			System.out.println("Warning: Invalid polygon verts on BaseActor, defaulting");
 			float v[] = { 0, 0, w, 0, w, h, 0, h };
@@ -212,6 +213,19 @@ public class BaseActor extends Group {
 			boundingPolygon = new Polygon(verts);
 			boundingPolygon.setOrigin(getOriginX(), getOriginY());
 		}
+		
+		
+	}
+	
+	public void setPolygonBoundary() {
+		float w = getWidth();
+		float h = getHeight();
+		
+		
+		float v[] = { 0, 0, w, 0, w, h, 0, h };
+		boundingPolygon = new Polygon(v);
+		boundingPolygon.setOrigin(getOriginX(), getOriginY());
+			
 		
 		
 	}

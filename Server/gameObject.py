@@ -41,9 +41,13 @@ class Game_object():
 	def __init__(self):
 		self.components = []
 		
-	def addComponent(self, c):
+	def add_component(self, c):
 		self.components.append(c)
 		
+	def get_component_by_idd(self, id):
+		for (comp in self.components):
+			if (comp.id == id):
+				return comp
 	
 	#compiles Game_object to send to client, with context as the command id so the client knows what to do with it
 	def compile(self, context):
