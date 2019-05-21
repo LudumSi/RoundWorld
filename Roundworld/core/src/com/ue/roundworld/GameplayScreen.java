@@ -29,9 +29,6 @@ public class GameplayScreen implements Screen{
 	public BaseActor test;
 	public Label text;
 	
-	
-	private TextInput textInput;
-	
 	private RenderManager renderManager;
 	private Player player;
 	private Entity ghost;
@@ -85,20 +82,10 @@ public class GameplayScreen implements Screen{
 		ghost2 = new Entity(Utils.missingTexture);
 		ghost2.setPosition(150, 50);
 		
-		
-		
-		//TextInput listener = new TextInput();
-		//Gdx.input.getTextInput(listener, "Enter ip", "Insert server ip here", "hint hint nudge nudge");
-		
-	
-		
-		
 		mainStage.addActor(player);
 		mainStage.addActor(ghost);
 		mainStage.addActor(ghost2);
-		
-		//AssetManager.load_textures(new File("assets/"));
-		
+	
 		uiStage.addActor(uiBase);
 		Gdx.input.setInputProcessor(InputProcess.instance);
 	}
