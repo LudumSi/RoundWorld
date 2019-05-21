@@ -13,7 +13,7 @@ class Game_object():
 	def add_component(self, c):
 		self.components.append(c)
 		
-	def get_component_by_idd(self, id):
+	def get_component_by_id(self, id):
 		for comp in self.components:
 			if (comp.id == id):
 				return comp
