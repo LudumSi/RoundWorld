@@ -25,4 +25,39 @@ class Component():
 		data += "}"
 		
 		return data
+
+class Render(Component){
+	def __init__(self, texture, x, y, theta){
+		super(self, "renderable", {"texture" : texture, "x" : x, "y" : y, "theta" : theta})
+	}
+	def handle(event){
+		#contains the 
+	}
+}
+
+class Movement(Component){
+	def __init__(self, velocity, accel, theta){
+		super(self, "movement", {"velocty" : velocity, "accel" : accel, "theta" : theta})
+	}
+	def handle(event){
+
+	}
+}
+
+class Collision(Component)
+	def __init__(self, vertices){
+		super(self, "collision", {"Vertices" : vertices})
+	}
+	def handle(event){
+
+	}
+}
+
+class Damaging(Component){
+	def __init__(self, type, amount){
+		super(self, "damaging", {"type" : type, "amount" : amount})
+	}
+	def handle(event){
 		
+	}
+}
