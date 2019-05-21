@@ -9,7 +9,6 @@ class Component():
 	
 	#compiles data into json string format for sending
 	def compile(self):
-		global COMPONENT_ID_LEX
 		data = self.id + ":"
 		data += "{"
 		
