@@ -48,7 +48,15 @@ public class UiBase extends BaseActor{
 		
 		mousePos = this.screenToLocalCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 	
-		phb.sub(0.01f);
+		//phb.sub(0.01f);
+		
+		if (Gdx.input.isKeyPressed(Keys.J)) {
+			phb.sub(0.05f);
+		}
+		if (Gdx.input.isKeyPressed(Keys.H)) {
+			phb.add(0.05f);
+		}
+		
 		pmb.add(0.001f);
 		chatUpdate();
 		
