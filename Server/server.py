@@ -20,7 +20,7 @@ class ClientThread(Thread):
 	def run(self):
 		global testRenders
 		
-		conn.send(testRenders.encode())
+		
 		
 		#client update loop
 		while self.running:

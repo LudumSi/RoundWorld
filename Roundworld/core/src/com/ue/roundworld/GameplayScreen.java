@@ -11,7 +11,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-
+import com.ue.roundworld.client.Client;
+import com.ue.roundworld.client.Event;
 import com.ue.roundworld.ui.UiBase;
 
 public class GameplayScreen implements Screen{
@@ -93,8 +94,10 @@ public class GameplayScreen implements Screen{
 	
 	
 		//System.out.println(client.getRecievedData());
-		
-		
+		Event e = Client.getParsedData();
+		if (Event.verify(e, "client_connect")) {
+			Client.popParsedData();
+		}
 		
 		
 		

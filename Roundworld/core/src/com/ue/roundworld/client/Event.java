@@ -54,13 +54,13 @@ public class Event {
 	 */
 	public String generate() {
 		String str = "";
-		str += this.id + "{";
+		str += this.id;
 		str += Utils.removeSpaces(this.args.toString());
-		str += "}";
 		int len = 0;
 		len = str.length();
 		len += Utils.getDigits(len);
-		str = Integer.toString(len) + "|" + str;
+		len++;
+		str = Integer.toString(len) + "|" + str + "\n";
 		return str;
 	}
 	

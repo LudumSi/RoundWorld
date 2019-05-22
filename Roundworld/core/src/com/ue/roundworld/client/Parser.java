@@ -30,7 +30,7 @@ public class Parser {
 		}
 		//read the rest of the data
 		data = data.substring(start, len);
-		System.out.println("parsing: " + data);
+		
 		
 		HashMap<String, String> args = new HashMap<String, String>();
 		start = data.indexOf("{");
@@ -39,15 +39,28 @@ public class Parser {
 		while (!data.equals("}")) {
 			String[] arg = parseArg(data);
 			args.put(arg[0], arg[1]);
-			data = data.substring(data.indexOf(",") + 1);//substring away the arg
+			if (data.contains(",")) {
+				data = data.substring(data.indexOf(",") + 1);
+			} else {
+				data = "}";
+			}
+			//substring away the arg
+			
 		}
+		data = data.substring(0, data.length()-1);
+		Event e = new Event(id, args);
 		
-		
-		return new Event(id, args);
+		return e;
 	}
 	
 	private static String[] parseArg(String data) {
-		String arg = data.substring(0, data.indexOf(","));
-		return arg.split("=");
+		if (data.contains(",")) {
+			String arg = data.substring(0, data.indexOf(","));
+			return arg.split("=");
+		} else {
+			String arg = data.substring(0, data.indexOf("}"));
+			return arg.split("=");
+		}
+		
 	}
 }
