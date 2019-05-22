@@ -40,11 +40,11 @@ public class Chat extends BaseActor{
 	public void act(float dt) {
 		super.act(dt);
 		if (Client.isConnected()) {
-			Event e = Client.popParsedData();
+			Event e = Client.getParsedData();
 			
-			if(Event.verify(e)) {
-
-					add_to_log(e.getArg("name"), e.getArg("text"), Color.valueOf(e.getArg("Color")));
+			if(Event.verify(e, "chat")) {
+				Client.popParsedData();
+				add_to_log(e.getArg("name"), e.getArg("text"), Color.valueOf(e.getArg("Color")));
 						
 					
 			}

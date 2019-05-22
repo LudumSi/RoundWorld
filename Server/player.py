@@ -15,9 +15,12 @@ def construct_player():
 	player.add_component(Collision([0,0, 0,32, 32,0, 32,32]))
 	player.add_component(Stats(10, 10, 10, 10))
 	((Stats) player.get_component_by_id("stats")).derive()
-	player.add_component(Living(100))
-	player.add_component(Magical(100))
-	player.add_component(Staminal(100))
+	hp = player.get_component_by_id("stats").args["str"] * player.get_component_by_id("stats").args["cha"]
+	mana = player.get_component_by_id("stats").args["int"] * 5
+	stamina = player.get_component_by_id("stats").args["str"] * 5
+	player.add_component(Living(hp))
+	player.add_component(Magical(mana))
+	player.add_component(Staminal(stamina))
 	player.add_component(Specialties())
 	
 	return player

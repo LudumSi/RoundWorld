@@ -49,15 +49,13 @@ public class Event {
 	}
 	
 	/**
-	 * generates a command
-	 * @param t the type of the command
-	 * @param c the string components of the command
-	 * @return a string representing the command
+	 * generates the event
+	 * @return a string representing the event
 	 */
 	public String generate() {
 		String str = "";
 		str += this.id + "{";
-		str += this.args.toString();
+		str += Utils.removeSpaces(this.args.toString());
 		str += "}";
 		int len = 0;
 		len = str.length();
@@ -73,11 +71,7 @@ public class Event {
 	 * @param expectedComponents the number of expected components
 	 * @return whether to command is valid 
 	 */
-	public static boolean verify(Event e) {
-		if (e == null) {
-			return false;
-		}
-		
-		return true;
+	public static boolean verify(Event e, String id) {
+		return e != null && e.id.equals(id);
 	}
 }

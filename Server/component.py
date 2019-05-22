@@ -131,8 +131,8 @@ class Staminal(Component)
 	
 	def handle(event):
 	
-class Specialties(Component)
-	def __init__(self, specialties):
+class Specialties(Component):
+	def __init__(self):
 		super(self, "specialties", {"specialties" : [])
 	
 	def handle(event):
@@ -140,3 +140,10 @@ class Specialties(Component)
 			spec(event)
 	
 
+class Inventory(Component):
+	def __init__(self, items):
+		super(self, "inventory", {"items" : [])
+	
+	def handle(event):
+		if (event.id == "sendInventory"):
+			
