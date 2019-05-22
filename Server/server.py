@@ -51,7 +51,7 @@ class ClientThread(Thread):
 		self.running = False
 
 
-TCP_IP = 'localhost'
+TCP_IP = '128.193.254.43'
 TCP_PORT = 7777
 BUFFER_SIZE = 128
 
