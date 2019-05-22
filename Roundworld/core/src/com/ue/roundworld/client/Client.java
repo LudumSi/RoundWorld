@@ -140,7 +140,7 @@ public class Client {
 	 * removes the command at the front of the data queue
 	 * @return the command at the front of the data queue
 	 */
-	public static Command popParsedData() {
+	public static Event popParsedData() {
 		/*add search for correct command*/
 		if (isCommandComplete()) {
 			if (dataQueue.size> 0) {
@@ -158,7 +158,7 @@ public class Client {
 	 * snags parsed data from the data queue
 	 * @return A command representing the first command in the data queue
 	 */
-	public static Command getParsedData() {
+	public static Event getParsedData() {
 		if (isCommandComplete()) {
 			if (dataQueue.size> 0) {
 				return Parser.parse(dataQueue.first());

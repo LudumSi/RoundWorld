@@ -49,7 +49,10 @@ class Render(Component){
 		#contains the 
 		if (event.id == "spawn"):
 			pushAll(event)
-	
+			
+		if (event.id == "recvVelUpdate"):
+			self.args["x"] = event.args["x"]
+			self.args["y"] = event.args["y"]
 
 
 class Movement(Component){
@@ -58,10 +61,10 @@ class Movement(Component){
 	
 	def handle(event):
 		#send velocity update
-		if (event.id == "sendUpdate"):
+		if (event.id == "sendVelUpdate"):
 			pushAll(event)
 		#recieve velocity update
-		elif (event.id == "recvUpdate"):
+		elif (event.id == "recvVelUpdate"):
 			pullAll(event)
 
 

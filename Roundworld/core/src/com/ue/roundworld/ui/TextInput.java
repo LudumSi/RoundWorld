@@ -1,20 +1,15 @@
 package com.ue.roundworld.ui;
 
-import java.util.ArrayList;
+
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Color;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ue.roundworld.BaseActor;
 import com.ue.roundworld.RoundWorld;
 import com.ue.roundworld.Utils;
-import com.ue.roundworld.client.Client;
-import com.ue.roundworld.client.Command;
-import com.ue.roundworld.client.Component;
 
 public class TextInput extends BaseActor implements InputProcessor {
 	

@@ -8,8 +8,7 @@ import com.ue.roundworld.BaseActor;
 import com.ue.roundworld.GameplayScreen;
 import com.ue.roundworld.RoundWorld;
 import com.ue.roundworld.client.Client;
-import com.ue.roundworld.client.Command;
-import com.ue.roundworld.client.Component;
+import com.ue.roundworld.client.Event;
 
 public class Chat extends BaseActor{
 	
@@ -41,24 +40,23 @@ public class Chat extends BaseActor{
 	public void act(float dt) {
 		super.act(dt);
 		if (Client.isConnected()) {
-			Command com = Client.popParsedData();
+			Event e = Client.popParsedData();
 			
-			if(com!= null && com.get_id() == 0xC001 && com.get_component(Component.Type.text, 0) != null && com.get_component(Component.Type.text, 1) != null) {
-				
-					
-						
-					add_to_log( com.get_component(Component.Type.text, 0).getArg(0), com.get_component(Component.Type.text, 1).getArg(0), Color.WHITE);
+			if(Event.verify(e)) {
+
+					add_to_log(e.getArg("name"), e.getArg("text"), Color.valueOf(e.getArg("Color")));
 						
 					
 			}
 		}
 		if (!lastText.equals(textInput.getInput())) {
 			add_to_log(Client.user, textInput.getInput(), Color.WHITE);
+			Event e = new Event("chat_message");
+			e.addArg("name", Client.user);
+			e.addArg("text", textInput.getInput());
+			e.addArg("color", Color.WHITE.toString());
 			if (Client.isConnected()) {
-				Client.sendRequest(Command.generate(Command.Type.sendText,
-						Component.generate(Component.Type.text, Client.user),
-						Component.generate(Component.Type.text, textInput.getInput())
-						));
+				Client.sendRequest(e.generate());
 			}
 			
 			lastText = textInput.getInput();

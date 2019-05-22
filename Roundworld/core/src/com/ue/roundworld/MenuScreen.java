@@ -17,8 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.ue.roundworld.client.Client;
-import com.ue.roundworld.client.Command;
-import com.ue.roundworld.client.Component;
+import com.ue.roundworld.client.Event;
 import com.ue.roundworld.client.Parser;
 import com.ue.roundworld.ui.TextInput;
 
@@ -288,10 +287,10 @@ public class MenuScreen implements Screen{
 					Client.init(Client.userIpAddress, 7777);
 					
 					//send hello
-					Client.sendRequest(Command.generate(
-							Command.Type.initConnect, 
-							Component.generate(Component.Type.text, Client.user)));
-							System.out.println("Sending Connect Message");
+					Event e = new Event("client_connect");
+					e.addArg("client_name", Client.user);
+					Client.sendRequest(e.generate());
+					System.out.println("Sending Connect Message");
 				
 					connectAnimCountdown = 30;
 				}

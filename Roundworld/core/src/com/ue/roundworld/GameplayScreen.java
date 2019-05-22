@@ -1,23 +1,17 @@
 package com.ue.roundworld;
 
-import java.io.File;
+
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
+
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.ue.roundworld.client.Client;
-import com.ue.roundworld.client.Command;
-import com.ue.roundworld.client.Component;
-import com.ue.roundworld.client.Parser;
-import com.ue.roundworld.client.RenderManager;
-import com.ue.roundworld.ui.TextInput;
+
 import com.ue.roundworld.ui.UiBase;
 
 public class GameplayScreen implements Screen{
@@ -29,7 +23,6 @@ public class GameplayScreen implements Screen{
 	public BaseActor test;
 	public Label text;
 	
-	private RenderManager renderManager;
 	private Player player;
 	private Entity ghost;
 	private Entity ghost2;
@@ -39,7 +32,6 @@ public class GameplayScreen implements Screen{
 	
 	public GameplayScreen(Game g){
 		game = g;
-		renderManager = new RenderManager();
 		create();
 		
 	}
@@ -104,7 +96,7 @@ public class GameplayScreen implements Screen{
 		
 		
 		
-		renderManager.render(player);
+		
 		
 		mainStage.draw();
 		uiStage.draw();
