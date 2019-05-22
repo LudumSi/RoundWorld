@@ -33,7 +33,6 @@ public class Bar extends BaseActor{
 		if (lossFadeTimer < 0) {
 			lossFadeTimer = 0;
 		} else {
-			System.out.println("Ratio: " + ratio + ", Loss: " + lossRatio + ", timer: " + lossFadeTimer + ", dt*60 of: " + dt*60);
 			lossFadeTimer -= dt * 60;
 		}
 			
