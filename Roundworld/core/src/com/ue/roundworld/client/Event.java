@@ -62,7 +62,7 @@ public class Event {
 		int len = 0;
 		len = str.length();
 		len += Utils.getDigits(len);
-		str = Integer.toString(len) + "L" + str;
+		str = Integer.toString(len) + "|" + str;
 		return str;
 	}
 	

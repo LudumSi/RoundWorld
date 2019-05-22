@@ -53,7 +53,7 @@ public class Chat extends BaseActor{
 			add_to_log(Client.user, textInput.getInput(), Color.WHITE);
 			Event e = new Event("chat_message");
 			e.addArg("name", Client.user);
-			e.addArg("text", textInput.getInput());
+			e.addArg("text", "\""+ textInput.getInput() + "\"");
 			e.addArg("color", Color.WHITE.toString());
 			if (Client.isConnected()) {
 				Client.sendRequest(e.generate());

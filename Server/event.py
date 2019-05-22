@@ -22,4 +22,10 @@ class Event():
 		data = data[0:len(data) -1] #cut off last comma
 		data += "}"
 		
+		leng = len(data)
+		leng += len(str(leng))
+		data = str(leng) + "|" + data
+		
 		return data
+		
+		

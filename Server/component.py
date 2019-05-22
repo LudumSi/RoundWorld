@@ -23,23 +23,7 @@ class Component():
 				self.args[key] = event.args[key]
 		
 	
-	#compiles data into json string format for sending
-	def compile(self):
-		data = self.id + ":"
-		data += "{"
-		
-		for key, val in self.args.items():
-			if (isinstance(val, type(1))):
-				data += key + ":" + str(val) + ","
-			elif (isinstance(val, Game_object)):
-				data += key + ":{" + val.compile() + "},"
-			else:
-				data += key + ":" + val + ","
-			
-		data = data[0:len(data) -1] #cut off last comma
-		data += "}"
-		
-		return data
+	
 
 class Render(Component){
 	def __init__(self, texture, x, y, theta):

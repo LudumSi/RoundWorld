@@ -18,24 +18,7 @@ class Game_object():
 			if (comp.id == id):
 				return comp
 	
-	#compiles Game_object to json context as the command id so the client knows what to do with it
-	def compile(self):
-		data = self.id + ":["
-		for comp in self.components:
-			data += comp.compile() + ","
-		
-		data = data[0:len(data) -1] #cut off last comma
-		data = data + "]"
-		return data
-		
+	
 
-#prepares compiled stuff to send to client
-def ship(data, context):
-	data = "L{" + data + "}"
-	#calculate length
-	leng = len(data)
-	leng += len(str(leng))
-	data = str(leng) + data
-	return data
-		
+
 		

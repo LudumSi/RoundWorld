@@ -21,7 +21,7 @@ public class Parser {
 		
 		/*getLength*/
 		for (int i = 0; i < data.length(); i++) {
-			if (data.charAt(i) == 'L') {
+			if (data.charAt(i) == '|') {
 				len = Integer.parseInt(data.substring(0, i));
 				start = i + 1;
 				break;
