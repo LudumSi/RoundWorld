@@ -1,10 +1,11 @@
 
 
 import socket
+import main_loop
 from threading import Thread
 from socketserver import ThreadingMixIn
 
-
+queue = []
 testRenders = "74L0002{(4:grass_00,50,50,0,)(4:grass_00,100,50,0,)(4:grass_00,50,100,0,)}"
 
 class ClientThread(Thread):
@@ -27,6 +28,7 @@ class ClientThread(Thread):
 			#get data
 			data = conn.recv(2048)
 			print(f"Server received data: {data}")
+			queue.append(data)
 
 			#check for disconnect
 			if data == b'FFFF{(0:text|bye)}':
@@ -57,7 +59,8 @@ BUFFER_SIZE = 128
 tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpServer.bind((TCP_IP, TCP_PORT))
-threads = []
+main_loop = MainLoopThread(queue)
+threads = [main_loop]
 
 while True:
 	print(threads)
