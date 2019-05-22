@@ -9,12 +9,12 @@ class MainLoopThread(Thread):
 		self.queue = queue
 		print("Started the main game loop")
 	
-	def run(self):
+	#def run(self):
 		
 		#Game loop
 		while self.running:
-		
-
+		#Needs to take something off the queue, parse it, and then do the thing
+			print(parse(queue.pop(0)))
 		
 #length|id:{key:val,key:val,key:val}		
 def parser(input_string):
