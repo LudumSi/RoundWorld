@@ -58,7 +58,7 @@ public class Entity extends BaseActor{
 		//update position and velocity from server
 		Event e = Client.getParsedData();
 	
-		if(Event.verify(e)) {
+		if(Event.verify(e, "velocity_update")) {
 			Client.popParsedData();
 			if (id == Integer.parseInt(e.getArg("id"))){
 				this.setCenter(Float.parseFloat(e.getArg("x")), 

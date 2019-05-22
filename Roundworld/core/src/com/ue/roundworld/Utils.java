@@ -137,5 +137,14 @@ public class Utils {
 		
 		return count;
 	}
-
+	
+	
+	public static String removeSpaces(String s) {
+		for (int i = 0; i < s.length(); i++) {
+			if (s.charAt(i) == ' ') {
+				s = s.substring(0, i) + s.substring(i+1);
+			}
+		}
+		return s;
+	}
 }
