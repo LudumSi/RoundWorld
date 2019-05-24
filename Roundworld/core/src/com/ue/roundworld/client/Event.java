@@ -33,10 +33,9 @@ public class Event{
 		this.json = null;
 	}
 	
-	public void load(String json) {
-		JsonReader r = new JsonReader();
-		this.json = r.parse(json);
-		this.id = this.json.name();
+	public void setJson(JsonValue json) {
+		this.json = json.child;
+		this.id = json.child.name();
 	}
 	
 	public void addArg(String key, String val) {
@@ -84,17 +83,17 @@ public class Event{
 	 * @return a string representing the event
 	 */
 	public String generate() {
-		/*String str = "";
-		str += this.id;
-		str += Utils.removeSpaces(this.args.toString());
+		String str = "";
+		str += "{" + this.id + ":";
+		str += json.toJson(OutputType.json) + "}";
 		int len = 0;
 		len = str.length();
 		len += Utils.getDigits(len);
 		len++;
-		str = Integer.toString(len) + "|" + str + "\n";*/
-		String str = "";
-		System.out.println("json: " + json.toJson(OutputType.minimal));
-		return json.toJson(OutputType.minimal);
+		str = Integer.toString(len) + "|" + str + "\n";
+		
+		
+		return str;
 		
 		
 		

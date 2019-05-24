@@ -3,10 +3,12 @@ package com.ue.roundworld.client;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.badlogic.gdx.utils.JsonReader;
+
 public class Parser {
 
 	
-	
+	private static JsonReader reader = new JsonReader();
 	
 	/**
 	 * converts a command string into a command
@@ -30,37 +32,11 @@ public class Parser {
 		}
 		//read the rest of the data
 		data = data.substring(start, len);
+	
+		Event e = new Event();
 		
-		
-		HashMap<String, String> args = new HashMap<String, String>();
-		start = data.indexOf("{");
-		id = data.substring(0, start);
-		data = data.substring(start+1);
-		while (!data.equals("}")) {
-			String[] arg = parseArg(data);
-			args.put(arg[0], arg[1]);
-			if (data.contains(",")) {
-				data = data.substring(data.indexOf(",") + 1);
-			} else {
-				data = "}";
-			}
-			//substring away the arg
-			
-		}
-		data = data.substring(0, data.length()-1);
-		Event e = new Event(id, args);
-		
+		e.setJson(reader.parse(data));
 		return e;
 	}
-	
-	private static String[] parseArg(String data) {
-		if (data.contains(",")) {
-			String arg = data.substring(0, data.indexOf(","));
-			return arg.split("=");
-		} else {
-			String arg = data.substring(0, data.indexOf("}"));
-			return arg.split("=");
-		}
-		
-	}
+
 }

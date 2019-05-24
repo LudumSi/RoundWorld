@@ -147,9 +147,7 @@ public class Client {
 		/*add search for correct command*/
 		
 			if (dataQueue.size> 0) {
-				Event e = new Event();
-				e.load(dataQueue.removeFirst());
-				return e;
+				return Parser.parse(dataQueue.removeFirst());
 			}
 			return null;
 		
@@ -164,9 +162,8 @@ public class Client {
 	public static Event getParsedData() {
 		//if (isCommandComplete()) {
 			if (dataQueue.size> 0) {
-				Event e = new Event();
-				e.load(dataQueue.first());
-				return e;
+				
+				return Parser.parse(dataQueue.first());
 			}
 			return null;
 		
