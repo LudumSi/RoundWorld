@@ -30,10 +30,8 @@ public class UiBase extends BaseActor {
 		super(Utils.emptyTexture);
 
 		// health bars
-		phb = new Bar(AssetManager.getTexture("health_bar_back"), AssetManager.getTexture("health_bar_invert"),
-				AssetManager.getTexture("health_bar"));
-		pmb = new Bar(AssetManager.getTexture("mana_bar_back"), AssetManager.getTexture("mana_bar"),
-				AssetManager.getTexture("mana_bar"));
+		phb = new Bar(AssetManager.getTexture("health_bar_back"), AssetManager.getTexture("health_bar_invert"), AssetManager.getTexture("health_bar"));
+		pmb = new Bar(AssetManager.getTexture("mana_bar_back"), AssetManager.getTexture("mana_bar"), AssetManager.getTexture("mana_bar"));
 		this.addActor(phb);
 		this.addActor(pmb);
 		pmb.sub(1);
@@ -53,7 +51,15 @@ public class UiBase extends BaseActor {
 
 		mousePos = this.screenToLocalCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
-		phb.sub(0.01f);
+		//phb.sub(0.01f);
+		
+		if (Gdx.input.isKeyPressed(Keys.J)) {
+			phb.sub(0.05f);
+		}
+		if (Gdx.input.isKeyPressed(Keys.H)) {
+			phb.add(0.05f);
+		}
+		
 		pmb.add(0.001f);
 		chatUpdate();
 

@@ -3,9 +3,9 @@ package com.ue.roundworld;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+
 import com.ue.roundworld.client.Client;
-import com.ue.roundworld.client.Command;
-import com.ue.roundworld.client.Component;
+import com.ue.roundworld.client.Event;
 
 public class Entity extends BaseActor{
 
@@ -56,15 +56,14 @@ public class Entity extends BaseActor{
 		this.moveBy(dt * 60 * vel.x, dt * 60 * vel.y);
 		
 		//update position and velocity from server
-		Command com = Client.getParsedData();
+		Event e = Client.getParsedData();
 	
-		if(Command.verify(com, Component.Type.velocity, 1) && Command.verify(com, Component.Type.position, 1) && com.get_id() == 0xC002) {
+		if(Event.verify(e, "velocity_update")) {
 			Client.popParsedData();
-			if (id == Integer.parseInt(com.get_component(Component.Type.value, 0).getArg(0))){
-				this.setCenter(Float.parseFloat(com.get_component(Component.Type.position, 0).getArg(0)), 
-						Float.parseFloat(com.get_component(Component.Type.position, 0).getArg(1)));
-				this.setVelX(Float.parseFloat(com.get_component(Component.Type.velocity, 0).getArg(0)));
-				this.setVelY(Float.parseFloat(com.get_component(Component.Type.velocity, 0).getArg(1)));
+			if (id == e.getInt("int")){
+				this.setCenter(e.getFloat("x"), e.getFloat("y"));
+				this.setVelX(e.getFloat("velocity_x"));
+				this.setVelY(e.getFloat("velocity_y"));
 				
 			}
 				
@@ -79,16 +78,13 @@ public class Entity extends BaseActor{
 	 */
 	public void sendVelUpdate() {
 		if (Client.isConnected()) {
-			Client.sendRequest(
-					Command.generate(Command.Type.velUpdate, 
-							Component.generate(Component.Type.value, Integer.toString(0)),
-							Component.generate(Component.Type.position, Float.toString(this.center.x), Float.toString(this.center.y)),
-							Component.generate(Component.Type.velocity, Float.toString(vel.x), Float.toString(vel.y)
-									)
-							
-							)
-					
-					);
+			Event e = new Event("recvVelUpdate");
+			e.addArg("id", Integer.toString(this.id));
+			e.addArg("x", Float.toString(this.center.x));
+			e.addArg("y", Float.toString(this.center.y));
+			e.addArg("velocity_x", Float.toString(this.vel.x));
+			e.addArg("velocity_y", Float.toString(this.vel.y));
+			Client.sendRequest(e.generate());
 			
 		
 		}

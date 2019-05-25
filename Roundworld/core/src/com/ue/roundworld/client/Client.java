@@ -93,15 +93,15 @@ public class Client {
 			String prevData = "";
 			isRunning = true;
 			while (isRunning) {
-				if (receivedData.equals("STOP")) {
-					break;
-				}
+			
 				BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
 				try {
-
+					
 					if (buffer.ready()) {
+						
 						data = buffer.readLine();
+						
 
 					}
 				} catch (IOException e) {
@@ -112,14 +112,17 @@ public class Client {
 				
 				if (!data.equals(prevData)) {
 					System.out.println("Recieved: " + data);
+					
+					receivedData = data;
+					dataQueue.addLast(data);
 					if (receivedData.equals("STOP")) {
 						break;
 					}
-					receivedData = data;
-					dataQueue.addLast(data);
+				
+
 				}
 				prevData = data;
-
+				
 			}
 
 		}
@@ -140,17 +143,15 @@ public class Client {
 	 * removes the command at the front of the data queue
 	 * @return the command at the front of the data queue
 	 */
-	public static Command popParsedData() {
+	public static Event popParsedData() {
 		/*add search for correct command*/
-		if (isCommandComplete()) {
+		
 			if (dataQueue.size> 0) {
 				return Parser.parse(dataQueue.removeFirst());
 			}
 			return null;
 		
-		} else {
-			return null;
-		}
+		
 		
 	}
 	
@@ -158,16 +159,17 @@ public class Client {
 	 * snags parsed data from the data queue
 	 * @return A command representing the first command in the data queue
 	 */
-	public static Command getParsedData() {
-		if (isCommandComplete()) {
+	public static Event getParsedData() {
+		//if (isCommandComplete()) {
 			if (dataQueue.size> 0) {
+				
 				return Parser.parse(dataQueue.first());
 			}
 			return null;
 		
-		} else {
-			return null;
-		}
+		//} else {
+			//return null;
+		//}
 		
 	}
 	
