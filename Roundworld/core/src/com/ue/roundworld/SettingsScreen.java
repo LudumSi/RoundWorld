@@ -28,8 +28,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.ue.roundworld.client.Client;
-import com.ue.roundworld.client.Command;
-import com.ue.roundworld.client.Component;
 import com.ue.roundworld.client.Parser;
 import com.ue.roundworld.ui.TextInput;
 
