@@ -1,6 +1,7 @@
 
 
 import socket
+import json
 #import main_loop
 from threading import Thread
 from socketserver import ThreadingMixIn
@@ -28,7 +29,7 @@ class ClientThread(Thread):
 			#get data
 			data = conn.recv(2048)
 			print(f"Server received data: {data}")
-			queue.append(data)
+			queue.append(json.loads(data))
 
 			#check for disconnect
 			if data == b'FFFF{(0:text|bye)}':
