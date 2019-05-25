@@ -60,11 +60,10 @@ public class Entity extends BaseActor{
 	
 		if(Event.verify(e, "velocity_update")) {
 			Client.popParsedData();
-			if (id == Integer.parseInt(e.getArg("id"))){
-				this.setCenter(Float.parseFloat(e.getArg("x")), 
-						Float.parseFloat(e.getArg("y")));
-				this.setVelX(Float.parseFloat(e.getArg("velocity_x")));
-				this.setVelY(Float.parseFloat(e.getArg("velocity_y")));
+			if (id == e.getInt("int")){
+				this.setCenter(e.getFloat("x"), e.getFloat("y"));
+				this.setVelX(e.getFloat("velocity_x"));
+				this.setVelY(e.getFloat("velocity_y"));
 				
 			}
 				

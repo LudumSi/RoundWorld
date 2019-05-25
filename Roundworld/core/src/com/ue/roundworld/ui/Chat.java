@@ -45,7 +45,7 @@ public class Chat extends BaseActor{
 			if(Event.verify(e, "chat_message")) {
 				Client.popParsedData();
 				
-				add_to_log(e.getArg("name"), e.getArg("text"), Color.valueOf(e.getArg("color")));
+				add_to_log(e.getString("name"), e.getString("text"), Color.valueOf(e.getString("color")));
 						
 					
 			}
@@ -56,6 +56,7 @@ public class Chat extends BaseActor{
 			e.addArg("name", Client.user);
 			e.addArg("text", "\""+ textInput.getInput() + "\"");
 			e.addArg("color", Color.WHITE.toString());
+			e.generate();
 			if (Client.isConnected()) {
 				Client.sendRequest(e.generate());
 			}

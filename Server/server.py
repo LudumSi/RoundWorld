@@ -2,6 +2,7 @@
 
 import socket
 from main_loop import *
+
 from threading import Thread
 from socketserver import ThreadingMixIn
 
@@ -52,6 +53,7 @@ class ClientThread(Thread):
 
 TCP_IP = '192.168.1.15'
 #TCP_IP = '128.193.254.43'
+
 TCP_PORT = 7777
 BUFFER_SIZE = 128
 
@@ -59,8 +61,8 @@ BUFFER_SIZE = 128
 tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpServer.bind((TCP_IP, TCP_PORT))
-main_loop = MainLoopThread(queue)
-threads = [main_loop]
+#main_loop = MainLoopThread(queue)
+threads = []#main_loop]
 
 main_loop.start()
 
