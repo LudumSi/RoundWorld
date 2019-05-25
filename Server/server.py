@@ -66,7 +66,7 @@ tcpServer.bind((TCP_IP, TCP_PORT))
 #main_loop = MainLoopThread(queue)
 threads = []#main_loop]
 
-main_loop.start()
+#main_loop.start()
 
 while True:
 	print(threads)
