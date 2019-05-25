@@ -27,10 +27,10 @@ public class RoundWorld extends Game {
 	private SettingsScreen settingsScreen;
 	private String prefsFileName = "settings";
 	
-	public static int height; 			/* window pixel height */
-	public static int width; 			/* window pixel width */
-	public static int unscaledHeight; 	/* ui width before scaling (coordinate system) */
-	public static int unscaledWidth; 	/* ui height before scaling (coordinate system) */
+	public static int height = 700; 			/* window pixel height */
+	public static int width = 800; 			/* window pixel width */
+	public static int unscaledHeight = 700; 	/* ui width before scaling (coordinate system) */
+	public static int unscaledWidth = 800; 	/* ui height before scaling (coordinate system) */
 	public static float scale = 1; 		/* scaling up to account for display size */
 	public static float zoom = 1; 		/* user controlled zoom level */
 
@@ -56,13 +56,13 @@ public class RoundWorld extends Game {
 		
 		/* make screens */
 		menuScreen = new MenuScreen(this);
-		settingsScreen = new SettingsScreen(this, menuScreen, prefsFileName);
+		//settingsScreen = new SettingsScreen(this, menuScreen, prefsFileName);
 		
 		/* load settings, reset to defaults if needed */
-		settingsScreen.resetAllToStoredOrDefault();
+		//settingsScreen.resetAllToStoredOrDefault();
 		
 		/* read and enforce stored display settings */
-		settingsScreen.applySettingsFromFile();
+		//settingsScreen.applySettingsFromFile();
 		enforce_scaling();
 		
 		/* apply window size and scale */
