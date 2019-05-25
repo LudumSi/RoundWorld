@@ -47,6 +47,11 @@ public class TextInput extends BaseActor implements InputProcessor {
 		return input;
 	}
 	
+	public void setText(String in)
+	{
+		this.text = in;
+	}
+	
 	public void erase() {
 		text = "";
 		inputLine.setText("");
