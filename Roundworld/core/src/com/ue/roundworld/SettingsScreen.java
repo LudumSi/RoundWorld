@@ -641,6 +641,9 @@ public class SettingsScreen implements Screen {
 		if (storedPrefs.getInteger("DisplayMode") == 1)
 		{
 			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+			RoundWorld.width = Gdx.graphics.getWidth();
+			RoundWorld.height = Gdx.graphics.getHeight();
+			((RoundWorld) game).enforce_scaling();
 		}
 	}
 	
@@ -653,6 +656,7 @@ public class SettingsScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		((RoundWorld) game).adaptScalingToWindow();
 		resetPositionsAndSizing();
 		updateViewports();
 	}

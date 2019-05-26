@@ -32,7 +32,9 @@ public class RoundWorld extends Game {
 	public static int unscaledHeight; 	/* ui width before scaling (coordinate system) */
 	public static int unscaledWidth; 	/* ui height before scaling (coordinate system) */
 	public static float scale = 1; 		/* scaling up to account for display size */
-	public static float zoom = 1; 		/* user controlled zoom level */
+	public static float targetZoom = 1;	/* user controlled zoom level during game */
+	public static float minZoom = .75f;
+	public static float maxZoom = 1.5f;
 
 	public static boolean serverless = false;
 

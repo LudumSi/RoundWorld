@@ -13,8 +13,9 @@ public class DesktopLauncher {
 		
 		/* handle window configuration stuff */
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
+		cfg.width = 800; 	/* not needed, but just in case */
+		cfg.height = 700;	/* not needed, but just in case */
 		cfg.title = "Round World";
-		cfg.resizable = false;
 		// cfg.addIcon("assets/player.png", FileType.Internal);
 		
 		cfg.addIcon("assets/textures/RW_Icon_32.png", FileType.Internal);

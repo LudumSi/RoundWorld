@@ -73,8 +73,8 @@ public class MenuScreen implements Screen{
 	public void create() {
 		titleTheme = Gdx.audio.newMusic(Gdx.files.internal("assets/song_03.wav"));
 		
-		mainStage = new Stage(); //new ScalingViewport(Scaling.stretch, RoundWorld.unscaledWidth, RoundWorld.unscaledHeight));//new ScalingViewport(Scaling.stretch, RoundWorld.unscaledWidth, RoundWorld.unscaledHeight));
-		uiStage = new Stage();//new ScalingViewport(Scaling.stretch, RoundWorld.unscaledWidth, RoundWorld.unscaledHeight));
+		mainStage = new Stage();
+		uiStage = new Stage();
 		settingsOpened = false;
 	
 		test = new BaseActor(AssetManager.getTexture("RW_Icon_64"));
@@ -184,20 +184,6 @@ public class MenuScreen implements Screen{
 		imgAnim();
 	
 		/* key handling */
-		if (Gdx.input.isKeyJustPressed(Keys.R)) {
-//			mainStage.clear();
-//			System.out.println("Resetting");
-//			System.out.println("width = " + RoundWorld.width + "; height = " + RoundWorld.height + "; target_w = " + RoundWorld.unscaledWidth + "; target_h = " + RoundWorld.unscaledHeight + ";");
-//			
-//			start_title_animation();
-//			resetPositions();
-//			resetSizing();
-//			
-//			addElementsToStage();
-//			updateViewports();
-//			
-//			this.create();
-		}
 		if (Gdx.input.isKeyJustPressed(Keys.U)) {
 			username.setColor(Color.FOREST);
 			serverIp.setColor(Color.YELLOW);
@@ -343,7 +329,6 @@ public class MenuScreen implements Screen{
 			if (Gdx.input.justTouched()) {
 				RoundWorld.serverless = true;
 				System.out.println("Going serverless");
-				Gdx.graphics.setResizable(true);
 				this.game.setScreen(new GameplayScreen(this.game));
 			}
 		}
@@ -429,6 +414,7 @@ public class MenuScreen implements Screen{
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
+		((RoundWorld) game).adaptScalingToWindow();
 		resetTitleAnimation();
 		resetPositions();
 		resetSizing();

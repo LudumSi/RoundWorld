@@ -6,7 +6,8 @@ import java.math.RoundingMode;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
@@ -35,10 +36,12 @@ public class GameplayScreen implements Screen {
 	
 	private UiBase uiBase;
 	
+	private final boolean SMOOTH_ZOOM = false; /* toggle me! */
 	private OrthographicCamera camera;
 	private Vector2 cam_d = new Vector2();
+	private float currentZoom = 1f;
 	
-	private float deadzoneScale = (float) .075;
+	private float deadzoneScale = (float) .05;
 	private float deadzoneXVal;
 	private float deadzoneYVal;
 	
@@ -51,8 +54,8 @@ public class GameplayScreen implements Screen {
 		mainStage = new Stage();
 		uiStage = new Stage();
 		
-		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth);
-		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight);
+		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth / currentZoom);
+		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight / currentZoom);
 		
 		camera = (OrthographicCamera) mainStage.getCamera();
 				
@@ -111,14 +114,27 @@ public class GameplayScreen implements Screen {
 			Client.popParsedData();
 		}
 		
-		
 		moveCamera(dt);
+		
+		if (Gdx.input.isKeyPressed(Keys.Q)) {
+			if(RoundWorld.targetZoom > RoundWorld.minZoom)
+			{
+				RoundWorld.targetZoom *= .99;
+			}
+		}
+		if (Gdx.input.isKeyPressed(Keys.E)) {
+			if(RoundWorld.targetZoom < RoundWorld.maxZoom)
+			{
+				RoundWorld.targetZoom *= 1.01;
+			}
+		}
 		
 		mainStage.getViewport().apply();
 		mainStage.draw();
 		uiStage.getViewport().apply(true);
 		uiStage.draw();
 	}
+
 	
 	/*
 	 *	description:	Changes camera position based on player movement.
@@ -137,21 +153,37 @@ public class GameplayScreen implements Screen {
 		
 		/* move camera */
 		camera.translate(cam_d.x, cam_d.y);
+		
+		/* update currentZoom */
+		currentZoom += ((SMOOTH_ZOOM) ? (dt) : (1)) * (RoundWorld.targetZoom - currentZoom);
+		
+		/* update viewports */
+		updateZoomViewportStuff();
 	}
+	
 	
 	/*
 	 * Updates viewport fields to account for new window / scaled dimensions
 	 */
 	void updateViewport()
 	{
-		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth);
-		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight);
+		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth / currentZoom);
+		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight / currentZoom);
 		mainStage.getViewport().setScreenSize(RoundWorld.width, RoundWorld.height);
-		mainStage.getViewport().setWorldSize(RoundWorld.unscaledWidth, RoundWorld.unscaledHeight);
+		mainStage.getViewport().setWorldSize(RoundWorld.unscaledWidth / currentZoom, RoundWorld.unscaledHeight / currentZoom);
 		uiStage.getViewport().setScreenSize(RoundWorld.width, RoundWorld.height);
 		uiStage.getViewport().setWorldSize(RoundWorld.unscaledWidth, RoundWorld.unscaledHeight);
 		uiBase.resetElementPositions();
 	}
+	
+	void updateZoomViewportStuff()
+	{
+		deadzoneXVal = (float) (deadzoneScale * RoundWorld.width / currentZoom);
+		deadzoneYVal = (float) (deadzoneScale * RoundWorld.height / currentZoom);
+		mainStage.getViewport().setWorldSize(RoundWorld.unscaledWidth / currentZoom, RoundWorld.unscaledHeight / currentZoom);
+		uiBase.resetElementPositions();
+	}
+	
 	
 	@Override
 	public void show() {
