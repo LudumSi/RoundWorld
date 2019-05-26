@@ -257,7 +257,7 @@ public class MenuScreen implements Screen{
 		textBase.setPosition(20, 20);
 		username.setPosition(10, RoundWorld.unscaledHeight - 25);
 		serverIp.setPosition(10, RoundWorld.unscaledHeight - 50);
-		serverlessDebugButton.setBounds(5, 5, 64 * 2, 16 * 2);
+		serverlessDebugButton.setBounds(10, 10, 64 * 2, 16 * 2);
 		settingsButton.setBounds(RoundWorld.unscaledWidth - (10 + 64 * 2), 10, 64*2, 16*2);
 		usernameIn.setPosition(140, RoundWorld.unscaledHeight - 17);
 		ipIn.setPosition(10, RoundWorld.unscaledHeight - 100);
@@ -352,18 +352,14 @@ public class MenuScreen implements Screen{
 	private void settingsButtonOnClick() {
 		if (settingsButton.getBoundingRectangle().contains(Gdx.input.getX() / RoundWorld.scale, RoundWorld.unscaledHeight - Gdx.input.getY() / RoundWorld.scale)) {
 			if (Gdx.input.justTouched()) {
-				
 				if(this.settingsOpened == false)
 				{
 					this.settings = ((RoundWorld) game).getSettingsScreen();
 					this.settings.create();
 					this.settingsOpened = true;
 				}
-//				String ip_backup = ipIn.getInput();
-//				String user_backup = usernameIn.getInput();
+				
 				this.game.setScreen(settings);
-//				ipIn.setText(ip_backup);
-//				usernameIn.setText(user_backup);
 			}
 		}
 	}

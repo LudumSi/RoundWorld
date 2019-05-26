@@ -150,10 +150,10 @@ public class SettingsScreen implements Screen {
 			i++;
 		}
 		
-		backButton.setBounds(5, 5, 64, 16);
+		backButton.setBounds(10, 10, 64*2, 16*2);
 		mainStage.addActor(backButton);
 		
-		applyButton.setBounds(RoundWorld.unscaledWidth - 5 - 64, 5, 64, 16);
+		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - 64*2, 10, 64*2, 16*2);
 		mainStage.addActor(applyButton);
 	}
 	
@@ -174,41 +174,7 @@ public class SettingsScreen implements Screen {
 		mainStage.getViewport().apply();
 		mainStage.draw();
 	}
-	
-	
-	/* Resets position and size, adding elements to reduce loops through */
-	public void resetElements()
-	{
-		float w = RoundWorld.unscaledWidth / 2;
-		float h = settingEntries.size() * 30;
-		int i = 1;
-		
-		settingEntriesRect.set((RoundWorld.unscaledWidth - w) / 2, (RoundWorld.unscaledHeight + h) / 2, w, h);
-		title.setPosition(settingEntriesRect.x + (w - title.getWidth()) / 2, settingEntriesRect.y + 15);
-		title.setFontScale(3);
-		mainStage.addActor(title);
-		
-		for (Entry<String, SettingEntry> entry : settingEntries.entrySet())  
-		{
-			entry.getValue().label.setPosition(settingEntriesRect.x + w / 2 - entry.getValue().label.getWidth(), settingEntriesRect.y - 30 * i);
-			entry.getValue().label.setFontScale(2);
-			entry.getValue().valueLabel.setPosition(settingEntriesRect.x + w / 2, settingEntriesRect.y - 30 * i);
-			entry.getValue().valueLabel.setFontScale(2);
-			entry.getValue().left_arrow.setBounds(settingEntriesRect.x + w / 2 + 5, settingEntriesRect.y - 30 * i, 16, 16);
-			entry.getValue().right_arrow.setBounds(settingEntriesRect.x + w / 2 + 180, settingEntriesRect.y - 30 * i, 16, 16);
-			mainStage.addActor(entry.getValue().label);
-			mainStage.addActor(entry.getValue().valueLabel);
-			
-			i++;
-		}
-		
-		backButton.setBounds(5, 5, 64, 16);
-		mainStage.addActor(backButton);
-		
-		applyButton.setBounds(RoundWorld.unscaledWidth - 5 - 64, 5, 64, 16);
-		mainStage.addActor(applyButton);
-	}
-	
+
 	
 	/* resets element positions and sizes but doesn't add (reduces computation) */
 	public void resetPositionsAndSizing()
@@ -233,8 +199,8 @@ public class SettingsScreen implements Screen {
 			i++;
 		}
 		
-		backButton.setBounds(5, 5, 64, 16);
-		applyButton.setBounds(RoundWorld.unscaledWidth - 5 - 64, 5, 64, 16);
+		backButton.setBounds(10, 10, 64 * 2, 16 * 2);
+		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - 64 * 2, 10, 64 * 2, 16 * 2);
 	}
 	
 	
@@ -258,8 +224,8 @@ public class SettingsScreen implements Screen {
 			i++;
 		}
 		
-		backButton.setBounds(5, 5, 64, 16);
-		applyButton.setBounds(RoundWorld.unscaledWidth - 5 - 64, 5, 64, 16);
+		backButton.setBounds(10, 10, 64 * 2, 16 * 2);
+		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - 64 * 2, 10, 64 * 2, 16 * 2);
 	}
 	
 
@@ -298,7 +264,7 @@ public class SettingsScreen implements Screen {
 		/* change game fields */
 		RoundWorld.width = storedPrefs.getInteger("res_w");
 		RoundWorld.height = storedPrefs.getInteger("res_h");
-			RoundWorld.scale = storedPrefs.getFloat("Scale");
+		RoundWorld.scale = storedPrefs.getFloat("Scale");
 		((RoundWorld) game).enforce_scaling();
 		
 		/* re-make window */
@@ -507,6 +473,18 @@ public class SettingsScreen implements Screen {
 	}
 	
 	
+	/* reset all to default, used if file didn't exist */
+	public void resetAllToDefault()
+	{
+		storedPrefs.putInteger("DisplayMode", 0);
+		storedPrefs.putInteger("AspectRatio", 0);
+		storedPrefs.putInteger("res_w", 800);
+		storedPrefs.putInteger("res_h", 600);
+		storedPrefs.putFloat("Scale", 1f);
+		storedPrefs.flush();
+	}	
+	
+	
 	/* gets value for this entry from the preference file or default */
 	private Integer getStoredOrDefault(Entry<String, SettingEntry> entry)
 	{
@@ -519,15 +497,22 @@ public class SettingsScreen implements Screen {
 		}
 		else if(entry.getKey().equals("Resolution"))
 		{
-			curr = 0;
-			
-			for(int i = 0; i < resolutionOptions[0].length; i++)
+			if(storedPrefs.contains("res_w") && storedPrefs.contains("res_h"))
 			{
-				if(Integer.parseInt(resolutionOptions[settingEntries.get("AspectRatio").val][i].split("x")[0]) == storedPrefs.getInteger("res_w"))
+				curr = 0;
+				
+				for(int i = 0; i < resolutionOptions[0].length; i++)
 				{
-					curr = i;
-					break;
+					if(Integer.parseInt(resolutionOptions[settingEntries.get("AspectRatio").val][i].split("x")[0]) == storedPrefs.getInteger("res_w"))
+					{
+						curr = i;
+						break;
+					}
 				}
+			}
+			else
+			{
+				curr = resetToDefault(entry.getKey());
 			}
 		}
 		else if(entry.getKey().equals("Scale"))
@@ -565,8 +550,8 @@ public class SettingsScreen implements Screen {
 		}
 		else if(key.contains("AspectRatio"))
 		{
-			storedPrefs.putInteger("AspectRatio", 1);
-			result = 1;
+			storedPrefs.putInteger("AspectRatio", 0);
+			result = 0;
 		}
 		else if(key.contains("Resolution"))
 		{
@@ -608,6 +593,7 @@ public class SettingsScreen implements Screen {
 	public void launchWindow()
 	{
 		Gdx.graphics.setWindowedMode(RoundWorld.width, RoundWorld.height);
+		
 		if(storedPrefs.getInteger("DisplayMode") == 1)
 		{
 			Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());

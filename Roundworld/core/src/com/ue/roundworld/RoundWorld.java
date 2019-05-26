@@ -58,15 +58,18 @@ public class RoundWorld extends Game {
 		menuScreen = new MenuScreen(this);
 		settingsScreen = new SettingsScreen(this, menuScreen, prefsFileName);
 		
+		/* set defaults if file doesn't exist */
+		if (!settingsScreen.prefsFileExists(prefsFileName))
+		{
+			settingsScreen.resetAllToDefault();
+		}
+		
 		/* load settings, reset to defaults if needed */
 		settingsScreen.resetAllToStoredOrDefault();
 		
 		/* read and enforce stored display settings */
 		settingsScreen.applySettingsFromFile();
 		enforce_scaling();
-		
-		/* apply window size and scale */
-		Gdx.graphics.setWindowedMode(RoundWorld.width, RoundWorld.height);
 		
 		/* set screen to the menu */
 		setScreen(menuScreen);
