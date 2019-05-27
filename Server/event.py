@@ -14,8 +14,6 @@ class Event():
 			
 			if(isinstance(val,type(1)):
 					data += key + ":" + str(val) + ","
-			elif(isinstance(val, Game_object)):
-				data += key + ":{" + val.compile() + "},"
 			else:
 				data += key + ":" + val + ","
 				
@@ -24,8 +22,10 @@ class Event():
 		
 		leng = len(data)
 		leng += len(str(leng))
-		data = str(leng) + "|" + data
+		data = str(leng) + "|" + data + "\n"
 		
 		return data
+		
+#length|id:{key:val,key:val,key:val}
 		
 		
