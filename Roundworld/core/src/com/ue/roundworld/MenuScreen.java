@@ -29,17 +29,20 @@ import com.ue.roundworld.client.Event;
 import com.ue.roundworld.client.Parser;
 import com.ue.roundworld.ui.TextInput;
 
-public class MenuScreen implements Screen{
+public class MenuScreen implements Screen {
 	
 	public Stage mainStage;
 	public Stage uiStage;
 	
 	public Game game;
 	private SettingsScreen settings;
+	private GameplayScreen gameplay;
 	private boolean settingsOpened;
 	
-	private BaseActor serverlessDebugButton = new BaseActor(AssetManager.getTexture("serverless_debug_button"));
+	private BaseActor serverlessButton = new BaseActor(AssetManager.getTexture("serverless_debug_button"));
 	private BaseActor settingsButton = new BaseActor(AssetManager.getTexture("settings_button"));
+	private BaseActor exitButton = new BaseActor(AssetManager.getTexture("exit_button"));
+	private float buttonScale = 1.5f;
 	
 	public BaseActor test;
 	public BaseActor textBase = new BaseActor(Utils.emptyTexture);
@@ -73,8 +76,8 @@ public class MenuScreen implements Screen{
 	public void create() {
 		titleTheme = Gdx.audio.newMusic(Gdx.files.internal("assets/song_03.wav"));
 		
-		mainStage = new Stage(); //new ScalingViewport(Scaling.stretch, RoundWorld.unscaledWidth, RoundWorld.unscaledHeight));//new ScalingViewport(Scaling.stretch, RoundWorld.unscaledWidth, RoundWorld.unscaledHeight));
-		uiStage = new Stage();//new ScalingViewport(Scaling.stretch, RoundWorld.unscaledWidth, RoundWorld.unscaledHeight));
+		mainStage = new Stage();
+		uiStage = new Stage();
 		settingsOpened = false;
 	
 		test = new BaseActor(AssetManager.getTexture("RW_Icon_64"));
@@ -147,8 +150,9 @@ public class MenuScreen implements Screen{
 			}
 		}
 		
-		serverlessDebugOnClick();
+		serverlessButtonOnClick();
 		settingsButtonOnClick();
+		exitButtonOnClick();
 		
 		/* check for title orbiting */
 		for (int i = 0; i < Projectile.projs.size(); i++) {
@@ -184,20 +188,6 @@ public class MenuScreen implements Screen{
 		imgAnim();
 	
 		/* key handling */
-		if (Gdx.input.isKeyJustPressed(Keys.R)) {
-//			mainStage.clear();
-//			System.out.println("Resetting");
-//			System.out.println("width = " + RoundWorld.width + "; height = " + RoundWorld.height + "; target_w = " + RoundWorld.unscaledWidth + "; target_h = " + RoundWorld.unscaledHeight + ";");
-//			
-//			start_title_animation();
-//			resetPositions();
-//			resetSizing();
-//			
-//			addElementsToStage();
-//			updateViewports();
-//			
-//			this.create();
-		}
 		if (Gdx.input.isKeyJustPressed(Keys.U)) {
 			username.setColor(Color.FOREST);
 			serverIp.setColor(Color.YELLOW);
@@ -215,7 +205,6 @@ public class MenuScreen implements Screen{
 			if (Client.isConnected()) {
 				Client.close();
 			}
-			
 			Gdx.app.exit();
 		}
 		
@@ -234,8 +223,16 @@ public class MenuScreen implements Screen{
 				e.printStackTrace();
 			}
 		
-			GameplayScreen g = new GameplayScreen(this.game);
-			this.game.setScreen(g);
+			this.gameplay = ((RoundWorld) game).getGameplayScreen();
+			this.gameplay.create();
+			if(this.settingsOpened == false)
+			{
+				this.settings = ((RoundWorld) game).getSettingsScreen();
+				this.settings.create();
+				this.settingsOpened = true;
+			}
+			this.settings.setBackTarget(this.gameplay, true);
+			this.game.setScreen(gameplay);
 		}
 		if (ipIn.getInput() != null && ipIn.getInput() != "") {
 			Client.userIpAddress = ipIn.getInput();
@@ -257,8 +254,9 @@ public class MenuScreen implements Screen{
 		textBase.setPosition(20, 20);
 		username.setPosition(10, RoundWorld.unscaledHeight - 25);
 		serverIp.setPosition(10, RoundWorld.unscaledHeight - 50);
-		serverlessDebugButton.setBounds(5, 5, 64 * 2, 16 * 2);
-		settingsButton.setBounds(RoundWorld.unscaledWidth - (10 + 64 * 2), 10, 64*2, 16*2);
+		serverlessButton.setBounds(10, 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		settingsButton.setBounds(RoundWorld.unscaledWidth - 10 - (int) (64 * buttonScale), 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		exitButton.setBounds(RoundWorld.unscaledWidth - 10 - (int) (64 * buttonScale), RoundWorld.unscaledHeight - 10 - (int) (16 * buttonScale), (int) (64 * buttonScale), (int) (16 * buttonScale));
 		usernameIn.setPosition(140, RoundWorld.unscaledHeight - 17);
 		ipIn.setPosition(10, RoundWorld.unscaledHeight - 100);
 	}
@@ -283,8 +281,9 @@ public class MenuScreen implements Screen{
 		mainStage.addActor(textBase);
 		mainStage.addActor(username);
 		mainStage.addActor(serverIp);		
-		mainStage.addActor(serverlessDebugButton);
+		mainStage.addActor(serverlessButton);
 		mainStage.addActor(settingsButton);
+		mainStage.addActor(exitButton);
 		mainStage.addActor(usernameIn);
 		mainStage.addActor(ipIn);
 	}
@@ -338,13 +337,32 @@ public class MenuScreen implements Screen{
 		}
 	}
 	
-	private void serverlessDebugOnClick() {
-		if (serverlessDebugButton.getBoundingRectangle().contains(Gdx.input.getX() / RoundWorld.scale, RoundWorld.unscaledHeight - Gdx.input.getY() / RoundWorld.scale)) {
+	private void exitButtonOnClick() {
+		if (exitButton.getBoundingRectangle().contains(Gdx.input.getX() / RoundWorld.scale, RoundWorld.unscaledHeight - Gdx.input.getY() / RoundWorld.scale)) {
+			if (Gdx.input.justTouched()) {
+				if (Client.isConnected()) {
+					Client.close();
+				}
+				Gdx.app.exit();
+			}
+		}
+	}
+	
+	private void serverlessButtonOnClick() {
+		if (serverlessButton.getBoundingRectangle().contains(Gdx.input.getX() / RoundWorld.scale, RoundWorld.unscaledHeight - Gdx.input.getY() / RoundWorld.scale)) {
 			if (Gdx.input.justTouched()) {
 				RoundWorld.serverless = true;
 				System.out.println("Going serverless");
-				Gdx.graphics.setResizable(true);
-				this.game.setScreen(new GameplayScreen(this.game));
+				if(this.settingsOpened == false)
+				{
+					this.settings = ((RoundWorld) game).getSettingsScreen();
+					this.settings.create();
+					this.settingsOpened = true;
+				}
+				this.gameplay = ((RoundWorld) game).getGameplayScreen();
+				this.settings.setBackTarget(this.gameplay, true);
+				this.gameplay.create();
+				this.game.setScreen(this.gameplay);
 			}
 		}
 	}
@@ -352,18 +370,14 @@ public class MenuScreen implements Screen{
 	private void settingsButtonOnClick() {
 		if (settingsButton.getBoundingRectangle().contains(Gdx.input.getX() / RoundWorld.scale, RoundWorld.unscaledHeight - Gdx.input.getY() / RoundWorld.scale)) {
 			if (Gdx.input.justTouched()) {
-				
 				if(this.settingsOpened == false)
 				{
 					this.settings = ((RoundWorld) game).getSettingsScreen();
 					this.settings.create();
 					this.settingsOpened = true;
 				}
-//				String ip_backup = ipIn.getInput();
-//				String user_backup = usernameIn.getInput();
+				
 				this.game.setScreen(settings);
-//				ipIn.setText(ip_backup);
-//				usernameIn.setText(user_backup);
 			}
 		}
 	}
@@ -433,6 +447,11 @@ public class MenuScreen implements Screen{
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
+		if(RoundWorld.autoScaling)
+		{
+			((RoundWorld) game).autoScale();
+		}
+		((RoundWorld) game).adaptScalingToWindow();
 		resetTitleAnimation();
 		resetPositions();
 		resetSizing();
