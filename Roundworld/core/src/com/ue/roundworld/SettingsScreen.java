@@ -53,8 +53,8 @@ public class SettingsScreen implements Screen {
 	public static String[] aspectRatios = {"4:3", "16:9", "16:10"};
 	public static String[] displayModes = {"windowed", "fullscreen"};
 	public static float[] scalingOptions = {.5f, .75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f, 4.0f};
-	public static String[] smoothZoomOptions = {"Off", "On"};
-	public static String[] smoothCamOptions = {"Off", "On"};
+	public static String[] smoothZoomOptions = {"off", "on"};
+	public static String[] smoothCamOptions = {"off", "on"};
 	
 	/*
 	 * class:		 	SettingEntry
@@ -281,6 +281,7 @@ public class SettingsScreen implements Screen {
 		
 		mainStage.addActor(backButton);
 		mainStage.addActor(applyButton);
+		mainStage.addActor(resetButton);
 		
 		if(showMenuButton)
 		{
