@@ -158,7 +158,7 @@ public class GameplayScreen implements Screen {
 		camera.translate(cam_d.x, cam_d.y);
 		
 		/* update currentZoom */
-		currentZoom += ((RoundWorld.smoothZoom) ? (dt) : (1)) * (RoundWorld.targetZoom - currentZoom);
+		currentZoom += ((RoundWorld.smoothZoom) ? (5 * dt) : (1)) * (RoundWorld.targetZoom - currentZoom);
 		
 		/* update viewports */
 		updateZoomViewportStuff();
