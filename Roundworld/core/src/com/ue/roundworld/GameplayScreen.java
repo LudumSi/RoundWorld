@@ -42,7 +42,7 @@ public class GameplayScreen implements Screen {
 	private Vector2 cam_d = new Vector2();
 	private float currentZoom = 1f;
 	
-	private float deadzoneScale = (float) .05;
+	private float deadzoneScale = (float) .005;
 	private float deadzoneXVal;
 	private float deadzoneYVal;
 	
@@ -57,8 +57,8 @@ public class GameplayScreen implements Screen {
 		mainStage = new Stage();
 		uiStage = new Stage();
 		
-		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth / currentZoom);
-		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight / currentZoom);
+		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth / 2 / currentZoom);
+		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight / 2 / currentZoom);
 		
 		camera = (OrthographicCamera) mainStage.getCamera();
 				
@@ -145,11 +145,20 @@ public class GameplayScreen implements Screen {
 	 */
 	private void moveCamera(float dt)
 	{
-		cam_d.x = player.getX() + player.getWidth() / 2 - camera.position.x;
-		cam_d.y = player.getY() + player.getHeight() / 2 - camera.position.y;
+		if(player.getX() > camera.position.x)
+		{
+			cam_d.x = (Math.abs(player.getX() + player.getWidth() / 2 - camera.position.x) - deadzoneXVal);//player.getX() + player.getWidth() / 2 - camera.position.x;
+		}
+		else
+		{
+			
+		}
+	
+		cam_d.x = ((player.getX() > camera.position.x) ? (1f) : (-1f)) * (Math.abs(player.getX() + player.getWidth() / 2 - camera.position.x) - deadzoneXVal);
+		cam_d.y = ((player.getY() > camera.position.y) ? (1f) : (-1f)) * (Math.abs(player.getY() + player.getHeight() / 2 - camera.position.y) - deadzoneYVal);
 		
 		/* deadzone check */
-		cam_d.scl((cam_d.x < deadzoneXVal) ? (.75f) : (1), (cam_d.y < deadzoneYVal) ? (.75f) : (1));
+		cam_d.scl((Math.abs(cam_d.x) < deadzoneXVal && RoundWorld.smoothCam) ? (0f) : (1f), (Math.abs(cam_d.y) < deadzoneYVal && RoundWorld.smoothCam) ? (0f) : (1f));
 		
 		/* account for dt */
 		cam_d = cam_d.scl((RoundWorld.smoothCam) ? (1.5f * dt) : (1f));
