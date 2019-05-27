@@ -77,7 +77,6 @@ public class RoundWorld extends Game {
 		
 		/* read and enforce stored display settings */
 		settingsScreen.applySettingsFromFile();
-		System.out.println("Scale = " + RoundWorld.scale);
 		if(RoundWorld.scale == 0 || RoundWorld.autoScaling)
 		{
 			autoScale();

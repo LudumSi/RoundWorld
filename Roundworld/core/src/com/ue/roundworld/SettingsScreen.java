@@ -42,6 +42,7 @@ public class SettingsScreen implements Screen {
 	private MenuScreen menu;
 	private Screen backTarget;
 	private boolean showMenuButton = false;
+	private float buttonScale = 1.5f;
 	
 	private Map<String, SettingEntry> settingEntries; /* keeps track of selected settingEntries */
 	
@@ -158,16 +159,16 @@ public class SettingsScreen implements Screen {
 			i++;
 		}
 		
-		backButton.setBounds(10, 10, 64 * 2, 16 * 2);
+		backButton.setBounds(10, 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
 		mainStage.addActor(backButton);
 		
-		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - 64 * 2, 10, 64 * 2, 16 * 2);
+		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - (int) (64 * buttonScale), 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
 		mainStage.addActor(applyButton);
 		
-		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - 64, 10, 64 * 2, 16 * 2);
+		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - (int) (64 * buttonScale / 2), 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
 		mainStage.addActor(resetButton);
 		
-		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - 16 * 2, 64 * 2, 16 * 2);
+		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - (int) (16 * buttonScale), (int) (64 * buttonScale), (int) (16 * buttonScale));
 	}
 	
 	
@@ -218,10 +219,10 @@ public class SettingsScreen implements Screen {
 			i++;
 		}
 		
-		backButton.setBounds(10, 10, 64 * 2, 16 * 2);
-		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - 64 * 2, 10, 64 * 2, 16 * 2);
-		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - 64, 10, 64 * 2, 16 * 2);
-		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - 16 * 2, 64 * 2, 16 * 2);
+		backButton.setBounds(10, 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - (int) (64 * buttonScale), 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - (int) (64 * buttonScale / 2), 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - (int) (16 * buttonScale), (int) (64 * buttonScale), (int) (16 * buttonScale));
 	}
 	
 	
@@ -245,10 +246,10 @@ public class SettingsScreen implements Screen {
 			i++;
 		}
 		
-		backButton.setBounds(10, 10, 64 * 2, 16 * 2);
-		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - 64 * 2, 10, 64 * 2, 16 * 2);
-		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - 64, 10, 64 * 2, 16 * 2);
-		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - 16 * 2, 64 * 2, 16 * 2);
+		backButton.setBounds(10, 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - (int) (64 * buttonScale), 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - (int) (64 * buttonScale / 2), 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - (int) (16 * buttonScale), (int) (64 * buttonScale), (int) (16 * buttonScale));
 	}
 	
 

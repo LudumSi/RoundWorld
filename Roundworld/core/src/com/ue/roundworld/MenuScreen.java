@@ -42,6 +42,7 @@ public class MenuScreen implements Screen {
 	private BaseActor serverlessButton = new BaseActor(AssetManager.getTexture("serverless_debug_button"));
 	private BaseActor settingsButton = new BaseActor(AssetManager.getTexture("settings_button"));
 	private BaseActor exitButton = new BaseActor(AssetManager.getTexture("exit_button"));
+	private float buttonScale = 1.5f;
 	
 	public BaseActor test;
 	public BaseActor textBase = new BaseActor(Utils.emptyTexture);
@@ -253,9 +254,9 @@ public class MenuScreen implements Screen {
 		textBase.setPosition(20, 20);
 		username.setPosition(10, RoundWorld.unscaledHeight - 25);
 		serverIp.setPosition(10, RoundWorld.unscaledHeight - 50);
-		serverlessButton.setBounds(10, 10, 64 * 2, 16 * 2);
-		settingsButton.setBounds(RoundWorld.unscaledWidth - (10 + 64 * 2), 10, 64*2, 16*2);
-		exitButton.setBounds(RoundWorld.unscaledWidth - 10 - 64 * 2, RoundWorld.unscaledHeight - 10 - 16 * 2, 64 * 2, 16 * 2);
+		serverlessButton.setBounds(10, 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		settingsButton.setBounds(RoundWorld.unscaledWidth - 10 - (int) (64 * buttonScale), 10, (int) (64 * buttonScale), (int) (16 * buttonScale));
+		exitButton.setBounds(RoundWorld.unscaledWidth - 10 - (int) (64 * buttonScale), RoundWorld.unscaledHeight - 10 - (int) (16 * buttonScale), (int) (64 * buttonScale), (int) (16 * buttonScale));
 		usernameIn.setPosition(140, RoundWorld.unscaledHeight - 17);
 		ipIn.setPosition(10, RoundWorld.unscaledHeight - 100);
 	}
