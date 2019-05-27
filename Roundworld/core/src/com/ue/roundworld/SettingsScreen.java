@@ -602,7 +602,7 @@ public class SettingsScreen implements Screen {
 		storedPrefs.putInteger("res_w", Integer.parseInt(resolutionOptions[0][res].split("x")[0]));
 		storedPrefs.putInteger("res_h", Integer.parseInt(resolutionOptions[0][res].split("x")[1]));
 		storedPrefs.putFloat("Scale", 0f);
-		storedPrefs.putInteger("SmoothZoom", 0);
+		storedPrefs.putInteger("SmoothZoom", 1);
 		storedPrefs.putInteger("SmoothCam", 1);
 		storedPrefs.flush();
 	}	
@@ -698,8 +698,8 @@ public class SettingsScreen implements Screen {
 		}
 		else if (key.equals("SmoothZoom"))
 		{
-			storedPrefs.putInteger("SmoothZoom", 0);
-			result = 0;
+			storedPrefs.putInteger("SmoothZoom", 1);
+			result = 1;
 		}
 		else if (key.equals("SmoothCam"))
 		{
