@@ -6,7 +6,8 @@ import java.math.RoundingMode;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,11 +22,13 @@ import com.ue.roundworld.client.Event;
 import com.ue.roundworld.ui.UiBase;
 
 public class GameplayScreen implements Screen {
-	
 	public Stage mainStage;
 	public Stage uiStage;
+	
 	public Game game;
-		
+	public MenuScreen menu;
+	public SettingsScreen settings;
+	
 	public BaseActor test;
 	public Label text;
 	
@@ -37,22 +40,25 @@ public class GameplayScreen implements Screen {
 	
 	private OrthographicCamera camera;
 	private Vector2 cam_d = new Vector2();
+	private float currentZoom = 1f;
 	
-	private float deadzoneScale = (float) .075;
+	private float deadzoneScale = (float) .005;
 	private float deadzoneXVal;
 	private float deadzoneYVal;
 	
-	public GameplayScreen(Game g){
+	public GameplayScreen(Game g, MenuScreen menu, SettingsScreen settings){
 		game = g;
-		create();
+		this.menu = menu;
+		this.settings = settings;
+		/* create called before being opened */
 	}
 	
 	public void create() {
 		mainStage = new Stage();
 		uiStage = new Stage();
 		
-		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth);
-		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight);
+		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth / 2 / currentZoom);
+		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight / 2 / currentZoom);
 		
 		camera = (OrthographicCamera) mainStage.getCamera();
 				
@@ -71,13 +77,9 @@ public class GameplayScreen implements Screen {
 		
 		uiBase = new UiBase();
 	
-		
-		
 		text = new Label(" ", RoundWorld.font);
 		text.setPosition(5, 5);
 		mainStage.addActor(text);
-		
-		
 
 		player = new Player();
 		player.setPosition((RoundWorld.unscaledWidth - player.getWidth()) / 2, (RoundWorld.unscaledHeight - player.getHeight()) / 2);
@@ -111,47 +113,89 @@ public class GameplayScreen implements Screen {
 			Client.popParsedData();
 		}
 		
-		
 		moveCamera(dt);
+		
+		if (Gdx.input.isKeyPressed(Keys.Q)) {
+			if(RoundWorld.targetZoom > RoundWorld.minZoom)
+			{
+				RoundWorld.targetZoom *= .99;
+			}
+		}
+		if (Gdx.input.isKeyPressed(Keys.E)) {
+			if(RoundWorld.targetZoom < RoundWorld.maxZoom)
+			{
+				RoundWorld.targetZoom *= 1.01;
+			}
+		}
+		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+			game.setScreen(settings);
+		}
 		
 		mainStage.getViewport().apply();
 		mainStage.draw();
+		
 		uiStage.getViewport().apply(true);
 		uiStage.draw();
 	}
+
 	
 	/*
 	 *	description:	Changes camera position based on player movement.
 	 *	pre-condition:	Called only once per render() call
 	 */
-	void moveCamera(float dt)
+	private void moveCamera(float dt)
 	{
-		cam_d.x = player.getX() + player.getWidth() / 2 - camera.position.x;
-		cam_d.y = player.getY() + player.getHeight() / 2 - camera.position.y;
+		if(player.getX() > camera.position.x)
+		{
+			cam_d.x = (Math.abs(player.getX() + player.getWidth() / 2 - camera.position.x) - deadzoneXVal);//player.getX() + player.getWidth() / 2 - camera.position.x;
+		}
+		else
+		{
+			
+		}
+	
+		cam_d.x = ((player.getX() > camera.position.x) ? (1f) : (-1f)) * (Math.abs(player.getX() + player.getWidth() / 2 - camera.position.x) - deadzoneXVal);
+		cam_d.y = ((player.getY() > camera.position.y) ? (1f) : (-1f)) * (Math.abs(player.getY() + player.getHeight() / 2 - camera.position.y) - deadzoneYVal);
 		
 		/* deadzone check */
-		cam_d.scl((cam_d.x < deadzoneXVal) ? (.75f) : (1), (cam_d.y < deadzoneYVal) ? (.75f) : (1));
+		cam_d.scl((Math.abs(cam_d.x) < deadzoneXVal && RoundWorld.smoothCam) ? (0f) : (1f), (Math.abs(cam_d.y) < deadzoneYVal && RoundWorld.smoothCam) ? (0f) : (1f));
 		
 		/* account for dt */
-		cam_d = cam_d.scl(1.5f * dt);
+		cam_d = cam_d.scl((RoundWorld.smoothCam) ? (1.5f * dt) : (1f));
 		
 		/* move camera */
 		camera.translate(cam_d.x, cam_d.y);
+		
+		/* update currentZoom */
+		currentZoom += ((RoundWorld.smoothZoom) ? (5 * dt) : (1)) * (RoundWorld.targetZoom - currentZoom);
+		
+		/* update viewports */
+		updateZoomViewportStuff();
 	}
+	
 	
 	/*
 	 * Updates viewport fields to account for new window / scaled dimensions
 	 */
-	void updateViewport()
+	private void updateViewports()
 	{
-		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth);
-		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight);
+		deadzoneXVal = (float) (deadzoneScale * RoundWorld.unscaledWidth / currentZoom);
+		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight / currentZoom);
 		mainStage.getViewport().setScreenSize(RoundWorld.width, RoundWorld.height);
-		mainStage.getViewport().setWorldSize(RoundWorld.unscaledWidth, RoundWorld.unscaledHeight);
+		mainStage.getViewport().setWorldSize(RoundWorld.unscaledWidth / currentZoom, RoundWorld.unscaledHeight / currentZoom);
 		uiStage.getViewport().setScreenSize(RoundWorld.width, RoundWorld.height);
 		uiStage.getViewport().setWorldSize(RoundWorld.unscaledWidth, RoundWorld.unscaledHeight);
 		uiBase.resetElementPositions();
 	}
+	
+	private void updateZoomViewportStuff()
+	{
+		deadzoneXVal = (float) (deadzoneScale * RoundWorld.width / currentZoom);
+		deadzoneYVal = (float) (deadzoneScale * RoundWorld.height / currentZoom);
+		mainStage.getViewport().setWorldSize(RoundWorld.unscaledWidth / currentZoom, RoundWorld.unscaledHeight / currentZoom);
+		uiBase.resetElementPositions();
+	}
+	
 	
 	@Override
 	public void show() {
@@ -161,8 +205,13 @@ public class GameplayScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
+		if(RoundWorld.autoScaling)
+		{
+			((RoundWorld) game).autoScale();
+		}
 		((RoundWorld) game).adaptScalingToWindow();
-		updateViewport();
+		uiBase.resetElementPositions();
+		updateViewports();
 	}
 
 	@Override

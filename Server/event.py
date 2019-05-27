@@ -6,6 +6,7 @@ class Event():
 		self.id = id #String
 		self.args = args #Dictionary of args
 		
+		
 	def __init__(self, j):
 		self.id = j.keys[0]
 		self.args = j[self.id]
