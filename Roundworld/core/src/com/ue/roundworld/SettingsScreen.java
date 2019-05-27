@@ -33,7 +33,6 @@ import com.ue.roundworld.ui.TextInput;
 
 public class SettingsScreen implements Screen {
 	private Stage mainStage;
-	private Stage uiStage;
 	
 	private Preferences storedPrefs;
 	
@@ -41,6 +40,8 @@ public class SettingsScreen implements Screen {
 	
 	private Game game;
 	private MenuScreen menu;
+	private Screen backTarget;
+	private boolean showMenuButton = false;
 	
 	private Map<String, SettingEntry> settingEntries; /* keeps track of selected settingEntries */
 	
@@ -51,6 +52,8 @@ public class SettingsScreen implements Screen {
 	public static String[] aspectRatios = {"4:3", "16:9", "16:10"};
 	public static String[] displayModes = {"windowed", "fullscreen"};
 	public static float[] scalingOptions = {.5f, .75f, 1.0f, 1.25f, 1.5f, 1.75f, 2.0f, 3.0f, 4.0f};
+	public static String[] smoothZoomOptions = {"Off", "On"};
+	public static String[] smoothCamOptions = {"Off", "On"};
 	
 	/*
 	 * class:		 	SettingEntry
@@ -75,6 +78,7 @@ public class SettingsScreen implements Screen {
 	private BaseActor applyButton = new BaseActor(AssetManager.getTexture("apply_button"));
 	private BaseActor backButton = new BaseActor(AssetManager.getTexture("back_button"));
 	private BaseActor resetButton = new BaseActor(AssetManager.getTexture("reset_button"));
+	private BaseActor menuButton = new BaseActor(AssetManager.getTexture("menu_button"));
 	
 	private Texture left_arrow_active = AssetManager.getTexture("left_arrow_active");
 	private Texture left_arrow_unactive = AssetManager.getTexture("left_arrow_unactive");
@@ -88,6 +92,7 @@ public class SettingsScreen implements Screen {
 	public SettingsScreen(Game g, MenuScreen menu, String prefsFileName){
 		game = g;
 		this.menu = menu;
+		this.backTarget = menu;
 		settingEntries = new HashMap<String, SettingEntry>();
 		storedPrefs = Gdx.app.getPreferences(prefsFileName);
 		
@@ -103,7 +108,9 @@ public class SettingsScreen implements Screen {
 		settingEntries.put("DisplayMode", new SettingEntry(displayModes.length)); 			/* windowed, fullscreen */
 		settingEntries.put("AspectRatio", new SettingEntry(aspectRatios.length)); 			/* 4:3, 16:9, 16:10 */
 		settingEntries.put("Resolution", new SettingEntry(resolutionOptions[0].length)); 	/* 5 depending on aspect ratio */
-		settingEntries.put("Scale", new SettingEntry(scalingOptions.length + 1)); 			/* custom, .5f, .75f, 1.0f, 1.25f,
+		settingEntries.put("Scale", new SettingEntry(scalingOptions.length + 1)); 			/* auto, .5, .75, 1, 1.25, 1.5, 1.75, 2, 3, 4 */
+		settingEntries.put("SmoothZoom", new SettingEntry(smoothZoomOptions.length));		/* off, on */
+		settingEntries.put("SmoothCam", new SettingEntry(smoothCamOptions.length));			/* off, on */
 		
 		/* compile settingEntries panel */
 		float w = RoundWorld.unscaledWidth / 2;
@@ -159,6 +166,8 @@ public class SettingsScreen implements Screen {
 		
 		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - 64, 10, 64 * 2, 16 * 2);
 		mainStage.addActor(resetButton);
+		
+		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - 16 * 2, 64 * 2, 16 * 2);
 	}
 	
 	
@@ -172,8 +181,13 @@ public class SettingsScreen implements Screen {
 		resetButtonOnClick();
 		arrowsOnClick();
 		
+		if(showMenuButton)
+		{
+			menuButtonOnClick();
+		}
+		
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
-			this.game.setScreen(this.menu);
+			this.game.setScreen(this.backTarget);
 		}
 		
 		mainStage.getViewport().apply();
@@ -207,6 +221,7 @@ public class SettingsScreen implements Screen {
 		backButton.setBounds(10, 10, 64 * 2, 16 * 2);
 		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - 64 * 2, 10, 64 * 2, 16 * 2);
 		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - 64, 10, 64 * 2, 16 * 2);
+		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - 16 * 2, 64 * 2, 16 * 2);
 	}
 	
 	
@@ -233,6 +248,7 @@ public class SettingsScreen implements Screen {
 		backButton.setBounds(10, 10, 64 * 2, 16 * 2);
 		applyButton.setBounds(RoundWorld.unscaledWidth - 10 - 64 * 2, 10, 64 * 2, 16 * 2);
 		resetButton.setBounds(RoundWorld.unscaledWidth / 2 - 64, 10, 64 * 2, 16 * 2);
+		menuButton.setBounds(10, RoundWorld.unscaledHeight - 10 - 16 * 2, 64 * 2, 16 * 2);
 	}
 	
 
@@ -258,10 +274,17 @@ public class SettingsScreen implements Screen {
 		{
 			mainStage.addActor(entry.getValue().label);
 			mainStage.addActor(entry.getValue().valueLabel);
+			mainStage.addActor(entry.getValue().leftArrow);
+			mainStage.addActor(entry.getValue().rightArrow);
 		}
 		
 		mainStage.addActor(backButton);
 		mainStage.addActor(applyButton);
+		
+		if(showMenuButton)
+		{
+			mainStage.addActor(menuButton);
+		}
 	}	
 	
 	
@@ -271,8 +294,20 @@ public class SettingsScreen implements Screen {
 		/* change game fields */
 		RoundWorld.width = storedPrefs.getInteger("res_w");
 		RoundWorld.height = storedPrefs.getInteger("res_h");
-		RoundWorld.scale = storedPrefs.getFloat("Scale");
+		if(storedPrefs.getFloat("Scale") == 0)
+		{
+			RoundWorld.autoScaling = true;
+			((RoundWorld) game).autoScale();
+		}
+		else
+		{
+			RoundWorld.autoScaling = false;
+			RoundWorld.scale = storedPrefs.getFloat("Scale");
+		}
 		((RoundWorld) game).enforce_scaling();
+
+		RoundWorld.smoothZoom = (storedPrefs.getInteger("SmoothZoom") == 1) ? (true) : (false);
+		RoundWorld.smoothCam = (storedPrefs.getInteger("SmoothCam") == 1) ? (true) : (false);
 		
 		/* re-make window */
 		launchWindow();
@@ -282,6 +317,17 @@ public class SettingsScreen implements Screen {
 	private void backButtonOnClick() {
 		if (backButton.getBoundingRectangle().contains(Gdx.input.getX() / RoundWorld.scale, RoundWorld.unscaledHeight - Gdx.input.getY() / RoundWorld.scale)) {
 			if (Gdx.input.justTouched()) {
+				this.game.setScreen(this.backTarget);
+			}
+		}
+	}
+	
+	
+	private void menuButtonOnClick() {
+		if (menuButton.getBoundingRectangle().contains(Gdx.input.getX() / RoundWorld.scale, RoundWorld.unscaledHeight - Gdx.input.getY() / RoundWorld.scale)) {
+			if (Gdx.input.justTouched()) {
+				this.showMenuButton = false;
+				this.backTarget = this.menu;
 				this.game.setScreen(this.menu);
 			}
 		}
@@ -304,7 +350,16 @@ public class SettingsScreen implements Screen {
 					else if (entry.getKey().equals("Scale"))
 					{
 						/* store auto or preset */
-						storedPrefs.putFloat("Scale", (entry.getValue().val == 0) ? (0) : (scalingOptions[entry.getValue().val - 1]));
+						if(entry.getValue().val == 0)
+						{
+							RoundWorld.autoScaling = true;
+							storedPrefs.putFloat("Scale", 0);
+						}
+						else
+						{
+							RoundWorld.autoScaling = false;
+							storedPrefs.putFloat("Scale", scalingOptions[entry.getValue().val - 1]);
+						}
 					}
 					else
 					{
@@ -460,6 +515,14 @@ public class SettingsScreen implements Screen {
 				return String.valueOf(scalingOptions[entry.getValue().val - 1]);
 			}
 		}
+		else if (entry.getKey().equals("SmoothZoom"))
+		{
+			return smoothZoomOptions[settingEntries.get("SmoothZoom").val];
+		}
+		else if (entry.getKey().equals("SmoothCam"))
+		{
+			return smoothZoomOptions[settingEntries.get("SmoothCam").val];
+		}
 		else
 		{
 			return "ERROR";
@@ -486,16 +549,20 @@ public class SettingsScreen implements Screen {
 		{
 			if (settingEntries.get(key).val == 0)
 			{
-				return "custom";
-			}
-			else if (settingEntries.get(key).val == scalingOptions.length+2)
-			{
-				return "automatic";
+				return "auto";
 			}
 			else
 			{
 				return String.valueOf(scalingOptions[settingEntries.get(key).val - 1]);
 			}
+		}
+		else if (key.equals("SmoothZoom"))
+		{
+			return smoothZoomOptions[settingEntries.get("SmoothZoom").val];
+		}
+		else if (key.equals("SmoothCam"))
+		{
+			return smoothZoomOptions[settingEntries.get("SmoothCam").val];
 		}
 		else
 		{
@@ -517,11 +584,24 @@ public class SettingsScreen implements Screen {
 	/* reset all to default, used if file didn't exist */
 	public void resetAllToDefault()
 	{
+		int res = 0;
+		for(int i = 0; i < resolutionOptions[0].length; i++)
+		{
+			if(Integer.parseInt(resolutionOptions[0][i].split("x")[1]) <= java.awt.Toolkit.getDefaultToolkit().getScreenSize().height)
+			{
+				res = i;
+			}
+		}
+		
+		System.out.println("res = " + res);
+		
 		storedPrefs.putInteger("DisplayMode", 0);
-		storedPrefs.putInteger("AspectRatio", 0);
-		storedPrefs.putInteger("res_w", 800);
-		storedPrefs.putInteger("res_h", 600);
-		storedPrefs.putFloat("Scale", 1f);
+		storedPrefs.putInteger("AspectRatio", 1);
+		storedPrefs.putInteger("res_w", Integer.parseInt(resolutionOptions[0][res].split("x")[0]));
+		storedPrefs.putInteger("res_h", Integer.parseInt(resolutionOptions[0][res].split("x")[1]));
+		storedPrefs.putFloat("Scale", 0f);
+		storedPrefs.putInteger("SmoothZoom", 0);
+		storedPrefs.putInteger("SmoothCam", 1);
 		storedPrefs.flush();
 	}	
 	
@@ -558,7 +638,7 @@ public class SettingsScreen implements Screen {
 		}
 		else if (entry.getKey().equals("Scale"))
 		{
-			curr = 0; /* custom scale */
+			curr = 0; /* auto scale */
 			
 			float scale = storedPrefs.getFloat("Scale");
 			for(int i = 0; i < scalingOptions.length; i++)
@@ -596,29 +676,33 @@ public class SettingsScreen implements Screen {
 		}
 		else if (key.contains("Resolution"))
 		{
-			switch(storedPrefs.getInteger("AspectRatio"))
+			result = 0;
+			int aspectRatio = storedPrefs.getInteger("AspectRatio");
+			for(int i = 0; i < resolutionOptions[aspectRatio].length; i++)
 			{
-			case 0:
-				storedPrefs.putInteger("res_w", 800);
-				storedPrefs.putInteger("res_h", 600);
-				result = 1;
-				break;
-			case 1:
-				storedPrefs.putInteger("res_w", 1920);
-				storedPrefs.putInteger("res_h", 1080);
-				result = 2;
-				break;
-			case 3:
-				storedPrefs.putInteger("res_w", 1920);
-				storedPrefs.putInteger("res_h", 1200);
-				result = 3;
-				break;
+				if(Integer.parseInt(resolutionOptions[aspectRatio][i].split("x")[1]) <= java.awt.Toolkit.getDefaultToolkit().getScreenSize().height)
+				{
+					result = i;
+				}
 			}
+			
+			storedPrefs.putInteger("res_w", Integer.parseInt(resolutionOptions[aspectRatio][result].split("x")[0]));
+			storedPrefs.putInteger("res_h", Integer.parseInt(resolutionOptions[aspectRatio][result].split("x")[1]));
 		}
 		else if (key.contains("Scale"))
 		{
-			storedPrefs.putFloat("Scale", 1f);
-			result = 3;
+			storedPrefs.putFloat("Scale", 0f);
+			result = 0;
+		}
+		else if (key.equals("SmoothZoom"))
+		{
+			storedPrefs.putInteger("SmoothZoom", 0);
+			result = 0;
+		}
+		else if (key.equals("SmoothCam"))
+		{
+			storedPrefs.putInteger("SmoothCam", 1);
+			result = 1;
 		}
 		
 		storedPrefs.flush();
@@ -648,14 +732,25 @@ public class SettingsScreen implements Screen {
 	}
 	
 	
+	public void setBackTarget(Screen s, boolean showMenuButton)
+	{
+		this.showMenuButton = showMenuButton;
+		this.backTarget = s;
+	}
+	
+	
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-		
+		addElementsToStage();
 	}
 
 	@Override
 	public void resize(int width, int height) {
+		if(RoundWorld.autoScaling)
+		{
+			((RoundWorld) game).autoScale();
+		}
 		((RoundWorld) game).adaptScalingToWindow();
 		resetPositionsAndSizing();
 		updateViewports();
@@ -676,7 +771,7 @@ public class SettingsScreen implements Screen {
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
+		mainStage.clear();
 	}
 
 	@Override

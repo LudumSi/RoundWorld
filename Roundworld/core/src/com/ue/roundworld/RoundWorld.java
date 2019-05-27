@@ -25,6 +25,7 @@ public class RoundWorld extends Game {
 
 	private MenuScreen menuScreen;
 	private SettingsScreen settingsScreen;
+	private GameplayScreen gameplayScreen;
 	private String prefsFileName = "settings";
 	
 	public static int height; 			/* window pixel height */
@@ -35,8 +36,12 @@ public class RoundWorld extends Game {
 	public static float targetZoom = 1;	/* user controlled zoom level during game */
 	public static float minZoom = .75f;
 	public static float maxZoom = 1.5f;
+	
+	public static boolean smoothZoom = true;
+	public static boolean smoothCam = true;
 
 	public static boolean serverless = false;
+	public static boolean autoScaling = false;
 
 	
 	@Override
@@ -59,6 +64,7 @@ public class RoundWorld extends Game {
 		/* make screens */
 		menuScreen = new MenuScreen(this);
 		settingsScreen = new SettingsScreen(this, menuScreen, prefsFileName);
+		gameplayScreen = new GameplayScreen(this, menuScreen, settingsScreen);
 		
 		/* set defaults if file doesn't exist */
 		if (!settingsScreen.prefsFileExists(prefsFileName))
@@ -71,6 +77,11 @@ public class RoundWorld extends Game {
 		
 		/* read and enforce stored display settings */
 		settingsScreen.applySettingsFromFile();
+		System.out.println("Scale = " + RoundWorld.scale);
+		if(RoundWorld.scale == 0 || RoundWorld.autoScaling)
+		{
+			autoScale();
+		}
 		enforce_scaling();
 		
 		/* set screen to the menu */
@@ -93,8 +104,26 @@ public class RoundWorld extends Game {
 	public void autoScale()
 	{
 		/* @TODO for automatic scaling, uses 1 for now */
-		RoundWorld.unscaledWidth = RoundWorld.width;
-		RoundWorld.unscaledHeight = RoundWorld.height;
+		if (RoundWorld.width < 600)
+		{
+			RoundWorld.scale = .5f;
+		}
+		else if (RoundWorld.width < 1000)
+		{
+			RoundWorld.scale = 1f;
+		}
+		else if (RoundWorld.width < 1600)
+		{
+			RoundWorld.scale = 1.5f;
+		}
+		else if (RoundWorld.width < 2000)
+		{
+			RoundWorld.scale = 2f;
+		}
+		else
+		{
+			RoundWorld.scale = 3f;
+		}
 	}
 	
 	
@@ -143,6 +172,15 @@ public class RoundWorld extends Game {
 	{
 		return settingsScreen;
 	}
+	
+	/*
+	 * Returns this game's GameplayScreen
+	 */
+	public GameplayScreen getGameplayScreen()
+	{
+		return gameplayScreen;
+	}
+	
 	
 	/* rounds scale to number of decimals - deprecated for now
 		public void roundScalingTo(int num_decimals) {
