@@ -1,7 +1,10 @@
 
 
 import socket
-import main_loop
+
+import json
+#import main_loop
+
 from threading import Thread
 from socketserver import ThreadingMixIn
 
@@ -28,7 +31,7 @@ class ClientThread(Thread):
 			#get data
 			data = conn.recv(2048)
 			print(f"Server received data: {data}")
-			queue.append(data)
+			queue.append(json.loads(data))
 
 			#check for disconnect
 			if data == b'FFFF{(0:text|bye)}':
@@ -50,8 +53,9 @@ class ClientThread(Thread):
 		print("Killing thread...")
 		self.running = False
 
+TCP_IP = '192.168.1.15'
+#TCP_IP = '128.193.254.43'
 
-TCP_IP = '128.193.254.43'
 TCP_PORT = 7777
 BUFFER_SIZE = 128
 
@@ -59,8 +63,10 @@ BUFFER_SIZE = 128
 tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpServer.bind((TCP_IP, TCP_PORT))
-main_loop = MainLoopThread(queue)
-threads = [main_loop]
+#main_loop = MainLoopThread(queue)
+threads = []#main_loop]
+
+#main_loop.start()
 
 while True:
 	print(threads)
