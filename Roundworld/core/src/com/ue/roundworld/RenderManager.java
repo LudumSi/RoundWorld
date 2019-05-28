@@ -19,7 +19,7 @@ public class RenderManager {
 		//request renders
 		Event e = new Event("render_request");
 		e.addArg("area", area);
-		Client.sendRequest(e.generate());
+		//Client.sendRequest(e.generate());
 		
 		//clear layers
 		groundLayer.clear();

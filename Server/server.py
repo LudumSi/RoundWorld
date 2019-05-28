@@ -76,7 +76,7 @@ print("Started connection loop")
 while control_thread.running:
 	#print(threads)
 	tcpServer.listen(4)
-	print("Multithreaded Python server : Waiting for connections from TCP clients...")
+	#print("Multithreaded Python server : Waiting for connections from TCP clients...")
 	#get accept
 	
 	try:
