@@ -11,10 +11,16 @@ class Event():
 		
 	def compile(self):
 
-		j = {self.id : self.args}
-		data = json.dumps(j)
+		stri = ""
+		stri += "{" + self.id + ":"
+		stri += json.dumps(self.args) + "}"
+		leng = 0
+		leng = len(stri)
+		leng += len(str(leng))
+		leng+=1
+		stri = str(leng) + "|" + stri + "\n"
 		
-		return data
+		return stri
 		
 #length|id:{key:val,key:val,key:val}
 		

@@ -33,7 +33,7 @@ public class RenderManager {
 			if (Event.verify(ev, "render_list")) {
 					//load ground layer
 					JsonValue[] ground = ev.getArray("ground");
-				
+					
 					for (int i = 0; i < ground.length; i++) {
 						//create base actors and add to ground layer.
 						BaseActor b = new BaseActor(AssetManager.getTexture(ground[i].getString("texture")));

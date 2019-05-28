@@ -62,7 +62,7 @@ public class GameplayScreen implements Screen {
 		
 		camera = (OrthographicCamera) mainStage.getCamera();
 				
-		//RenderManager.getRenders("test", mainStage);
+		RenderManager.getRenders("test", mainStage);
 		
 
 		

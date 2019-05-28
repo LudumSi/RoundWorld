@@ -9,7 +9,6 @@ from control_thread import ControlThread
 
 from threading import Thread
 from socketserver import ThreadingMixIn
-
 from world import *
 
 control_thread = ControlThread()
@@ -31,29 +30,23 @@ class ClientThread(Thread):
 	def run(self):
 		global testRenders
 		
-		#conn.send(testWorld().compile().encode())
+		conn.send(testWorld().compile().encode())
 		
 		#client update loop
 		while self.running:
 			#get data
-			
-			try:
-				data = conn.recv(2048)
-				print(f"Server received data: {data}")
+			data = conn.recv(2048)
+			print(f"Server received data: {data}")
 			#queue.append(json.loads(data))
-				#check for disconnect
-				if data == b'FFFF{(0:text|bye)}':
-					print("Disconnect Sequence")
-					break
-				
-				elif(data):
-					#echo data
-					print("SENDING DATA")
-					conn.send(data)
-					print(f"SENT DATA: {data}")
+
+			#check for disconnect
+			if data == b'FFFF{(0:text|bye)}':
+				print("Disconnect Sequence")
 			
-			except:
-				pass
+				break
+				
+			#echo data
+			conn.send(data)
 			
 		#disconnect stuff goes here
 		threads.remove(self)
@@ -73,7 +66,7 @@ BUFFER_SIZE = 128
 tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpServer.bind((TCP_IP, TCP_PORT))
-tcpServer.settimeout(5)
+tcpServer.settimeout(0.4)
 
 main_loop = MainLoopThread(queue,control_thread)
 threads = []#main_loop
@@ -89,8 +82,8 @@ while control_thread.running:
 	
 	try:
 		(conn, (ip,port)) = tcpServer.accept()
-		print("Client found")
 		newthread = ClientThread(ip,port)
+		
 		newthread.start()
 		threads.append(newthread)
 		
@@ -98,7 +91,6 @@ while control_thread.running:
 	
 	except socket.timeout:
 		
-		#print("No client found")
 		pass
 
 for t in threads:

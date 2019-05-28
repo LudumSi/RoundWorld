@@ -1,6 +1,7 @@
 package com.ue.roundworld.client;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.utils.Json;
@@ -66,16 +67,21 @@ public class Event{
 	public String getId() {
 		return id;
 	}
-	
-	
+
 	public JsonValue[] getArray(String ar) {
-		JsonValue b = json.get(ar).child;
-		JsonValue[] arr = new JsonValue[b.size];
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = b.next();
-			b = b.next();
+		JsonValue b = json.get(ar);
+		JsonValue[] arra = new JsonValue[b.size];
+		ArrayList<JsonValue> arr = new ArrayList<JsonValue>();
+//		for (int i = 0; i < arr.length; i++) {
+//			System.out.println(b.name);
+//			arr[i] = b;
+//	
+//		}
+		
+		for (JsonValue j : b.iterator()) {
+			arr.add(j);
 		}
-		return arr;
+		return arr.toArray(arra);
 	}
 	
 	/**
