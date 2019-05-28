@@ -31,7 +31,7 @@ class ClientThread(Thread):
 			#get data
 			data = conn.recv(2048)
 			print(f"Server received data: {data}")
-			queue.append(json.loads(data))
+			#queue.append(json.loads(data))
 
 			#check for disconnect
 			if data == b'FFFF{(0:text|bye)}':
@@ -53,7 +53,7 @@ class ClientThread(Thread):
 		print("Killing thread...")
 		self.running = False
 
-TCP_IP = '192.168.1.15'
+TCP_IP = 'localhost'
 #TCP_IP = '128.193.254.43'
 
 TCP_PORT = 7777

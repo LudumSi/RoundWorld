@@ -62,18 +62,9 @@ public class GameplayScreen implements Screen {
 		
 		camera = (OrthographicCamera) mainStage.getCamera();
 				
-		//get renders
-		//while(!renderManage.getRenders(mainStage));
+		//RenderManager.getRenders("test", mainStage);
 		
-		for (int i = -25; i < 50; i++) {
-			for (int j = -25; j < 50; j++) {
-				BaseActor ba = new BaseActor(AssetManager.getTexture("grass_0" + Integer.toString(MathUtils.random(0, 3))));
-				ba.sizeBy(16);
-				ba.setPosition(i * 32, j * 32);
-				mainStage.addActor(ba);
-			}
-		}
-		
+
 		
 		uiBase = new UiBase();
 	
@@ -130,7 +121,7 @@ public class GameplayScreen implements Screen {
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			game.setScreen(settings);
 		}
-		
+		RenderManager.render(player);
 		mainStage.getViewport().apply();
 		mainStage.draw();
 		
