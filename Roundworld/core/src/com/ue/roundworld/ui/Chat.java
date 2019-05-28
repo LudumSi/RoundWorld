@@ -45,6 +45,7 @@ public class Chat extends BaseActor{
 			if(Event.verify(e, "chat_message")) {
 				Client.popParsedData();
 				
+				
 				add_to_log(e.getString("name"), e.getString("text"), Color.valueOf(e.getString("color")));
 						
 					

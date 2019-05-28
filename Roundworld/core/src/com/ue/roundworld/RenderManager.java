@@ -2,6 +2,7 @@ package com.ue.roundworld;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.JsonValue;
 import com.ue.roundworld.client.Client;
 import com.ue.roundworld.client.Event;
@@ -14,7 +15,7 @@ public class RenderManager {
 	private static final int renderDist = 1000;
 	
 	
-	public static void getRenders(String area) {
+	public static void getRenders(String area, Stage m) {
 		//request renders
 		Event e = new Event("render_request");
 		e.addArg("area", area);
@@ -37,15 +38,17 @@ public class RenderManager {
 						//create base actors and add to ground layer.
 						BaseActor b = new BaseActor(AssetManager.getTexture(ground[i].getString("texture")));
 						b.setPosition(ground[i].getInt("x"), ground[i].getInt("y"));
+						m.addActor(b);
 						groundLayer.add(b);
 					}
-					//load surface layer
+					/*//load surface layer
 					JsonValue[] surface = ev.getArray("surface");
 					
 					for (int i = 0; i < surface.length; i++) {
 						//create base actors and add to ground layer.
 						BaseActor b = new BaseActor(AssetManager.getTexture(surface[i].getString("texture")));
 						b.setPosition(surface[i].getInt("x"), surface[i].getInt("y"));
+						m.addActor(b);
 						surfaceLayer.add(b);
 					}
 					//load roof layer
@@ -55,8 +58,9 @@ public class RenderManager {
 						//create base actors and add to ground layer.
 						BaseActor b = new BaseActor(AssetManager.getTexture(roof[i].getString("texture")));
 						b.setPosition(roof[i].getInt("x"), roof[i].getInt("y"));
+						m.addActor(b);
 						surfaceLayer.add(b);
-					}
+					}*/
 			}
 			done = true;
 				
