@@ -3,10 +3,15 @@
 import socket
 
 import json
-#import main_loop
+
+from main_loop import MainLoopThread
+from control_thread import ControlThread
 
 from threading import Thread
 from socketserver import ThreadingMixIn
+
+control_thread = ControlThread()
+control_thread.start()
 
 queue = []
 testRenders = "74L0002{(4:grass_00,50,50,0,)(4:grass_00,100,50,0,)(4:grass_00,50,100,0,)}"
@@ -39,9 +44,6 @@ class ClientThread(Thread):
 			
 				break
 				
-		
-			
-			
 			#echo data
 			conn.send(data)
 			
@@ -63,25 +65,33 @@ BUFFER_SIZE = 128
 tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpServer.bind((TCP_IP, TCP_PORT))
-#main_loop = MainLoopThread(queue)
-threads = []#main_loop]
+tcpServer.settimeout(0.4)
 
-#main_loop.start()
+main_loop = MainLoopThread(queue,control_thread)
+threads = []#main_loop
 
-while True:
-	print(threads)
+main_loop.start()
+
+print("Started connection loop")
+while control_thread.running:
+	#print(threads)
 	tcpServer.listen(4)
 	print("Multithreaded Python server : Waiting for connections from TCP clients...")
 	#get accept
-	(conn, (ip,port)) = tcpServer.accept()
-	#if found, create client thread
-	newthread = ClientThread(ip,port)
-	newthread.start()
-	#append thread to threads
-	threads.append(newthread)
 	
-	print(f"Threads: {len(threads)}")
+	try:
+		(conn, (ip,port)) = tcpServer.accept()
+		newthread = ClientThread(ip,port)
+		
+		newthread.start()
+		threads.append(newthread)
+		
+		print(f"Threads: {len(threads)}")
 	
+	except socket.timeout:
+		
+		pass
+
 for t in threads:
 	t.abort()
 	
