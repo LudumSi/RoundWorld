@@ -129,7 +129,7 @@ public class MenuScreen implements Screen {
 		titleTheme.play();
 		username.setText("Username:  " + usernameIn.getInput());
 		serverIp.setText("Server Ip: " + Client.userIpAddress);
-		Client.user = "ME";
+		
 	
 		Gdx.gl.glClearColor(0.6f, 0.6f, 0.6f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

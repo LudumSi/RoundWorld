@@ -14,6 +14,8 @@ public class Entity extends BaseActor{
 	private Vector2 vel = new Vector2();
 	private Vector2 prevVel = new Vector2();
 	private int id;
+	private int health;
+	private int maxHealth;
 	
 	public Entity(Texture t) {
 		super(t);
@@ -43,6 +45,10 @@ public class Entity extends BaseActor{
 		this.vel.y = amtY;
 		
 	}
+	
+	public int getId() {
+		return this.id;
+	}
 	public void act(float dt) {
 		
 		//check for vel update
@@ -55,21 +61,8 @@ public class Entity extends BaseActor{
 	
 		this.moveBy(dt * 60 * vel.x, dt * 60 * vel.y);
 		
-		//update position and velocity from server
-		Event e = Client.getParsedData();
-	
-		if(Event.verify(e, "velocity_update")) {
-			Client.popParsedData();
-			if (id == e.getInt("int")){
-				this.setCenter(e.getFloat("x"), e.getFloat("y"));
-				this.setVelX(e.getFloat("velocity_x"));
-				this.setVelY(e.getFloat("velocity_y"));
-				
-			}
-				
-				
-			
-		}
+		checkEvents();
+		
 		super.act(dt);
 	}
 	
@@ -77,7 +70,6 @@ public class Entity extends BaseActor{
 	 * sends a position and velocity update to the server
 	 */
 	public void sendVelUpdate() {
-		if (Client.isConnected()) {
 			Event e = new Event("recvVelUpdate");
 			e.addArg("id", Integer.toString(this.id));
 			e.addArg("x", Float.toString(this.center.x));
@@ -85,9 +77,35 @@ public class Entity extends BaseActor{
 			e.addArg("velocity_x", Float.toString(this.vel.x));
 			e.addArg("velocity_y", Float.toString(this.vel.y));
 			Client.sendRequest(e.generate());
-			
 		
+	}
+	
+	private boolean checkEvent(Event e, String id) {
+		if (Event.verify(e, id) && this.id == e.getInt("id")) {
+			Client.popParsedData();
+			return true;
 		}
+		return false;
+			
+	}
+	
+	//place various server effects here
+	private void checkEvents() {
+		//update position and velocity from server
+			Event e = Client.getParsedData();
+		
+			if(checkEvent(e, "velocity_update")) {
+				
+				this.setCenter(e.getFloat("x"), e.getFloat("y"));
+				this.setVelX(e.getFloat("velocity_x"));
+				this.setVelY(e.getFloat("velocity_y"));
+					
+				
+			} else if (checkEvent(e, "damage")) {
+				
+				this.health -= e.getInt("amount");
+				
+			}
 	}
 	
 	

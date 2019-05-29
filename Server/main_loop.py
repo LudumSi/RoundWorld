@@ -14,6 +14,16 @@ class MainLoopThread(Thread):
 		#Game loop
 		print("Started Main Loop Thread\n")
 		while self.control.running:
+				event = self.queue.pop()
+				if event.id == "spawn_player":
+				
+					e = Event("re:spawn_player")
+					if event.args["isClient"] == 1:
+						e.args["isClient"] = 1
+					else:
+						e.args["isClient"] = 0
+						
+					
 				pass
 		
 		print("Closing Main Loop Thread\n")

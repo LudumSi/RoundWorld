@@ -72,11 +72,7 @@ public class Event{
 		JsonValue b = json.get(ar);
 		JsonValue[] arra = new JsonValue[b.size];
 		ArrayList<JsonValue> arr = new ArrayList<JsonValue>();
-//		for (int i = 0; i < arr.length; i++) {
-//			System.out.println(b.name);
-//			arr[i] = b;
-//	
-//		}
+
 		
 		for (JsonValue j : b.iterator()) {
 			arr.add(j);

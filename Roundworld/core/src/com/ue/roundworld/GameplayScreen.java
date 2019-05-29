@@ -72,7 +72,7 @@ public class GameplayScreen implements Screen {
 		text.setPosition(5, 5);
 		mainStage.addActor(text);
 
-		player = new Player();
+		player = new Player(Client.user, Color.GREEN);
 		player.setPosition((RoundWorld.unscaledWidth - player.getWidth()) / 2, (RoundWorld.unscaledHeight - player.getHeight()) / 2);
 		camera.position.set(RoundWorld.unscaledWidth / 2, RoundWorld.unscaledHeight / 2, camera.position.z);
 		

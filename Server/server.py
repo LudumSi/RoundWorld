@@ -37,6 +37,7 @@ class ClientThread(Thread):
 			#get data
 			data = conn.recv(2048)
 			print(f"Server received data: {data}")
+			#we need the parser back :()
 			#queue.append(json.loads(data))
 
 			#check for disconnect

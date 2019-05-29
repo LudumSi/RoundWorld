@@ -18,7 +18,7 @@ public class Client {
 
 	public static String userIpAddress;
 
-	public static String user = "ME";
+	public static String user = "SUPER_USER";
 	
 	private static boolean isConnected = false;
 	private static boolean isRunning = true;
@@ -72,14 +72,15 @@ public class Client {
 	 * 
 	 */
 	public static void sendRequest(String s) {
-
-		try {
-			// write our entered message to the stream
-			System.out.println("Sent: " + s);
-			socket.getOutputStream().write(s.getBytes());
-		} catch (Exception e) {
-			System.out.println("Socket write error " + e.getMessage());
-			isConnected = false;
+		if (isConnected) {
+			try {
+				// write our entered message to the stream
+				System.out.println("Sent: " + s);
+				socket.getOutputStream().write(s.getBytes());
+			} catch (Exception e) {
+				System.out.println("Socket write error " + e.getMessage());
+				isConnected = false;
+			}
 		}
 
 	}
