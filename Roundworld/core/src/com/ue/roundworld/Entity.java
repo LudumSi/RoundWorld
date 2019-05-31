@@ -70,7 +70,7 @@ public class Entity extends BaseActor{
 	 * sends a position and velocity update to the server
 	 */
 	public void sendVelUpdate() {
-			Event e = new Event("recvVelUpdate");
+			Event e = new Event("velocity_update");
 			e.addArg("id", Integer.toString(this.id));
 			e.addArg("x", Float.toString(this.center.x));
 			e.addArg("y", Float.toString(this.center.y));
@@ -94,7 +94,7 @@ public class Entity extends BaseActor{
 		//update position and velocity from server
 			Event e = Client.getParsedData();
 		
-			if(checkEvent(e, "velocity_update")) {
+			if(checkEvent(e, "re:velocity_update")) {
 				
 				this.setCenter(e.getFloat("x"), e.getFloat("y"));
 				this.setVelX(e.getFloat("velocity_x"));

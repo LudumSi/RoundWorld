@@ -48,6 +48,9 @@ public class Event{
 	public void addArg(String key, int val) {
 		json.addChild(key, new JsonValue(val));
 	}
+	public void addArg(String key, JsonValue val) {
+		json.addChild(key, val);
+	}
 	
 	public String getString(String key) {
 		return json.getString(key);

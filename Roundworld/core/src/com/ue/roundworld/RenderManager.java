@@ -2,6 +2,7 @@ package com.ue.roundworld;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.JsonValue;
 import com.ue.roundworld.client.Client;
@@ -12,6 +13,9 @@ public class RenderManager {
 	private static ArrayList<BaseActor> groundLayer = new ArrayList<BaseActor>();
 	private static ArrayList<BaseActor> surfaceLayer = new ArrayList<BaseActor>();
 	private static ArrayList<BaseActor> roofLayer = new ArrayList<BaseActor>();
+	
+	private static ArrayList<Player> localPlayers = new ArrayList<Player>();
+	
 	private static final int renderDist = 1000;
 	
 	
@@ -19,12 +23,16 @@ public class RenderManager {
 		//request renders
 		Event e = new Event("render_request");
 		e.addArg("area", area);
+		
 		//Client.sendRequest(e.generate());
 		
 		//clear layers
 		groundLayer.clear();
 		surfaceLayer.clear();
 		roofLayer.clear();
+		
+		localPlayers.clear();
+		
 		boolean done = false;
 	
 		while(!done)  {
@@ -61,12 +69,26 @@ public class RenderManager {
 						m.addActor(b);
 						surfaceLayer.add(b);
 					}*/
+					
+					
+					//get players
+					
+					JsonValue[] players = ev.getArray("players");
+					for (int i = 0; i < players.length; i++) {
+						Player p = null;
+						while(p == null) {
+							spawnPlayer(players[i].getString("name"), false);
+						}
+						m.addActor(p);
+						localPlayers.add(p);
+					}
 			}
 			done = true;
 				
 		}
 	}
-		
+	
+
 		
 	
 	
@@ -78,6 +100,62 @@ public class RenderManager {
 				render.setVisible(false);
 			}
 		}
+		
+		for (Player render : localPlayers) {
+			if (render.distanceTo(p.center.x, p.center.y) < renderDist) {
+				render.setVisible(true);
+			} else {
+				render.setVisible(false);
+			}
+		}
+		
+	}
+	
+	/**
+	 * sends an event to the server to spawn in a player with name name 
+	 * @param name the name of the player to spawn in
+	 * @return the player with name name
+	 */
+	public static Player spawnPlayer(String name, boolean isClient) {
+		Event e = new Event("spawn_player");
+		e.addArg("name", name);
+		if (isClient) {
+			e.addArg("isClient", 1);
+		}
+		
+		Player p = null;
+		
+		Event ev = Client.getParsedData();
+		if (Event.verify(ev, "re:spawn_player")) {
+			Client.popParsedData();
+			p = new Player();
+			if (ev.getInt("success") == 1) {
+				//Success! load data into player
+				if (ev.getInt("isClient") == 1) {
+					p.setIsClient(true);
+				}
+				
+				p.setName(ev.getString("name"));
+				p.setNameColor( Color.valueOf(ev.getString("name_color")));
+			
+				p.setCenter(ev.getFloat("x"), ev.getFloat("y"));
+				
+			} else {
+				//failure! print error or start up character creation!
+				if (ev.getInt("isClient") == 1) {
+					p.setIsClient(false);
+					//TODO character creation flag here
+					return null;
+				} else {
+					System.out.println("ERROR: player \"" + name  + "\" does not exist");
+				}
+			}
+			
+		}
+		
+		
+		return p;
+		
 	}
 	
 }

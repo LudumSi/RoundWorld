@@ -5,6 +5,7 @@ import socket
 import json
 
 from main_loop import MainLoopThread
+from parser import *
 from control_thread import ControlThread
 
 from threading import Thread
@@ -15,30 +16,37 @@ control_thread = ControlThread()
 control_thread.start()
 
 queue = []
-testRenders = "74L0002{(4:grass_00,50,50,0,)(4:grass_00,100,50,0,)(4:grass_00,50,100,0,)}"
+
 
 class ClientThread(Thread):
 
-	def __init__(self,ip,port):
+	def __init__(self,id,ip,port):
 		Thread.__init__(self)
 		self.ip = ip
 		self.port = port
 		self.running = True
+		self.id = id
 		print(f"[+] New server socket thread started for {ip} : {port}")
 
 
 	def run(self):
-		global testRenders
-		
-		conn.send(testWorld().compile().encode())
+		global queue
+	
 		
 		#client update loop
 		while self.running:
 			#get data
 			data = conn.recv(2048)
 			print(f"Server received data: {data}")
-			#we need the parser back :()
-			#queue.append(json.loads(data))
+			
+			#parse event
+			event = parse(data)
+			#add the thread's id into the event
+			event.args["THREAD_ID"] = self.id
+			#add to queue
+			queue.append(event)
+			
+			
 
 			#check for disconnect
 			if data == b'FFFF{(0:text|bye)}':
@@ -52,6 +60,9 @@ class ClientThread(Thread):
 		#disconnect stuff goes here
 		threads.remove(self)
 		conn.close()
+		
+	def send(event):
+		conn.send(event.compile().encode())
 			
 	def abort(self):
 		print("Killing thread...")
@@ -63,14 +74,17 @@ TCP_IP = 'localhost'
 TCP_PORT = 7777
 BUFFER_SIZE = 128
 
+GLOBAL_THREAD_ID = 0
+
 #setup server
 tcpServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 tcpServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 tcpServer.bind((TCP_IP, TCP_PORT))
 tcpServer.settimeout(0.4)
 
-main_loop = MainLoopThread(queue,control_thread)
 threads = []#main_loop
+main_loop = MainLoopThread(threads, queue,control_thread)
+
 
 main_loop.start()
 
@@ -83,7 +97,8 @@ while control_thread.running:
 	
 	try:
 		(conn, (ip,port)) = tcpServer.accept()
-		newthread = ClientThread(ip,port)
+		newthread = ClientThread(GLOBAL_THREAD_ID, ip,port)
+		GLOBAL_THREAD_ID += 1
 		
 		newthread.start()
 		threads.append(newthread)

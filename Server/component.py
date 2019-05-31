@@ -25,9 +25,9 @@ class Component():
 	
 	
 
-class Render(Component){
+class Render(Component):
 	def __init__(self, texture, x, y, theta):
-		super(self, "renderable", {"texture" : texture, "x" : x, "y" : y, "theta" : theta})
+		Component.__init__(self, "renderable", {"texture" : texture, "x" : x, "y" : y, "theta" : theta})
 	
 	def handle(self, event):
 		#contains the 
@@ -39,9 +39,9 @@ class Render(Component){
 			self.args["y"] = event.args["y"]
 
 
-class Movement(Component){
+class Movement(Component):
 	def __init__(self, velocity, accel, theta):
-		super(self, "movement", {"velocty" : velocity, "accel" : accel, "theta" : theta})
+		Component.__init__(self, "movement", {"velocty" : velocity, "accel" : accel, "theta" : theta})
 	
 	def handle(event):
 		#send velocity update
@@ -52,9 +52,9 @@ class Movement(Component){
 			pullAll(event)
 
 
-class Collision(Component)
+class Collision(Component):
 	def __init__(self, vertices):
-		super(self, "collision", {"vertices" : vertices})
+		Component.__init__(self, "collision", {"vertices" : vertices})
 	
 	def handle(event):
 		if (event.id == "spawn"):
@@ -64,7 +64,7 @@ class Collision(Component)
 
 class Damaging(Component):
 	def __init__(self, type, amount):
-		super(self, "damaging", {"type" : type, "amount" : amount})
+		Component.__init__(self, "damaging", {"type" : type, "amount" : amount})
 	
 	def handle(event):
 		if (event.id == "damage"):
@@ -84,28 +84,28 @@ class Damaging(Component):
 class Stats(Component):
 	#average = 10
 	def __init__(self, str, dex, int, cha):
-		super(self, "stats", {"str" : str, "dex" : dex, "int" : int, "cha" : cha)
+		Component.__init__(self, "stats", {"str" : str, "dex" : dex, "int" : int, "cha" : cha})
 	
-	def derive():
-		self.args["move_speed"] = 4 + dex / 10 #speed in pixels
-		self.args["stealth"] = dex #added to rolls vs perception
-		self.args["perception"] = int #added to rolls vs stealth
-		self.args["barter"] = cha / 1000 #percentage discount
-		self.args["physical_damage"] = str / 2 # damage base
-		self.args["physical_defense"] = (str + dex) / 4 #defense base
-		self.args["magical_damage"] = int /2 # damage base
-		self.args["magical_defense"] = (int + dex) / 4 #defense base
-		self.args["support_power"] = cha / 2 # support base
-		self.args["attack_speed"] = dex / 1000 #percentage speed increase
-		self.args["craft"] = (dex + int) / 4 #added to craft rolls
+	def derive(self):
+		self.args["move_speed"] = 4 + self.args["dex"] / 10 #speed in pixels
+		self.args["stealth"] = self.args["dex"] #added to rolls vs perception
+		self.args["perception"] = self.args["int"] #added to rolls vs stealth
+		self.args["barter"] = self.args["cha"]  / 1000 #percentage discount
+		self.args["physical_damage"] = self.args["str"] / 2 # damage base
+		self.args["physical_defense"] = (self.args["str"] + self.args["dex"]) / 4 #defense base
+		self.args["magical_damage"] = self.args["dex"]  /2 # damage base
+		self.args["magical_defense"] = (self.args["dex"]  + self.args["dex"]) / 4 #defense base
+		self.args["support_power"] = self.args["cha"] / 2 # support base
+		self.args["attack_speed"] = self.args["dex"] / 1000 #percentage speed increase
+		self.args["craft"] = (self.args["dex"] + self.args["dex"] ) / 4 #added to craft rolls
 	
 	def handle(event):
-	
+		pass
 
 
 class Living(Component):
 	def __init__(self, health):
-		super(self, "living", {"health" : health)
+		Component.__init__(self, "living", {"health" : health})
 	
 	def handle(event):
 		if (event.id == "damage"):
@@ -119,21 +119,23 @@ class Living(Component):
 				
 			self.args["health"] -= amt
 			
-class Magical(Component)
+class Magical(Component):
 	def __init__(self, mana):
-		super(self, "magical", {"mana" : mana)
+		Component.__init__(self, "magical", {"mana" : mana})
 	
 	def handle(event):
+		pass
 		
-class Staminal(Component)
+class Staminal(Component):
 	def __init__(self, stamina):
-		super(self, "staminal", {"stamina" : stamina)
+		Component.__init__(self, "staminal", {"stamina" : stamina})
 	
 	def handle(event):
+		pass
 	
 class Specialties(Component):
 	def __init__(self):
-		super(self, "specialties", {"specialties" : [])
+		Component.__init__("specialties", {"specialties" : []})
 	
 	def handle(event):
 		for spec in self.args["specialties"]:
@@ -142,8 +144,9 @@ class Specialties(Component):
 
 class Inventory(Component):
 	def __init__(self, items):
-		super(self, "inventory", {"items" : [])
+		Component.__init__("inventory", {"items" : []})
 	
 	def handle(event):
 		if (event.id == "sendInventory"):
+			pass
 			

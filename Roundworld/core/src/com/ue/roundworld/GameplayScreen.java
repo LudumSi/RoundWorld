@@ -46,6 +46,8 @@ public class GameplayScreen implements Screen {
 	private float deadzoneXVal;
 	private float deadzoneYVal;
 	
+	private boolean newChar = false;
+	
 	public GameplayScreen(Game g, MenuScreen menu, SettingsScreen settings){
 		game = g;
 		this.menu = menu;
@@ -64,7 +66,7 @@ public class GameplayScreen implements Screen {
 				
 		RenderManager.getRenders("test", mainStage);
 		
-
+		
 		
 		uiBase = new UiBase();
 	
@@ -72,7 +74,7 @@ public class GameplayScreen implements Screen {
 		text.setPosition(5, 5);
 		mainStage.addActor(text);
 
-		player = new Player(Client.user, Color.GREEN);
+		player = new Player();
 		player.setPosition((RoundWorld.unscaledWidth - player.getWidth()) / 2, (RoundWorld.unscaledHeight - player.getHeight()) / 2);
 		camera.position.set(RoundWorld.unscaledWidth / 2, RoundWorld.unscaledHeight / 2, camera.position.z);
 		
@@ -88,6 +90,13 @@ public class GameplayScreen implements Screen {
 	
 		uiStage.addActor(uiBase);
 		Gdx.input.setInputProcessor(InputProcess.instance);
+		
+		
+		if(RenderManager.spawnPlayer(Client.user, true) == null) {
+			game.setScreen(new CharacterCreationScreen(game, this));
+			newChar = true;
+			
+		}
 	}
 	
 	
@@ -97,6 +106,11 @@ public class GameplayScreen implements Screen {
 		uiStage.act();
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		if (newChar) {
+			RenderManager.spawnPlayer(Client.user, true);
+			newChar = false;
+		}
 	
 		//System.out.println(client.getRecievedData());
 		Event e = Client.getParsedData();

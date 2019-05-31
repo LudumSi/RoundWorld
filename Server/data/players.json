@@ -1,0 +1,37 @@
+{
+
+	"1" : {
+		"name_data" : {
+			"name" : "player1",
+			"name_color" : "0000FF"
+		},
+		"texture" : "player",
+		"x" : "0",
+		"y" : "0",
+		
+		"str" : "10",
+		"dex" : "10",
+		"int" : "10",
+		"cha" : "10"
+		
+	
+	},
+	"2" : {
+	
+		"name_data" : {
+			"name" : "player2",
+			"name_color" : "FF0000"
+		},
+		
+		"texture" : "player",
+		"x" : "10",
+		"y" : "10",
+		
+		"str" : "10",
+		"dex" : "10",
+		"int" : "10",
+		"cha" : "10"
+	
+	}
+
+}

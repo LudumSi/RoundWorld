@@ -1,0 +1,53 @@
+{
+	{
+	
+		"name" : "test",
+		"ground" : [
+			{
+				"texture" : "grass_00",
+				"x" : "0",
+				"y" : "0"
+			}
+		
+		
+		], 
+		"players" : [
+			{
+				"name" : "player1",
+			},
+			{
+				"name" : "player2",
+			},
+		
+		
+		],
+	
+	
+	}, 
+	{
+	
+	
+		"name" : "test2",
+		"ground" : [
+			{
+				"texture" : "grass_00",
+				"x" : "0",
+				"y" : "0"
+			}
+		
+		
+		], 
+		"players" : [
+			{
+				"name" : "player1",
+			},
+			{
+				"name" : "player2",
+			},
+		
+		
+		],
+	
+	}
+	
+}

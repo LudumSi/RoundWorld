@@ -1,3 +1,5 @@
+import json
+from event import *
 
 
 #Outputs the string sans list, throws and exception if the string isn't the same length as the length
@@ -15,8 +17,8 @@ def parse(input_string):
 			
 	sans_length = input_string[pipe_index:]
 			
-	return ''.join(sans_length)
+			
+	args = json.loads(''.join(sans_length))
+	e = Event(args.keys()[0], args[args.keys()[0]])
+	return 
 	
-testvar = input()
-parsedvar = parse(testvar)
-print(parsedvar)

@@ -16,19 +16,22 @@ public class Player extends Entity {
 	private Color nameColor = new Color(1f, 0.5f, 0.5f, 1f);
 	private String name;
 	private boolean isClient;
+	
+	private String area;
 
-	public Player(String name, Color nameColor) {
+	public Player() {
 		super(AssetManager.getTexture("character_01"));
 		this.genAnimation(AssetManager.getTexture("character_idle"), 2, 2, 0.5f * 0.3f);
-		this.nameColor = nameColor;
-		this.name = name;
-		nameDisp.setText(name);
+
+		
 		nameDisp.setPosition(this.center.x, this.getHeight() + 10);
-		nameDisp.setColor(nameColor);
+		
 		this.addActor(nameDisp);
 	}
 
 	public void act(float dt) {
+		nameDisp.setText(name);
+		nameDisp.setColor(nameColor);
 		if (Gdx.input.getInputProcessor() == InputProcess.instance && isClient) {
 			dy = 0;
 			dx = 0;
@@ -54,31 +57,26 @@ public class Player extends Entity {
 		
 		super.act(dt);
 	}
-	/**
-	 * sends an event to the server to spawn in a player with name name
-	 * BLOCKING 
-	 * @param name the name of the player to spawn in
-	 * @return the player with name name
-	 */
-	public static Player spawn(String name, boolean isClient) {
-		Event e = new Event("spawn_player");
-		e.addArg("name", name);
-		if (isClient) {
-			e.addArg("isClient", 1);
-		}
-		
-		Player p = null;
-		while (p == null) {
-			Event ev = Client.popParsedData();
-			if (Event.verify(ev, "re:spawn_player")) {
-				p = new Player(ev.getString("name"), Color.valueOf(ev.getString("color")));
-				if (ev.getInt("isClient") == 1) {
-					p.isClient = true;
-				}
-			}
-		}
-		
-		return p;
-		
+	
+	public void moveArea(String newArea) {
+		this.area = newArea;
+	
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+		super.setName(name);
+	}
+	
+	public void setIsClient(boolean t) {
+		this.isClient = t;
+	}
+	
+	public void setNameColor(Color c) {
+		this.nameColor = c;
+	}
+	
+	public boolean isClient() {
+		return this.isClient;
 	}
 }
