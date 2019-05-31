@@ -135,7 +135,7 @@ class Staminal(Component):
 	
 class Specialties(Component):
 	def __init__(self):
-		Component.__init__("specialties", {"specialties" : []})
+		Component.__init__(self, "specialties", {"specialties" : []})
 	
 	def handle(event):
 		for spec in self.args["specialties"]:
@@ -144,7 +144,7 @@ class Specialties(Component):
 
 class Inventory(Component):
 	def __init__(self, items):
-		Component.__init__("inventory", {"items" : []})
+		Component.__init__(self, "inventory", {"items" : []})
 	
 	def handle(event):
 		if (event.id == "sendInventory"):
