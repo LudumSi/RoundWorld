@@ -27,9 +27,10 @@ def load_areas():
 	areas = []
 	file = open("data/areas.json")
 	p = json.loads(file.read())
+	print(p)
 	#add players to list
 	for area in p:
-		areas.append(construct_area(area))
+		areas.append(construct_area(p[area]))
 	file.close()
 	return areas
 

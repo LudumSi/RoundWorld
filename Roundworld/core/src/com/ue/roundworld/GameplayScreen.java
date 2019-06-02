@@ -63,8 +63,12 @@ public class GameplayScreen implements Screen {
 		deadzoneYVal = (float) (deadzoneScale * RoundWorld.unscaledHeight / 2 / currentZoom);
 		
 		camera = (OrthographicCamera) mainStage.getCamera();
-				
-		RenderManager.getRenders("test", mainStage);
+		
+		if (Client.isConnected()) {
+			RenderManager.getRenders("test", mainStage);
+			
+		}
+		
 		
 		
 		
@@ -75,6 +79,7 @@ public class GameplayScreen implements Screen {
 		mainStage.addActor(text);
 
 		player = new Player();
+		player.setIsClient(true);
 		player.setPosition((RoundWorld.unscaledWidth - player.getWidth()) / 2, (RoundWorld.unscaledHeight - player.getHeight()) / 2);
 		camera.position.set(RoundWorld.unscaledWidth / 2, RoundWorld.unscaledHeight / 2, camera.position.z);
 		

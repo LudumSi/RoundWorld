@@ -1,5 +1,5 @@
 {
-	{
+	"1" : {
 	
 		"name" : "test",
 		"ground" : [
@@ -14,39 +14,10 @@
 		"players" : [
 			{
 				"name" : "player1",
-			},
-			{
-				"name" : "player2",
-			},
-		
-		
-		],
-	
-	
-	}, 
-	{
-	
-	
-		"name" : "test2",
-		"ground" : [
-			{
-				"texture" : "grass_00",
-				"x" : "0",
-				"y" : "0"
+				"name" : "player2"
 			}
-		
-		
-		], 
-		"players" : [
-			{
-				"name" : "player1",
-			},
-			{
-				"name" : "player2",
-			},
-		
-		
-		],
+		]
+	
 	
 	}
 	
