@@ -18,7 +18,7 @@ public class Client {
 
 	public static String userIpAddress;
 
-	public static String user = "SUPER_USER";
+	public static String user = "player1";
 	
 	private static boolean isConnected = false;
 	private static boolean isRunning = true;

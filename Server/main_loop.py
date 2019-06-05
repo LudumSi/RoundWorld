@@ -44,7 +44,7 @@ class MainLoopThread(Thread):
 		for i in range(len(self.players)):
 			if (self.players[i].get_component_by_id("name_data").args["name"] == name):
 				return i
-		
+		print("player " + name + " does not exist")
 		return -1
 			
 			
@@ -65,7 +65,7 @@ class MainLoopThread(Thread):
 			if event.id == "spawn_player":
 			
 				#create response
-				e = Event("re:spawn_player")
+				e = Event("re|spawn_player")
 				
 				#check if the player exsists
 				idx = self.playerExists(event.args["name"])
@@ -89,6 +89,7 @@ class MainLoopThread(Thread):
 					e.args["success"] = 0
 				
 				#send it
+				#print("LEODL: " + e.args)
 				self.send(event.args["THREAD_ID"], e)
 				
 			elif event.id == "new_player":

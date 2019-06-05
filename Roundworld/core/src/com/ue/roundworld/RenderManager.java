@@ -40,7 +40,7 @@ public class RenderManager {
 			//get and verify data
 			reqAttempts++;
 			Event ev = Client.popParsedData();
-			
+			System.out.println(ev); //REMOVING THIS BREAKS EVERYTHING
 			if (Event.verify(ev, "render_list")) {
 					//load ground layer
 					System.out.println("parsing renders...");
@@ -92,9 +92,7 @@ public class RenderManager {
 		
 				
 		}
-		if (reqAttempts >= 1000) {
-			System.out.println("ERROR: render request failed");
-		}
+		
 	}
 	
 
@@ -137,7 +135,7 @@ public class RenderManager {
 		Player p = null;
 		
 		Event ev = Client.getParsedData();
-		if (Event.verify(ev, "re:spawn_player")) {
+		if (Event.verify(ev, "re|spawn_player")) {
 			Client.popParsedData();
 			p = new Player();
 			if (ev.getInt("success") == 1) {
@@ -153,7 +151,7 @@ public class RenderManager {
 				
 			} else {
 				//failure! print error or start up character creation!
-				if (ev.getInt("isClient") == 1) {
+				if (e.getInt("isClient") == 1) {
 					p.setIsClient(false);
 					//TODO character creation flag here
 					return null;
