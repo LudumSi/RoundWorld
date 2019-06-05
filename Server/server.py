@@ -5,7 +5,7 @@ import socket
 import json
 
 from main_loop import MainLoopThread
-from parser import *
+from event_parser import parse
 from control_thread import ControlThread
 
 from threading import Thread
@@ -31,7 +31,7 @@ class ClientThread(Thread):
 
 	def run(self):
 		global queue
-	
+		global parser
 		
 		#client update loop
 		while self.running:
@@ -40,11 +40,12 @@ class ClientThread(Thread):
 			print(f"Server received data: {data}")
 			
 			#parse event
-			event = parse(data)
+			event = parse(str(data))
 			#add the thread's id into the event
 			event.args["THREAD_ID"] = self.id
 			#add to queue
 			queue.append(event)
+	
 			
 			
 
@@ -53,16 +54,17 @@ class ClientThread(Thread):
 				print("Disconnect Sequence")
 			
 				break
-				
-			#echo data
-			conn.send(data)
+			
 			
 		#disconnect stuff goes here
 		threads.remove(self)
 		conn.close()
 		
-	def send(event):
-		conn.send(event.compile().encode())
+	def send(self, event):
+		data = event.compile()
+		print("sending: " + data)
+		print("to " + self.ip)
+		conn.send(data.encode())
 			
 	def abort(self):
 		print("Killing thread...")
@@ -84,7 +86,6 @@ tcpServer.settimeout(0.4)
 
 threads = []#main_loop
 main_loop = MainLoopThread(threads, queue,control_thread)
-
 
 main_loop.start()
 

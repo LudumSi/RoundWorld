@@ -24,7 +24,7 @@ public class RenderManager {
 		Event e = new Event("render_request");
 		e.addArg("area", area);
 		
-		//Client.sendRequest(e.generate());
+		Client.sendRequest(e.generate());
 		
 		//clear layers
 		groundLayer.clear();
@@ -34,12 +34,16 @@ public class RenderManager {
 		localPlayers.clear();
 		
 		boolean done = false;
+		int reqAttempts = 0;
 	
 		while(!done)  {
 			//get and verify data
+			reqAttempts++;
 			Event ev = Client.popParsedData();
+			
 			if (Event.verify(ev, "render_list")) {
 					//load ground layer
+					System.out.println("parsing renders...");
 					JsonValue[] ground = ev.getArray("ground");
 					
 					for (int i = 0; i < ground.length; i++) {
@@ -73,18 +77,23 @@ public class RenderManager {
 					
 					//get players
 					
-					JsonValue[] players = ev.getArray("players");
+					/*JsonValue[] players = ev.getArray("players");
 					for (int i = 0; i < players.length; i++) {
 						Player p = null;
 						while(p == null) {
-							spawnPlayer(players[i].getString("name"), false);
+							p = spawnPlayer(players[i].getString("name"), false);
 						}
 						m.addActor(p);
 						localPlayers.add(p);
-					}
+					}*/
+					
+					done = true;
 			}
-			done = true;
+		
 				
+		}
+		if (reqAttempts >= 1000) {
+			System.out.println("ERROR: render request failed");
 		}
 	}
 	
@@ -121,8 +130,10 @@ public class RenderManager {
 		e.addArg("name", name);
 		if (isClient) {
 			e.addArg("isClient", 1);
+		} else {
+			e.addArg("isClient", 0);
 		}
-		
+		Client.sendRequest(e.generate());
 		Player p = null;
 		
 		Event ev = Client.getParsedData();
