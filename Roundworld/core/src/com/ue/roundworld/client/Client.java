@@ -12,6 +12,7 @@ import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.badlogic.gdx.utils.Queue;
+import com.ue.roundworld.Player;
 
 
 public class Client {
@@ -29,7 +30,7 @@ public class Client {
 	private static String ip;
 	private static int port;
 
-		
+	public static Player player;
 	
 	private static Socket socket; 
 

@@ -17,6 +17,7 @@ class MainLoopThread(Thread):
 	
 	
 	def send(self, target, event):
+		print("sent: " + event.id)
 		self.threads[target].send(event)
 	
 	def run(self):
@@ -61,16 +62,18 @@ class MainLoopThread(Thread):
 			
 			event = self.queue.pop()
 			print("handling: " + event.id)	
-				
+			e = 0	
 			if event.id == "spawn_player":
 			
 				#create response
-				e = Event("re|spawn_player")
+				e = Event("re-spawn_player")
+				
 				
 				#check if the player exsists
 				idx = self.playerExists(event.args["name"])
 				if not idx == -1 :
 					player = self.players[idx]
+					e.args = {}
 					e.args["success"] = 1
 					
 					#load player data into event
@@ -101,6 +104,7 @@ class MainLoopThread(Thread):
 				idx = self.areaExists(event.args["area"])
 				if (not idx == -1):
 					area = self.areas[idx]
+					e.args = {}
 					e.args["success"] = 1
 					
 					e.args["ground"] = area.get_component_by_id("ground").args
@@ -113,6 +117,11 @@ class MainLoopThread(Thread):
 				self.send(event.args["THREAD_ID"], e)
 				
 			elif (event.id == "chat_message"):
+				for i in range(len(self.threads)):
+					if (not event.args["THREAD_ID"] == i):
+						send(i, event)
+			elif (event.id == "velocity_update"):
+			
 				for i in range(len(self.threads)):
 					if (not event.args["THREAD_ID"] == i):
 						send(i, event)

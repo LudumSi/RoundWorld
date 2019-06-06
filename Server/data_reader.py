@@ -12,6 +12,7 @@ def load_players():
 	file = open("data/players.json")
 	p = json.loads(file.read())
 	#add players to list
+	print(p)
 	for player in p.values():
 		players.append(construct_player(player))
 	file.close()

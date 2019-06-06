@@ -77,15 +77,16 @@ public class RenderManager {
 					
 					//get players
 					
-					/*JsonValue[] players = ev.getArray("players");
+					JsonValue[] players = ev.getArray("players");
 					for (int i = 0; i < players.length; i++) {
 						Player p = null;
 						while(p == null) {
-							p = spawnPlayer(players[i].getString("name"), false);
+							p = spawnPlayer(players[i].asString(), players[i].asString().equals(Client.user));
 						}
+						
 						m.addActor(p);
 						localPlayers.add(p);
-					}*/
+					}
 					
 					done = true;
 			}
@@ -123,6 +124,7 @@ public class RenderManager {
 	 * @param name the name of the player to spawn in
 	 * @return the player with name name
 	 */
+	static boolean hasRev = false;
 	public static Player spawnPlayer(String name, boolean isClient) {
 		Event e = new Event("spawn_player");
 		e.addArg("name", name);
@@ -131,23 +133,31 @@ public class RenderManager {
 		} else {
 			e.addArg("isClient", 0);
 		}
-		Client.sendRequest(e.generate());
+		
+		if (!hasRev) {
+			Client.sendRequest(e.generate());
+			hasRev = true;
+		}
+	
 		Player p = null;
 		
 		Event ev = Client.getParsedData();
-		if (Event.verify(ev, "re|spawn_player")) {
+		if (Event.verify(ev, "re-spawn_player")) {
+			hasRev = false;
 			Client.popParsedData();
 			p = new Player();
 			if (ev.getInt("success") == 1) {
 				//Success! load data into player
 				if (ev.getInt("isClient") == 1) {
 					p.setIsClient(true);
+					Client.player = p;
 				}
 				
 				p.setName(ev.getString("name"));
 				p.setNameColor( Color.valueOf(ev.getString("name_color")));
 			
 				p.setCenter(ev.getFloat("x"), ev.getFloat("y"));
+				return p;
 				
 			} else {
 				//failure! print error or start up character creation!

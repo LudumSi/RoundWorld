@@ -32,7 +32,7 @@ public class GameplayScreen implements Screen {
 	public BaseActor test;
 	public Label text;
 	
-	private Player player;
+	
 	private Entity ghost;
 	private Entity ghost2;
 	
@@ -67,6 +67,9 @@ public class GameplayScreen implements Screen {
 		if (Client.isConnected()) {
 			RenderManager.getRenders("test", mainStage);
 			
+		} else {
+			Client.player = new Player();
+			mainStage.addActor(Client.player);
 		}
 		
 		
@@ -77,10 +80,6 @@ public class GameplayScreen implements Screen {
 		text = new Label(" ", RoundWorld.font);
 		text.setPosition(5, 5);
 		mainStage.addActor(text);
-
-		player = new Player();
-		player.setIsClient(true);
-		player.setPosition((RoundWorld.unscaledWidth - player.getWidth()) / 2, (RoundWorld.unscaledHeight - player.getHeight()) / 2);
 		camera.position.set(RoundWorld.unscaledWidth / 2, RoundWorld.unscaledHeight / 2, camera.position.z);
 		
 		ghost = new Entity(Utils.missingTexture);
@@ -89,7 +88,7 @@ public class GameplayScreen implements Screen {
 		ghost2 = new Entity(Utils.missingTexture);
 		ghost2.setPosition(150, 50);
 		
-		mainStage.addActor(player);
+	
 		mainStage.addActor(ghost);
 		mainStage.addActor(ghost2);
 	
@@ -140,7 +139,7 @@ public class GameplayScreen implements Screen {
 		if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
 			game.setScreen(settings);
 		}
-		RenderManager.render(player);
+		RenderManager.render(Client.player);
 		mainStage.getViewport().apply();
 		mainStage.draw();
 		
@@ -155,17 +154,17 @@ public class GameplayScreen implements Screen {
 	 */
 	private void moveCamera(float dt)
 	{
-		if(player.getX() > camera.position.x)
+		if(Client.player.getX() > camera.position.x)
 		{
-			cam_d.x = (Math.abs(player.getX() + player.getWidth() / 2 - camera.position.x) - deadzoneXVal);//player.getX() + player.getWidth() / 2 - camera.position.x;
+			cam_d.x = (Math.abs(Client.player.getX() + Client.player.getWidth() / 2 - camera.position.x) - deadzoneXVal);//player.getX() + player.getWidth() / 2 - camera.position.x;
 		}
 		else
 		{
 			
 		}
 	
-		cam_d.x = ((player.getX() > camera.position.x) ? (1f) : (-1f)) * (Math.abs(player.getX() + player.getWidth() / 2 - camera.position.x) - deadzoneXVal);
-		cam_d.y = ((player.getY() > camera.position.y) ? (1f) : (-1f)) * (Math.abs(player.getY() + player.getHeight() / 2 - camera.position.y) - deadzoneYVal);
+		cam_d.x = ((Client.player.getX() > camera.position.x) ? (1f) : (-1f)) * (Math.abs(Client.player.getX() + Client.player.getWidth() / 2 - camera.position.x) - deadzoneXVal);
+		cam_d.y = ((Client.player.getY() > camera.position.y) ? (1f) : (-1f)) * (Math.abs(Client.player.getY() + Client.player.getHeight() / 2 - camera.position.y) - deadzoneYVal);
 		
 		/* deadzone check */
 		cam_d.scl((Math.abs(cam_d.x) < deadzoneXVal && RoundWorld.smoothCam) ? (0f) : (1f), (Math.abs(cam_d.y) < deadzoneYVal && RoundWorld.smoothCam) ? (0f) : (1f));
