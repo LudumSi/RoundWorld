@@ -83,6 +83,7 @@ public class MenuScreen implements Screen {
 		test = new BaseActor(AssetManager.getTexture("RW_Icon_64"));
 		
 		text = new Label("", RoundWorld.font);
+		
 		textBase.addAction(Actions.fadeOut(0));
 		
 		username = new Label("Username: ", RoundWorld.font);
@@ -251,6 +252,7 @@ public class MenuScreen implements Screen {
 	public void resetPositions()
 	{
 		test.setCenter(RoundWorld.unscaledWidth / 2, RoundWorld.unscaledHeight / 2);
+		text.setPosition(RoundWorld.unscaledWidth / 2 - 64 - 16, RoundWorld.unscaledHeight / 2 - 248 + 64);
 		textBase.setPosition(20, 20);
 		username.setPosition(10, RoundWorld.unscaledHeight - 25);
 		serverIp.setPosition(10, RoundWorld.unscaledHeight - 50);
@@ -259,6 +261,7 @@ public class MenuScreen implements Screen {
 		exitButton.setBounds(RoundWorld.unscaledWidth - 10 - (int) (64 * buttonScale), RoundWorld.unscaledHeight - 10 - (int) (16 * buttonScale), (int) (64 * buttonScale), (int) (16 * buttonScale));
 		usernameIn.setPosition(140, RoundWorld.unscaledHeight - 17);
 		ipIn.setPosition(10, RoundWorld.unscaledHeight - 100);
+		
 	}
 	
 	

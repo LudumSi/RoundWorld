@@ -246,4 +246,9 @@ public class Client {
 	public static boolean isConnected() {
 		return isConnected;
 	}
+
+	public static void clear() {
+		dataQueue.clear();
+		
+	}
 }

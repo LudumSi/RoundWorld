@@ -13,7 +13,7 @@ class MainLoopThread(Thread):
 		self.queue = queue
 		self.control = control
 		self.threads = threads
-		
+		self.gID = 0
 	
 	
 	def send(self, target, event):
@@ -82,7 +82,8 @@ class MainLoopThread(Thread):
 					e.args["name_color"] = name_data.args["name_color"]
 					e.args["x"] = player.get_component_by_id("renderable").args["x"]
 					e.args["y"] = player.get_component_by_id("renderable").args["y"]
-				
+					e.args["id"] = self.gID
+					self.gID += 1
 				
 					if event.args["isClient"] == 1:
 						e.args["isClient"] = 1
@@ -119,10 +120,10 @@ class MainLoopThread(Thread):
 			elif (event.id == "chat_message"):
 				for i in range(len(self.threads)):
 					if (not event.args["THREAD_ID"] == i):
-						send(i, event)
+						self.send(i, event)
 			elif (event.id == "velocity_update"):
 			
 				for i in range(len(self.threads)):
-					if (not event.args["THREAD_ID"] == i):
-						send(i, event)
+					
+						self.send(i, event)
 			

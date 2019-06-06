@@ -19,7 +19,7 @@ public class Entity extends BaseActor{
 	
 	public Entity(Texture t) {
 		super(t);
-		id = globalID;
+		//id = globalID;
 	
 		globalID++;
 		
@@ -29,6 +29,10 @@ public class Entity extends BaseActor{
 		prevVel.x = 0;
 		prevVel.y = 0;
 	
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public void addVel(float amtX, float amtY) {
@@ -82,6 +86,7 @@ public class Entity extends BaseActor{
 	
 	private boolean checkEvent(Event e, String id) {
 		if (Event.verify(e, id) && this.id == e.getInt("id")) {
+			
 			Client.popParsedData();
 			return true;
 		}
@@ -93,10 +98,11 @@ public class Entity extends BaseActor{
 	private void checkEvents() {
 		//update position and velocity from server
 			Event e = Client.getParsedData();
-		
-			if(checkEvent(e, "re:velocity_update")) {
+			
+			if(checkEvent(e, "velocity_update")) {
 				
-				this.setCenter(e.getFloat("x"), e.getFloat("y"));
+			
+				//this.setCenter(e.getFloat("x"), e.getFloat("y"));
 				this.setVelX(e.getFloat("velocity_x"));
 				this.setVelY(e.getFloat("velocity_y"));
 					

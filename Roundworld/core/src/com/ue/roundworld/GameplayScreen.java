@@ -96,11 +96,8 @@ public class GameplayScreen implements Screen {
 		Gdx.input.setInputProcessor(InputProcess.instance);
 		
 		
-		if(RenderManager.spawnPlayer(Client.user, true) == null) {
-			game.setScreen(new CharacterCreationScreen(game, this));
-			newChar = true;
-			
-		}
+	
+		Client.clear();
 	}
 	
 	
@@ -111,10 +108,7 @@ public class GameplayScreen implements Screen {
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		if (newChar) {
-			RenderManager.spawnPlayer(Client.user, true);
-			newChar = false;
-		}
+		
 	
 		//System.out.println(client.getRecievedData());
 		Event e = Client.getParsedData();
@@ -145,6 +139,8 @@ public class GameplayScreen implements Screen {
 		
 		uiStage.getViewport().apply(true);
 		uiStage.draw();
+		
+		
 	}
 
 	

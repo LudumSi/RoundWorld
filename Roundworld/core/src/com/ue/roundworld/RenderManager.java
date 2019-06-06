@@ -89,10 +89,12 @@ public class RenderManager {
 					}
 					
 					done = true;
+					
 			}
 		
 				
 		}
+		
 		
 	}
 	
@@ -157,6 +159,7 @@ public class RenderManager {
 				p.setNameColor( Color.valueOf(ev.getString("name_color")));
 			
 				p.setCenter(ev.getFloat("x"), ev.getFloat("y"));
+				p.setId(ev.getInt("id"));
 				return p;
 				
 			} else {
