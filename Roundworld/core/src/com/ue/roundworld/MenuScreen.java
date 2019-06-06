@@ -209,6 +209,13 @@ public class MenuScreen implements Screen {
 			Gdx.app.exit();
 		}
 		
+		if (Gdx.input.isKeyJustPressed(Keys.C)) {
+			if (connectDone) {
+				connectionThread = new Thread(connect);
+				connectionThread.start();
+			}
+		}
+		
 		//countdown anim
 		if (connectAnimCountdown > 0) {
 			connectAnimCountdown--;
